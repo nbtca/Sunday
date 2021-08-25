@@ -3,7 +3,7 @@
     <div class="">
       <div class="flex items-center justify-between px-4 py-5 sm:px-10">
         <div class="text-left">
-          <h3 class="pt-4 text-3xl font-medium text-gray-900">事件详情</h3>
+          <h3 class="pt-4 text-4xl font-medium text-gray-900">事件详情</h3>
           <p class="ml-0.5 text-sm text-gray-500">Eid:{{ eid }}</p>
         </div>
         <div>{{ statusToText[detail.status + 1] }}</div>
@@ -58,19 +58,20 @@
         </dl>
       </div>
     </div>
-    <div class="self-end mb-20 px-20">
-      <button
-        v-if="detail.status == 0"
-        class="btn bg-primary text-primaryContent"
-        @click="acceptEvent"
-      >
-        接受
-      </button>
-      <!-- v-if="detail.rid == rid && detail.status == 1" -->
-      <div class="flex flex-col items-end">
+    <div class="w-full mb-20 px-20 border">
+      <div>
+        <button
+          v-if="detail.status == 0"
+          class="btn bg-primary text-primaryContent w-20"
+          @click="acceptEvent"
+        >
+          接受
+        </button>
+      </div>
+      <div v-if="detail.rid == rid && detail.status == 1" class="flex flex-col">
         <textarea
           v-model="descriptionToSubmit"
-          class="border-2 shadow-inner h-28 w-80 mb-10"
+          class="textInput border-2 shadow-inner h-28 w-80 mb-7 self-center"
           style="resize: none"
         ></textarea>
         <div>
@@ -83,6 +84,17 @@
           </button>
         </div>
       </div>
+      <div v-if="detail.status == 2 && role == 'admin'">
+        <button class="btn w-20 mx-4 bg-warning" @click="closeEvent(0)">
+          退回
+        </button>
+        <button
+          class="btn w-20 mx-4 bg-primary text-primaryContent"
+          @click="closeEvent(1)"
+        >
+          通过
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -94,6 +106,7 @@ export default {
   name: "EventsDetail",
   data() {
     return {
+      role: "",
       rid: "",
       eid: "",
       statusToText: ["取消", "待接受", "已接受", "待确认", "关闭"],
@@ -109,6 +122,7 @@ export default {
     },
   },
   created() {
+    this.role = sessionStorage.getItem("user_role");
     this.rid = sessionStorage.getItem("rid");
     this.getdetail();
   },
@@ -126,20 +140,22 @@ export default {
       });
     },
     dropEvent() {
-      const that = this;
-      axiosApi("/events/drop", { eid: this.eid }, "post").then((response) => {
-        that.getdetail();
+      axiosApi("/events/drop", { eid: this.eid }, "post").then(() => {
+        this.getdetail();
+      });
+    },
+    closeEvent(action) {
+      axiosApi("/events/close", { accept: action, eid: this.eid },"post").then(() => {
+        this.getdetail();
       });
     },
     submitEvnet() {
-      const that = this;
       axiosApi(
         "/events/submit",
         { eid: this.eid, description: this.descriptionToSubmit },
         "post"
-      ).then((response) => {
-        that.getdetail();
-        console.log(response);
+      ).then(() => {
+        this.getdetail();
       });
     },
   },

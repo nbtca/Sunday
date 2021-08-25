@@ -1,7 +1,10 @@
 <template>
-  <div class="flex flex-col items-center p-10">
+  <div class="flex flex-col items-center p-10" style="height: 100vh">
     <div id="login" class="flex flex-col items-center mt-52">
-      <form class="flex flex-col items-center" style="width: 25vw; min-width: 300px">
+      <form
+        class="flex flex-col items-center"
+        style="width: 25vw; min-width: 300px"
+      >
         <input
           v-model="id"
           class="w-full textInput"
@@ -15,14 +18,9 @@
           placeholder="password"
         />
         <button
-          class="
-            w-full
-            btn
-            bg-primary
-            text-primaryContent
-          "
+          class="w-full btn bg-primary text-primaryContent"
           type="btn"
-          @click="sendAccount()"
+          @click="login()"
         >
           login
         </button>
@@ -31,23 +29,76 @@
   </div>
 </template>
 <script>
+import { login } from "../../api/api";
+// import radio from "../../components/radio.vue";
+// import crypto from "crypto";
+import { ref, computed } from "vue";
 export default {
   name: "Login",
-  data() {
+  setup() {
+    const model = ref("");
     return {
-      id: "",
-      password: "",
+      model,
+      isValid: computed(() => model.value.length <= 3),
     };
   },
+  components: {
+    // radio
+  },
+  data() {
+    return {
+      isPwd: true,
+      id: "",
+      password: "",
+      isIDValid: true,
+      isPasswordValid: true,
+    };
+  },
+  computed: {
+    // // 计算属性的 getter
+    // publishedBooksMessage() {
+    //   // `this` 指向 vm 实例
+    //   return this.author.books.length > 0 ? "Yes" : "No";
+    // },
+  },
   methods: {
-    sendAccount() {
-      const accountObject = {
+    login() {
+      var that = this;
+      // var hashedPassword = null;
+      // if (this.password !== "") {
+      //   const hash = crypto.createHash("md5");
+      //   hash.update(this.password);
+      //   hashedPassword = hash.digest("hex");
+      // }
+      login({
         id: this.id,
-        pwd: this.password,
-      };
-      console.log(accountObject);
-      if ((this.id === "1") & (this.password === "1"))
-        this.$router.push("./Home");
+        password: this.password,
+      })
+        .then(function (response) {
+          console.log(response);
+          const resultCode = response.resultCode;
+          if (resultCode === 0) {
+            const token = response.data.token;
+            console.log(token);
+            sessionStorage.setItem("access_token", token);
+            sessionStorage.setItem("user_role", response.data.role);
+            sessionStorage.setItem("alias", response.data.alias);
+            sessionStorage.setItem("rid", response.data.rid);
+            sessionStorage.setItem("avatar", response.data.avatar);
+            if (response.data.isPasswordEmpty) {
+              that.$router.push("/register");
+            } else {
+              that.$router.push("/");
+            }
+          } else if (resultCode === 101) {
+            that.isIDValid = false;
+          } else if (resultCode === 102) {
+            that.isPasswordValid = false;
+          }
+        })
+        .catch(function (error) {
+          console.log(error.response);
+        });
     },
   },
 };

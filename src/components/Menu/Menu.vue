@@ -1,7 +1,23 @@
 <template>
   <div class="flex flex-col justify-between h-full">
     <div>
-      <div class="h-16 w-full border">LOGO</div>
+      <div
+        class="
+          h-16
+          w-full
+          text-4xl
+          font-bold font-mono
+          italic
+          tracking-wide
+          uppercase
+          flex
+          items-center
+          text-gray-900
+          justify-center
+        "
+      >
+        sunday
+      </div>
       <button
         v-for="item in menuitems"
         :key="item.name"
@@ -11,10 +27,19 @@
         {{ item.name }}
       </button>
     </div>
-    <div class="flex flex-col items-center h-56 mb-15 border">
-      <div class="h-30 w-30 rounded-full border">AVATAR</div>
-      <div>alias</div>
-      <div>role</div>
+    <div class="flex flex-col items-center h-56 mb-15">
+      <!-- <div class="h-28 w-28 m-2 rounded-full border">
+        <img :src="avatar" alt="" />
+      </div> -->
+      <div class="flex overflow-hidden">
+        <img
+          class="object-cover h-28 w-28 rounded-full ring-2 ring-white"
+          :src="avatar"
+          alt=""
+        />
+      </div>
+      <div>{{ alias }}</div>
+      <div>{{ role }}</div>
       <div>event count</div>
       <div>account setting</div>
     </div>
@@ -42,17 +67,13 @@ export default {
   data() {
     return {
       alias: "",
+      avatar: "",
       role: "",
       menuitems: [
         {
           name: "维修事件",
           icon: "star",
           link: "/Events/",
-        },
-        {
-          name: "事件管理",
-          icon: "star",
-          link: "/EventsManage/",
         },
         {
           name: "成员管理",
@@ -69,6 +90,7 @@ export default {
   },
   created() {
     this.alias = sessionStorage.getItem("alias");
+    this.avatar = sessionStorage.getItem("avatar");
     this.role = sessionStorage.getItem("user_role") === "admin" ? "管理员" : "";
   },
   methods: {

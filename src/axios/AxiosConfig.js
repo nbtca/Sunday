@@ -11,9 +11,7 @@ axios.defaults.timeout = 10000;
 
 axios.interceptors.request.use(
   (config) => {
-    // const token = sessionStorage.getItem("access_token");
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mzg0NTI1MDMsImRhdGEiOnsicmlkIjoiMzE5MDQyMTE2MyIsInJvbGUiOiJhZG1pbiIsImFpZCI6Mn0sImlhdCI6MTYyOTgxMjUwM30.JMFNQs4G368ry75XjorOxSdV4YaP3YYo4JXQUzhoJEE";
+    const token = sessionStorage.getItem("access_token");
     config.headers.authorization = "bearer " + token;
     // if (config.type) {
     //   switch (config.type) {

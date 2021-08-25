@@ -1,82 +1,137 @@
 <template>
-  <div class="flex flex-row w-full h-full">
+  <div class="flex">
     <div
-      class="flex flex-col items-center border-r px-2"
-      style="width: 20vw; min-width: 250px"
+      class="flex flex-col items-center border-r h-screen"
+      style="width: 24vw; min-width: 300px"
     >
-      <div class="sticky top-0 w-full h-auto py-4">ACTIVE | MINE (Slider)</div>
-      <button
-        v-for="item in fiilteredList"
-        :key="item.eid"
-        class="cell felx flex-row justify-between flex-nowrap"
-        @click="showDetail(item.eid)"
+      <div
+        class="
+          sticky
+          top-0
+          flex flex-col
+          items-center
+          w-full
+          bg-gray-100
+          border-b
+        "
       >
-        <div class="truncate w-2/3 text-left">
-          {{ item.user_description }}
-        </div>
-        <div>
-          {{ statusToText[item.status + 1] }}
-        </div>
-      </button>
+        <input
+          type="text"
+          class="textInput h-8 w-full my-0.5 order-last"
+          v-model="searchQuery"
+        />
+        <TabGroup class="w-full">
+          <TabList class="flex p-1 space-x-1">
+            <Tab
+              v-for="item in filterOptions"
+              as="template"
+              :key="item"
+              v-slot="{ selected }"
+            >
+              <button
+                @click="filterHandler(item)"
+                :class="[
+                  'w-full py-2.5 text-sm leading-5 font-medium text-blue-700 rounded-lg',
+                  'focus:(outline-none ring-2) ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60',
+                  selected
+                    ? 'bg-white shadow'
+                    : 'text-gray-400 hover:bg-gray-50/[0.12] hover:text-blue-400',
+                ]"
+              >
+                {{ item }}
+              </button>
+            </Tab>
+          </TabList>
+        </TabGroup>
+      </div>
+      <div class="px-2 overflow-auto w-full">
+        <button
+          v-for="item in fiilteredList"
+          :key="item.eid"
+          class="cell felx flex-row justify-between flex-nowrap"
+          @click="showDetail(item.eid)"
+        >
+          <div class="truncate w-2/3 text-left">
+            {{ item.user_description }}
+          </div>
+          <div>
+            {{ statusToText[item.status + 1] }}
+          </div>
+        </button>
+      </div>
     </div>
-    <div class="overflow-hidden w-full">
+    <div class="w-full">
       <router-view> </router-view>
     </div>
   </div>
 </template>
-//TODO:search
 
 <script>
 import { getEvents } from "@/api/api";
+import { TabGroup, TabList, Tab } from "@headlessui/vue";
+
 export default {
   name: "Events",
-  components: {},
-  setup() {
-    return {};
+  components: {
+    TabGroup,
+    TabList,
+    Tab,
   },
+  setup() {},
   data() {
     return {
-      statusToText: ["取消", "待接受", "已接受", "待确认", "关闭"],
+      rid: "",
+      filterOptions: ["待接受", "我的"],
+      statusToText: ["取消", "待接受", "已接受", "待审核", "关闭"],
       currentList: "全部",
       events: [],
       searchQuery: "",
+      checkOnly: false,
       eventsMatchingByID: false,
     };
   },
   computed: {
     fiilteredList() {
-      const rid = sessionStorage.getItem("rid");
-      console.log(rid);
       return this.events.filter((events) => {
         return (
-          ((this.eventsMatchingByID && events.rid === rid) ||
-            !this.eventsMatchingByID) &&
+          ((!this.checkOnly &&
+            this.eventsMatchingByID &&
+            events.rid === this.rid) ||
+            (!this.checkOnly &&
+              !this.eventsMatchingByID &&
+              events.status == 0) ||
+            (this.checkOnly && events.status == 2)) &&
           events.user_description.indexOf(this.searchQuery) >= 0
         );
       });
     },
   },
   watch: {
-    $route() {
-      // this.showAll();
-    },
+    $route() {},
   },
   async created() {
+    this.rid = sessionStorage.getItem("rid");
+    if (sessionStorage.getItem("user_role") == "admin") {
+      this.filterOptions = ["全部", "我的", "审核"];
+      console.log(this.filterOptions);
+    }
     await getEvents().then((res) => (this.events = res.data));
-    this.showAll();
   },
   methods: {
     showDetail(e) {
       console.log(e);
       this.$router.push("/Events/" + e);
     },
-    showAll() {
+    filterHandler(e) {
+      this.checkOnly = false;
       this.eventsMatchingByID = false;
-      this.currentList = "全部";
-    },
-    showMine() {
-      this.eventsMatchingByID = true;
-      this.currentList = "我的";
+      if (e == "全部") {
+        this.eventsMatchingByID = false;
+      } else if (e == "我的") {
+        this.eventsMatchingByID = true;
+      } else if (e == "审核") {
+        this.checkOnly = true;
+      }
     },
   },
 };

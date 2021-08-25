@@ -13,3 +13,9 @@ export async function acceptEvents(eid) {
 export async function login(account) {
   return await axiosApi("/login", account, "post");
 }
+// ((this.eventsMatchingByID && events.rid === this.rid) ||
+// !this.eventsMatchingByID) &&
+// (!this.checkOnly ||
+// (this.checkOnly &&
+//   events.status == 2 &&
+//   events.rid !== this.rid)) &&
