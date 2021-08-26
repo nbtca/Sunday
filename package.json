@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.4.0",
+    "@heroicons/vue": "^1.0.4",
     "axios": "^0.21.1",
     "daisyui": "^1.13.2",
     "vue": "^3.0.5",

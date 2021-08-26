@@ -58,7 +58,7 @@
         </dl>
       </div>
     </div>
-    <div class="w-full mb-20 px-20 border">
+    <div class="w-full mb-20 px-20">
       <div>
         <button
           v-if="detail.status == 0"
@@ -96,19 +96,27 @@
         </button>
       </div>
     </div>
+    <Dialog ref="acceptDialog">
+      <!-- <template #body class="h-96">123</template> -->
+    </Dialog>
   </div>
 </template>
 //TODO:display repair_description
 <script>
+import Dialog from "@/components/Dialog/Dialog.vue";
 import axiosApi from "../../axios/AxiosConfig";
 import { getEvents, acceptEvents } from "../../api/api";
 export default {
   name: "EventsDetail",
+  components: {
+    Dialog,
+  },
   data() {
     return {
       role: "",
       rid: "",
       eid: "",
+      promise: () => {},
       statusToText: ["取消", "待接受", "已接受", "待确认", "关闭"],
       contactPreference: ["QQ", "微信", "电话/短信"],
       descriptionToSubmit: "",
@@ -121,7 +129,8 @@ export default {
       this.getdetail();
     },
   },
-  created() {
+  created() {},
+  mounted() {
     this.role = sessionStorage.getItem("user_role");
     this.rid = sessionStorage.getItem("rid");
     this.getdetail();
@@ -134,10 +143,13 @@ export default {
       console.log(this.detail);
     },
     acceptEvent() {
-      const that = this;
-      acceptEvents({ eid: this.eid }).then((response) => {
-        that.getdetail();
-      });
+      this.$refs.acceptDialog
+        .openModal()
+        .then(async () => {
+          await acceptEvents({ eid: this.eid });
+          await this.getdetail();
+        })
+        .catch(() => {});
     },
     dropEvent() {
       axiosApi("/events/drop", { eid: this.eid }, "post").then(() => {
@@ -145,9 +157,11 @@ export default {
       });
     },
     closeEvent(action) {
-      axiosApi("/events/close", { accept: action, eid: this.eid },"post").then(() => {
-        this.getdetail();
-      });
+      axiosApi("/events/close", { accept: action, eid: this.eid }, "post").then(
+        () => {
+          this.getdetail();
+        }
+      );
     },
     submitEvnet() {
       axiosApi(

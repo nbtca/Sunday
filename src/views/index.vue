@@ -2,7 +2,7 @@
   <div class="flex flex-row" style="height: 100vh">
     <div
       class="p-2 bg-base-100 border-r h-full"
-      style="width: 17vw; min-width: 200px"
+      style="width: 17vw; min-width: 110px"
     >
       <Menu></Menu>
     </div>

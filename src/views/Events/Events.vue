@@ -113,13 +113,11 @@ export default {
     this.rid = sessionStorage.getItem("rid");
     if (sessionStorage.getItem("user_role") == "admin") {
       this.filterOptions = ["全部", "我的", "审核"];
-      console.log(this.filterOptions);
     }
     await getEvents().then((res) => (this.events = res.data));
   },
   methods: {
     showDetail(e) {
-      console.log(e);
       this.$router.push("/Events/" + e);
     },
     filterHandler(e) {

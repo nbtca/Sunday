@@ -30,7 +30,6 @@
 </template>
 <script>
 import { login } from "../../api/api";
-// import radio from "../../components/radio.vue";
 // import crypto from "crypto";
 import { ref, computed } from "vue";
 export default {
@@ -53,13 +52,6 @@ export default {
       isIDValid: true,
       isPasswordValid: true,
     };
-  },
-  computed: {
-    // // 计算属性的 getter
-    // publishedBooksMessage() {
-    //   // `this` 指向 vm 实例
-    //   return this.author.books.length > 0 ? "Yes" : "No";
-    // },
   },
   methods: {
     login() {
