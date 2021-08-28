@@ -1,7 +1,8 @@
 <template>
   <div class="flex flex-col items-center p-10" style="height: 100vh">
-    <div id="login" class="flex flex-col items-center mt-52">
+    <div class="flex flex-col items-center mt-52">
       <form
+        @submit="login"
         class="flex flex-col items-center"
         style="width: 25vw; min-width: 300px"
       >
@@ -19,7 +20,7 @@
         />
         <button
           class="w-full btn bg-primary text-primaryContent"
-          type="btn"
+          type="submit"
           @click="login()"
         >
           login

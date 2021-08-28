@@ -1,18 +1,20 @@
 <template>
   <TransitionRoot appear :show="open" as="template">
-    <Dialog as="div" @close="closeModal">
+    <Dialog as="div" @close="closeModal('outter')">
       <div class="fixed inset-0 z-10 overflow-y-auto">
         <div class="min-h-screen px-4 text-center">
           <TransitionChild
             as="template"
-            enter="duration-300 ease-out"
+            enter="duration-300 ease-out "
             enter-from="opacity-0"
             enter-to="opacity-100"
-            leave="duration-200 ease-in"
-            leave-from="opacity-100"
+            leave="duration-200 ease-in "
+            leave-from="opacity-20"
             leave-to="opacity-0"
           >
-            <DialogOverlay class="fixed inset-0" />
+            <DialogOverlay
+              :class="['fixed inset-0', focus ? 'bg-black opacity-20' : '']"
+            />
           </TransitionChild>
 
           <span class="inline-block h-screen align-middle" aria-hidden="true">
@@ -31,56 +33,51 @@
             <div
               class="
                 inline-block
-                w-full
+                min-w-xs
                 max-w-md
                 p-6
                 align-middle
                 transition-all
                 transform
+                border border-gray-100
                 bg-white
                 shadow-xl
                 rounded-xl
               "
             >
-              <slot name="body">
+              <slot name="entire">
                 <DialogTitle
                   as="h3"
                   class="
-                    text-lg text-center
+                    text-xl text-center
                     font-medium
                     leading-6
-                    text-gray-900
                   "
                 >
                   {{ heading }}
                 </DialogTitle>
-                <div class="mt-2">
-                  <p class="textDescription text-center">
-                    {{ content }}
-                  </p>
+                <slot name="body">
+                  <div class="mt-2">
+                    <p class="textDescription text-center">
+                      {{ content }}
+                    </p>
+                  </div>
+                </slot>
+                <div class="mt-4 flex justify-center">
+                  <button
+                    v-for="btn in btnList"
+                    :key="btn.title"
+                    :class="[
+                      'btn mx-5 text-sm',
+                      'bg-' + btn.color,
+                      'text-' + btn.color + 'Content',
+                    ]"
+                    @click="emitValue(btn.value)"
+                  >
+                    {{ btn.title }}
+                  </button>
                 </div>
               </slot>
-              <div class="mt-4 flex justify-around mx-20">
-                <button
-                  v-for="btn in btnList"
-                  :key="btn.title"
-                  class="
-                    btn
-                    px-3
-                    py-2
-                    text-sm
-                    font-medium
-                    text-blue-900
-                    bg-blue-100
-                    focus-visible:ring-2
-                    focus-visible:ring-offset-2
-                    focus-visible:ring-blue-500
-                  "
-                  @click="emitValue(btn.value)"
-                >
-                  {{ btn.title }}
-                </button>
-              </div>
             </div>
           </TransitionChild>
         </div>
@@ -108,15 +105,15 @@ export default {
     DialogTitle,
   },
   props: {
-    heading: {
-      type: String,
-      default: "Payment successful",
-    },
-    content: {
-      type: String,
-      default:
-        "Your payment has been successfully submitted. We’ve sent your an email with all of the details of your order.",
-    },
+    // heading: {
+    //   type: String,
+    //   default: "Payment successful",
+    // },
+    // content: {
+    //   type: String,
+    //   default:
+    //     "Your payment has been successfully submitted. We’ve sent your an email with all of the details of your order.",
+    // },
     // btnList: {
     //   type: Array,
     //   default: () => [
@@ -124,6 +121,10 @@ export default {
     //     { title: "取消", value: "decline" },
     //   ],
     // },
+    focus: {
+      type: Boolean,
+      default: false,
+    },
     noDecline: {
       type: Boolean,
       default: false,
@@ -132,11 +133,14 @@ export default {
   data() {
     return {
       btnList: {
-        decline: { title: "取消", value: "decline" },
-        accept: { title: "确认", value: "accept" },
+        decline: { title: "取消", value: "decline", color: "warning" },
+        accept: { title: "确认", value: "accept", color: "primary" },
       },
       open: false,
       value: "",
+      heading: "Payment successful",
+      content:
+        "Your payment has been successfully submitted. We’ve sent your an email with all of the details of your order.",
     };
   },
   created() {
@@ -145,8 +149,10 @@ export default {
     }
   },
   methods: {
-    async openModal() {
+    async openModal(e) {
       this.open = true;
+      this.heading = e.heading;
+      this.content = e.content;
       this.value = "";
       return await new Promise((resolve, reject) => {
         this.$watch("open", () => {
@@ -158,8 +164,10 @@ export default {
         });
       });
     },
-    closeModal() {
-      this.open = false;
+    closeModal(location) {
+      if (!this.focus || location != "outter") {
+        this.open = false;
+      }
     },
     emitValue(e) {
       this.closeModal();

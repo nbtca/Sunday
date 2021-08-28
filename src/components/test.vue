@@ -1,52 +1,44 @@
 <template>
-  <div class="flex flex-col w-40">
-    <div>value: {{ open }}</div>
-    <button @click="change">changeValue</button>
-    <button @click="start">listen</button>
+  <div class="h-96 w-96 flex flex-col justify-center items-center w-full">
+    <form @submit="submit">
+      <InputBase
+        placeholder=""
+        subject="ID"
+        required
+        v-model:content="content"
+        :rules="[{ rule: /^[0-9]*$/, warning: 'number only' }]"
+      ></InputBase>
+      <button type="submit" class="btn bg-primary text-primaryContent">
+        123
+      </button>
+    </form>
+  </div>
+  <div>
+    {{ content }}
   </div>
 </template>
 
 <script>
+import InputBase from "@/components/Input/InputBase.vue";
 export default {
-  components: {},
+  components: {
+    InputBase,
+  },
   data() {
     return {
-      flag: false,
-      open: false,
+      content: "",
+      isFormVaild: true,
     };
   },
   watch() {},
   methods: {
-    async start() {
-      console.log("start");
-      this.open = true;
-      await new Promise((resolve) => {
-        const unwatch = this.$watch("open", (newVal) => {
-          resolve(newVal);
-        });
-      }).then((res) => {
-        console.log(res);
-      });
-      // await this.openModal;
+    submit() {
+      var pattern = /^[0-9]*$/;
+      let str = "123";
+      let r = new RegExp(pattern);
+      console.log(r.test(str));
+      console.log("submit");
     },
-    change() {
-      this.open = !this.open;
-    },
-    // async someAction() {
-    //   this.$store.someStoreValue = "NEW VALUE";
-    //   await new Promise((resolve) => {
-    //     if (this.flag) {
-    //       resolve();
-    //     } else {
-    //       const unwatch = this.$watch("open", (newVal) => {
-    //         if (newVal) {
-    //           unwatch();
-    //           resolve();
-    //         }
-    //       });
-    //     }
-    //   });
-    // },
   },
 };
 

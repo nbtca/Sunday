@@ -2,7 +2,7 @@
   <div class="flex">
     <div
       class="flex flex-col items-center border-r h-screen"
-      style="width: 24vw; min-width: 300px"
+      style="width: 24vw; min-width: 250px"
     >
       <div
         class="
@@ -61,13 +61,13 @@
       </div>
     </div>
     <div class="w-full">
-      <router-view> </router-view>
+      <router-view @update="setEvents()"></router-view>
     </div>
   </div>
 </template>
 
 <script>
-import { getEvents } from "@/api/api";
+import { Event } from "@/api/api";
 import { TabGroup, TabList, Tab } from "@headlessui/vue";
 
 export default {
@@ -114,9 +114,12 @@ export default {
     if (sessionStorage.getItem("user_role") == "admin") {
       this.filterOptions = ["全部", "我的", "审核"];
     }
-    await getEvents().then((res) => (this.events = res.data));
+    this.setEvents();
   },
   methods: {
+    setEvents() {
+      Event.get().then((res) => (this.events = res.data));
+    },
     showDetail(e) {
       this.$router.push("/Events/" + e);
     },

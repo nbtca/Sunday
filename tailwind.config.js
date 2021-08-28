@@ -7,7 +7,8 @@ module.exports = {
         primaryContent: "#ffffff",
         base: "#F3F4F6", //grey-100
         baseContent: "#F3F4F6",
-        warning: "#DC2626",
+        warning: "#a40e26",
+        warningContent: "#ffffff",
       },
     },
   },
@@ -20,7 +21,7 @@ module.exports = {
     tableHead: "text-sm font-medium  flex flex-col justify-center",
     tableContent: "mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2",
     textHeading: "text-4xl",
-    textDescription:"text-sm text-gray-500"
+    textDescription: "text-sm text-gray-500 font-medium tracking-wider",
   },
-  plugins: [],
+  plugins: [require("windicss/plugin/forms")],
 };

@@ -52,6 +52,7 @@
               <div class="px-1 py-1">
                 <MenuItem v-slot="{ active }">
                   <button
+                    @click="addElement"
                     :class="[
                       active
                         ? 'text-primaryContent bg-primary'
@@ -90,169 +91,195 @@
         </Menu>
       </div>
     </div>
-    <div class="">
-      <div class="-my-2 overflow-x-auto">
-        <div class="py-2 align-middle inline-block min-w-full">
-          <div class="overflow-hidden sm:rounded-lg">
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-50 text-center">
+    <div class="py-2 align-middle inline-block min-w-full">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="text-center">
+          <tr>
+            <th
+              scope="col"
+              class="px-6 py-3 textDescription uppercase tracking-wider"
+            ></th>
+            <th
+              scope="col"
+              class="px-6 py-3 textDescription uppercase tracking-wider"
+            >
+              联系方式
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 textDescription uppercase tracking-wider"
+            >
+              Status
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 textDescription uppercase tracking-wider"
+            >
+              身份
+            </th>
+            <th scope="col" class="px-6 py-3">
+              <span class="sr-only">Edit</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr v-for="element in elementList" :key="element.email">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <div
+                  class="
+                    relative
+                    flex-shrink-0
+                    h-14
+                    w-14
+                    rounded-full
+                    border
+                    overflow-hidden
+                  "
+                >
+                  <img
+                    v-if="element.ravatar"
+                    class="absolute object-fill"
+                    :src="element.ravatar"
+                    alt=""
+                  />
+                  <UserIcon
+                    v-if="!element.ravatar"
+                    class="object-fill p-1 bg-gray-200"
+                  />
+                </div>
+                <div class="ml-4">
+                  <div class="text-lg text-left font-medium text-gray-900">
+                    {{ element.ralias }}
+                  </div>
+                  <div class=" text-gray-500">
+                    {{ element.rid }}
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <table class="w-full">
                 <tr>
-                  <th
-                    scope="col"
-                    class="
-                      px-6
-                      py-3
-                      text-xs
-                      font-medium
-                      text-gray-500
-                      uppercase
-                      tracking-wider
-                    "
-                  ></th>
-                  <th
-                    scope="col"
-                    class="
-                      px-6
-                      py-3
-                      text-xs
-                      font-medium
-                      text-gray-500
-                      uppercase
-                      tracking-wider
-                    "
-                  >
-                    联系方式
-                  </th>
-                  <th
-                    scope="col"
-                    class="
-                      px-6
-                      py-3
-                      text-xs
-                      font-medium
-                      text-gray-500
-                      uppercase
-                      tracking-wider
-                    "
-                  >
-                    Status
-                  </th>
-                  <th
-                    scope="col"
-                    class="
-                      px-6
-                      py-3
-                      text-xs
-                      font-medium
-                      text-gray-500
-                      uppercase
-                      tracking-wider
-                    "
-                  >
-                    身份
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    <span class="sr-only">Edit</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="element in elementList" :key="element.email">
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex items-center">
-                      <div class="flex-shrink-0 h-10 w-10">
-                        <img
-                          class="h-10 w-10 rounded-full"
-                          :src="element.ravatar"
-                          alt=""
-                        />
-                      </div>
-                      <div class="ml-4">
-                        <div class="text-sm font-medium text-gray-900">
-                          {{ element.ralias }}
-                        </div>
-                        <div class="text-sm text-gray-500">
-                          {{ element.rid }}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-sm whitespace-nowrap">
-                    <table>
-                      <tr>
-                        <td class="w-20">QQ</td>
-                        <td>
-                          {{ element.rqq }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>手机</td>
-                        <td>
-                          {{ element.rphone }}
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <span
-                      class="
-                        px-2
-                        inline-flex
-                        text-xs
-                        leading-5
-                        font-semibold
-                        rounded-full
-                        bg-green-100
-                        text-green-800
-                      "
-                    >
-                      Active
-                    </span>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span
-                      class="
-                        px-2
-                        inline-flex
-                        text-xs
-                        leading-5
-                        font-semibold
-                        rounded-full
-                        bg-green-100
-                        text-green-800
-                      "
-                    >
-                      Active
-                    </span>
-                    {{ element.role }}
-                  </td>
-                  <td
-                    class="
-                      px-6
-                      py-4
-                      whitespace-nowrap
-                      text-right text-sm
-                      font-medium
-                    "
-                  >
-                    <a href="#" class="text-indigo-600 hover:text-indigo-900"
-                      >Edit</a
-                    >
+                  <td class="w-20">QQ</td>
+                  <td class="text-left">
+                    {{ element.rqq }}
                   </td>
                 </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+                <tr>
+                  <td>手机</td>
+                  <td class="text-left">
+                    {{ element.rphone }}
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span
+                class="
+                  px-2
+                  inline-flex
+                  text-xs
+                  leading-5
+                  font-semibold
+                  rounded-full
+                  bg-green-100
+                  text-green-800
+                "
+              >
+                Active
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <span
+                class="
+                  px-2
+                  inline-flex
+                  text-xs
+                  leading-5
+                  font-semibold
+                  rounded-full
+                  bg-green-100
+                  text-green-800
+                "
+              >
+                Active
+              </span>
+              {{ element.role }}
+            </td>
+            <td
+              class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+            >
+              <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+    <Dialog focus ref="Dialog">
+      <template #entire>
+        <div class="text-2xl">添加成员</div>
+        <form @submit="submit" @close="$refs.Dialog.closeModal()" class="mt-5">
+          <div class="grid gap-3">
+            <InputBase
+              placeholder=""
+              hint="学号"
+              required
+              subject="ID"
+              v-model:content="newElement.rid"
+              :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]"
+            />
+            <InputBase
+              placeholder=""
+              subject="姓名"
+              v-model:content="newElement.name"
+              :rules="[{ rule: /^[\u4e00-\u9fa5]{2,4}$/, warning: '格式错误' }]"
+            />
+            <InputBase
+              placeholder=""
+              subject="班级"
+              hint="示例: 计算机196"
+              v-model:content="newElement.class"
+              :rules="[
+                {
+                  rule: /^([\u4e00-\u9fa5]{2,10})(\d{3})$/,
+                  warning: '格式错误',
+                },
+              ]"
+            />
+          </div>
+          <div class="mt-4 flex justify-center">
+            <button
+              class="btn bg-warning text-warningContent mx-5 text-sm"
+              type="close"
+              @click="$refs.Dialog.closeModal()"
+            >
+              取消
+            </button>
+            <button
+              class="btn bg-primary text-primaryContent mx-5 text-sm"
+              type="submit"
+            >
+              确认
+            </button>
+          </div>
+        </form>
+      </template>
+    </Dialog>
   </div>
 </template>
 
 <script>
-import axiosApi from "../../axios/AxiosConfig";
+import { Element } from "@/api/api";
+import Dialog from "@/components/Dialog/Dialog.vue";
+import InputBase from "@/components/Input/InputBase.vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
-import { UploadIcon, PlusIcon, UserAddIcon } from "@heroicons/vue/outline";
+import {
+  UserIcon,
+  UploadIcon,
+  PlusIcon,
+  UserAddIcon,
+} from "@heroicons/vue/outline";
 export default {
   name: "ElementManage",
   setup() {},
@@ -264,21 +291,58 @@ export default {
     PlusIcon,
     UserAddIcon,
     UploadIcon,
+    UserIcon,
+    Dialog,
+    InputBase,
   },
   data() {
     return {
+      newElement: {
+        rid: {},
+        name: {},
+        class: {},
+      },
       elementList: [],
     };
   },
+  computed: {
+    isNewElementValid() {
+      let ans = {};
+      for (let item of Object.keys(this.newElement)) {
+        if (this.newElement[item].isVaild == false) {
+          ans = false;
+          break;
+        } else {
+          ans[item] = this.newElement[item].value;
+        }
+      }
+      return ans;
+    },
+  },
   async created() {
-    await this.getElement();
+    await this.setElement();
   },
   methods: {
-    async getElement() {
-      await axiosApi("/elements", {}, "get").then((response) => {
-        console.log(response.data);
-        this.elementList = response.data;
+    async submit() {
+      let tmp = this.isNewElementValid;
+      console.log(tmp);
+      if (tmp) {
+        await Element.create(tmp).then(async (res) => {
+          this.$refs.Dialog.closeModal();
+          // await this.setElement();
+        });
+      }
+    },
+    async setElement() {
+      await Element.get().then((res) => {
+        console.log(res.data);
+        this.elementList = res.data;
       });
+    },
+    addElement() {
+      this.$refs.Dialog.openModal()
+        .then(async () => {})
+        .catch(() => {});
     },
   },
 };

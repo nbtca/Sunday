@@ -1,7 +1,8 @@
 # todo
-+ [ ] 添加dialog
-+ [ ] API管理
-+ [ ] 添加成员(手动)
++ [x] 添加dialog
++ [x] API管理
++ [x] 添加成员(手动)
+  + id
 + [ ] 个人信息完善页
 + [ ] getElement返回身份
 + [ ] Menu item从router获取

@@ -84,19 +84,22 @@
           </button>
         </div>
       </div>
-      <div v-if="detail.status == 2 && role == 'admin'">
-        <button class="btn w-20 mx-4 bg-warning" @click="closeEvent(0)">
+      <div
+        v-if="detail.status == 2 && role == 'admin'"
+        class="flex justify-center flex-nowrap"
+      >
+        <button class="btn w-20 mx-4 bg-warning" @click="rejectEvent()">
           退回
         </button>
         <button
           class="btn w-20 mx-4 bg-primary text-primaryContent"
-          @click="closeEvent(1)"
+          @click="closeEvent()"
         >
           通过
         </button>
       </div>
     </div>
-    <Dialog ref="acceptDialog">
+    <Dialog ref="Dialog">
       <!-- <template #body class="h-96">123</template> -->
     </Dialog>
   </div>
@@ -104,8 +107,7 @@
 //TODO:display repair_description
 <script>
 import Dialog from "@/components/Dialog/Dialog.vue";
-import axiosApi from "../../axios/AxiosConfig";
-import { getEvents, acceptEvents } from "../../api/api";
+import { Event } from "@/api/api";
 export default {
   name: "EventsDetail",
   components: {
@@ -126,51 +128,85 @@ export default {
   watch: {
     $route() {
       this.eid = this.$route.params.eid;
-      this.getdetail();
+      this.setDetail();
     },
   },
   created() {},
   mounted() {
     this.role = sessionStorage.getItem("user_role");
     this.rid = sessionStorage.getItem("rid");
-    this.getdetail();
+    this.eid = this.$route.params.eid;
+    this.setDetail();
   },
   methods: {
-    async getdetail() {
-      await getEvents(this.eid).then((response) => {
-        this.detail = response.data;
+    async setDetail() {
+      await Event.get(this.eid).then((res) => {
+        this.detail = res.data;
       });
       console.log(this.detail);
     },
     acceptEvent() {
-      this.$refs.acceptDialog
-        .openModal()
+      this.$refs.Dialog.openModal({
+        heading: "确认接受事件",
+        content: "",
+      })
         .then(async () => {
-          await acceptEvents({ eid: this.eid });
-          await this.getdetail();
+          await Event.accept({ eid: this.eid });
+          await this.setDetail();
+          this.$emit("update");
         })
         .catch(() => {});
     },
     dropEvent() {
-      axiosApi("/events/drop", { eid: this.eid }, "post").then(() => {
-        this.getdetail();
-      });
+      this.$refs.Dialog.openModal({
+        heading: "确认放弃事件",
+        content: "",
+      })
+        .then(async () => {
+          await Event.drop({ eid: this.eid });
+          await this.setDetail();
+          this.$emit("update");
+        })
+        .catch(() => {});
     },
-    closeEvent(action) {
-      axiosApi("/events/close", { accept: action, eid: this.eid }, "post").then(
-        () => {
-          this.getdetail();
-        }
-      );
+    closeEvent() {
+      this.$refs.Dialog.openModal({
+        heading: "确认关闭事件",
+        content: "",
+      })
+        .then(async () => {
+          await Event.close({ accept: 1, eid: this.eid });
+          await this.setDetail();
+          this.$emit("update");
+        })
+        .catch(() => {});
+    },
+    rejectEvent() {
+      this.$refs.Dialog.openModal({
+        heading: "确认退回事件",
+        content: "",
+      })
+        .then(async () => {
+          await Event.close({ accept: 0, eid: this.eid });
+          await this.setDetail();
+          this.$emit("update");
+        })
+        .catch(() => {});
     },
     submitEvnet() {
-      axiosApi(
-        "/events/submit",
-        { eid: this.eid, description: this.descriptionToSubmit },
-        "post"
-      ).then(() => {
-        this.getdetail();
-      });
+      this.$refs.Dialog.openModal({
+        heading: "确认提交事件",
+        content: "",
+      })
+        .then(async () => {
+          await Event.submit({
+            eid: this.eid,
+            description: this.descriptionToSubmit,
+          });
+          await this.setDetail();
+          this.$emit("update");
+        })
+        .catch(() => {});
     },
   },
 };
