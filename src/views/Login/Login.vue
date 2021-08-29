@@ -1,97 +1,100 @@
 <template>
-  <div class="flex flex-col items-center p-10" style="height: 100vh">
-    <div class="flex flex-col items-center mt-52">
+  <div class="flex flex-col items-center" style="height: 100vh">
+    <div class="flex flex-col items-center mt-20 md:mt-28">
       <form
         @submit="login"
-        class="flex flex-col items-center"
-        style="width: 25vw; min-width: 300px"
+        class="grid gap-4 place-items-center"
+        style="width: 17vw; min-width: 300px"
       >
-        <input
-          v-model="id"
-          class="w-full textInput"
-          type="text"
-          placeholder="id"
+        <div class="" style="width: 15vw; min-width: 250px">
+          <img src="../../assets/logo.png" alt="" />
+        </div>
+        <InputBase
+          placeholder="ID"
+          hint="学号"
+          required
+          :warn="isIDValid"
+          class="w-full"
+          v-model:content="account.id"
+          :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]"
         />
-        <input
-          v-model="password"
-          class="w-full textInput mt-5"
-          type="password"
-          placeholder="password"
+        <InputBase
+          placeholder="密码"
+          required
+          :warn="isPasswordValid"
+          class="w-full"
+          v-model:content="account.password"
         />
         <button
           class="w-full btn bg-primary text-primaryContent"
           type="submit"
           @click="login()"
         >
-          login
+          登入
         </button>
       </form>
     </div>
   </div>
 </template>
 <script>
-import { login } from "../../api/api";
+import { Account } from "@/api/api";
+import InputBase from "@/components/Input/InputBase.vue";
+import isVaild from "@/Utils/isVaild";
 // import crypto from "crypto";
-import { ref, computed } from "vue";
 export default {
   name: "Login",
-  setup() {
-    const model = ref("");
-    return {
-      model,
-      isValid: computed(() => model.value.length <= 3),
-    };
-  },
-  components: {
-    // radio
-  },
+  setup() {},
+  components: { InputBase },
   data() {
     return {
+      account: {
+        id: {},
+        password: {},
+      },
       isPwd: true,
-      id: "",
-      password: "",
-      isIDValid: true,
-      isPasswordValid: true,
+      isIDValid: "",
+      isPasswordValid: "",
     };
   },
   methods: {
     login() {
       var that = this;
-      // var hashedPassword = null;
-      // if (this.password !== "") {
-      //   const hash = crypto.createHash("md5");
-      //   hash.update(this.password);
-      //   hashedPassword = hash.digest("hex");
-      // }
-      login({
-        id: this.id,
-        password: this.password,
-      })
-        .then(function (response) {
-          console.log(response);
-          const resultCode = response.resultCode;
-          if (resultCode === 0) {
-            const token = response.data.token;
-            console.log(token);
-            sessionStorage.setItem("access_token", token);
-            sessionStorage.setItem("user_role", response.data.role);
-            sessionStorage.setItem("alias", response.data.alias);
-            sessionStorage.setItem("rid", response.data.rid);
-            sessionStorage.setItem("avatar", response.data.avatar);
-            if (response.data.isPasswordEmpty) {
-              that.$router.push("/register");
-            } else {
-              that.$router.push("/");
+      let account = isVaild(this.account);
+      if (account != false) {
+        // var hashedPassword = null;
+        // if (account.password !== "") {
+        //   const hash = crypto.createHash("md5");
+        //   hash.update(account.password);
+        //   hashedPassword = hash.digest("hex");
+        // }
+        Account.login(account)
+          .then((res) => {
+            console.log(res);
+            const resultCode = res.resultCode;
+            if (resultCode === 0) {
+              const token = res.data.token;
+              console.log(token);
+              sessionStorage.setItem("access_token", token);
+              sessionStorage.setItem("user_role", res.data.role);
+              sessionStorage.setItem("alias", res.data.alias);
+              sessionStorage.setItem("rid", res.data.rid);
+              sessionStorage.setItem("avatar", res.data.avatar);
+              if (res.data.isPasswordEmpty) {
+                that.$router.push("/register");
+              } else {
+                that.$router.push("/");
+              }
+            } else if (resultCode === 101) {
+              that.isIDValid = "账号不存在";
+              console.log(that.isIDValid);
+            } else if (resultCode === 102) {
+              that.isPasswordValid = "密码错误";
             }
-          } else if (resultCode === 101) {
-            that.isIDValid = false;
-          } else if (resultCode === 102) {
-            that.isPasswordValid = false;
-          }
-        })
-        .catch(function (error) {
-          console.log(error.response);
-        });
+          })
+          .catch(function (error) {
+            console.log(error.res);
+          });
+      }
     },
   },
 };

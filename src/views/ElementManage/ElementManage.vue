@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex justify-between px-4 py-5">
+    <div class="flex justify-between w-full px-8 pt-8 pb-2">
       <div class="text-4xl">成员管理</div>
       <div>
         <Menu as="div" class="text-left z-50">
@@ -149,10 +149,17 @@
                   />
                 </div>
                 <div class="ml-4">
-                  <div class="text-lg text-left font-medium text-gray-900">
+                  <div
+                    class="
+                      text-lg text-left
+                      font-medium
+                      tracking-wider
+                      text-gray-900
+                    "
+                  >
                     {{ element.ralias }}
                   </div>
-                  <div class=" text-gray-500">
+                  <div class="text-gray-500">
                     {{ element.rid }}
                   </div>
                 </div>
@@ -187,7 +194,7 @@
                   text-green-800
                 "
               >
-                Active
+                {{ element.isActivated }}
               </span>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -329,7 +336,7 @@ export default {
       if (tmp) {
         await Element.create(tmp).then(async (res) => {
           this.$refs.Dialog.closeModal();
-          // await this.setElement();
+          await this.setElement();
         });
       }
     },

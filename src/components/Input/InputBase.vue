@@ -14,7 +14,7 @@
       :placeholder="placeholder"
       v-model.lazy="input"
     />
-    <div class="h-5 w-full">
+    <div class="h-5 w-full mt-0.5">
       <div v-if="warning == ''" class="text-left mx-2 textDescription">
         {{ hint }}
       </div>
@@ -34,12 +34,19 @@ export default {
       default: "text",
     },
     subject: String,
-    rules: Array,
+    rules: {
+      type: Array,
+      default: [],
+    },
     required: {
       type: Boolean,
       default: false,
     },
     hint: {
+      type: String,
+      default: "",
+    },
+    warn: {
       type: String,
       default: "",
     },
@@ -62,7 +69,16 @@ export default {
         : false;
     },
   },
+  mounted() {
+    this.$emit("update:content", {
+      value: this.isVaild ? this.input : null,
+      isVaild: this.isVaild,
+    });
+  },
   watch: {
+    warn() {
+      this.warning = this.warn;
+    },
     input() {
       let tmp = "";
       for (let item of this.rules) {

@@ -29,24 +29,11 @@
         {{ item.name }}
       </button>
     </div>
-    <div class="flex flex-col items-center h-56 mb-15">
-      <div class="flex overflow-hidden">
-        <img
-          class="
-            object-cover
-            h-20
-            w-20
-            mb-4
-            md:(h-28
-            w-28)
-            rounded-full
-            ring-2 ring-white
-          "
-          :src="avatar"
-          alt=""
-        />
+    <div class="flex flex-col items-center mb-4">
+      <div class="overflow-hidden h-20 w-20 rounded-full md:(h-28 w-28)">
+        <img class="" :src="avatar" alt="" />
       </div>
-      <div class="relative ">
+      <div class="relative">
         <div class="text-2xl">{{ alias }}</div>
         <div class="textDescription text-left">
           {{ rid }}
@@ -70,9 +57,11 @@
           管理员
         </span>
       </div>
-      <!-- <div>event count</div> -->
-      <!-- <div><button>账号设置</button></div>
-      <button class="btn   bg-warning" @click="logout">登出</button> -->
+      <div>event count</div>
+      <div><button>账号设置</button></div>
+      <button class="btn bg-warning text-warningContent" @click="logout">
+        登出
+      </button>
     </div>
   </div>
 </template>
