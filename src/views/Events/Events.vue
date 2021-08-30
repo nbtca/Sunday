@@ -1,23 +1,32 @@
 <template>
   <div class="flex">
     <div
-      class="flex flex-col items-center border-r h-screen"
+      class="flex flex-col items-center border-r h-full"
       style="width: 24vw; min-width: 250px"
     >
       <div
         class="
-          sticky
-          top-0
           flex flex-col
+          order-last
+          self-end
+          sm:order-first
           items-center
           w-full
-          bg-gray-100
+          bg-base-emphasize
           border-b
         "
       >
         <input
           type="text"
-          class="textInput h-8 w-full my-0.5 order-last"
+          class="
+            border border-base-standout
+            rounded
+            shadow-inner
+            h-8
+            my-0.5
+            order-last
+          "
+          style="width: 99%"
           v-model="searchQuery"
         />
         <TabGroup class="w-full">
@@ -30,9 +39,22 @@
             >
               <button
                 @click="filterHandler(item)"
+                class="
+                  w-full
+                  py-2.5
+                  text-sm
+                  leading-5
+                  font-medium
+                  text-blue-700
+                  rounded-lg
+                  focus:(outline-none
+                  ring-2)
+                  ring-offset-2
+                  ring-offset-blue-400
+                  ring-white
+                  ring-opacity-60
+                "
                 :class="[
-                  'w-full py-2.5 text-sm leading-5 font-medium text-blue-700 rounded-lg',
-                  'focus:(outline-none ring-2) ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60',
                   selected
                     ? 'bg-white shadow'
                     : 'text-gray-400 hover:bg-gray-50/[0.12] hover:text-blue-400',
@@ -44,7 +66,7 @@
           </TabList>
         </TabGroup>
       </div>
-      <div class="px-2 overflow-auto w-full">
+      <div class="px-2 overflow-auto w-full h-screen">
         <button
           v-for="item in fiilteredList"
           :key="item.eid"

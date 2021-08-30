@@ -1,9 +1,6 @@
 <template>
-  <div class="flex flex-row" style="height: 100vh">
-    <div
-      class="p-2 bg-base-100 border-r h-full"
-      style="width: 17vw; min-width: 110px"
-    >
+  <div class="flex flex-col-reverse	 sm:(flex flex-row) overflow-hidden" style="height: 100vh">
+    <div class=" sm:(w-[17vw] mix-w-[17vw] bg-current)">
       <Menu></Menu>
     </div>
     <div class="w-full">
@@ -23,7 +20,6 @@ export default {
   components: {
     Menu,
   },
-
 };
 </script>
 

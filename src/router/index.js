@@ -1,43 +1,8 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-
+import constantRoutes from "./constantRoutes";
+import asyncRoutes from "./asyncRoutes";
 // TODO: router
-const routes = [
-  {
-    path: "/login",
-    name: "Login",
-    component: () => import("@/views/Login/Login.vue"),
-  },
-  {
-    path: "/test",
-    name: "test",
-    component: () => import("@/components/test.vue"),
-  },
-  {
-    path: "/",
-    name: "Index",
-    component: () => import("@/views/index.vue"),
-    children: [
-      {
-        path: "/Events",
-        name: "Events",
-        component: () => import("@/views/Events/Events.vue"),
-        children: [
-          {
-            path: ":eid",
-            name: "EventsDetail",
-            component: () => import("@/views/Events/EventsDetail.vue"),
-          },
-        ],
-      },
-      {
-        path: "/ElementManage",
-        name: "ElementManage",
-        component: () => import("@/views/ElementManage/ElementManage.vue"),
-      },
-    ],
-  },
-];
-
+const routes = constantRoutes.concat(asyncRoutes);
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
@@ -48,8 +13,9 @@ router.beforeEach((to, from, next) => {
     if (token) {
       if (to.path === "/login") {
         next({ path: "/" });
+      } else {
+        next();
       }
-      next();
     } else {
       if (to.path === "/login") {
         next();
@@ -58,7 +24,7 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    next({ path: "/NoFound404" });
+    next({ path: "/NotFound" });
   }
 });
 // function constructionRouters(router, t) {

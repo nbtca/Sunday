@@ -1,30 +1,30 @@
 <template>
-  <div class="flex flex-col justify-between h-full">
-    <div class="">
+  <div class="flex flex-col justify-between h-screen">
+    <div>
       <div class="flex items-center justify-between px-4 py-5 sm:px-10">
         <div class="text-left">
           <h3 class="pt-4 text-4xl font-medium text-gray-900">事件详情</h3>
-          <p class="ml-0.5 text-sm text-gray-500">Eid:{{ eid }}</p>
+          <p class="ml-0.5 textDescription">Eid:{{ eid }}</p>
         </div>
-        <div>{{ statusToText[detail.status + 1] }}</div>
+        <div class="textSubHeading">{{ statusToText[detail.status + 1] }}</div>
       </div>
       <div class="border-gray-200">
         <dl>
-          <div class="bg-gray-50 tableCell">
-            <dt class="text-gray-500 tableHead">型号</dt>
-            <dd class="tableContent">
+          <div class="bg-gray-50 infoCell">
+            <dt class="text-gray-500 infoHead">型号</dt>
+            <dd class="infoContent">
               {{ detail.model }}
             </dd>
           </div>
-          <div class="bg-white tableCell">
-            <dt class="text-gray-500 tableHead">问题描述</dt>
-            <dd class="tableContent">
+          <div class="bg-white infoCell">
+            <dt class="text-gray-500 infoHead">问题描述</dt>
+            <dd class="infoContent">
               {{ detail.user_description }}
             </dd>
           </div>
-          <div class="bg-gray-50 tableCell">
-            <dt class="text-gray-500 tableHead">联系方式</dt>
-            <dd class="tableContent flex justify-center">
+          <div class="bg-gray-50 infoCell">
+            <dt class="text-gray-500 infoHead">联系方式</dt>
+            <dd class="infoContent flex justify-center">
               <table>
                 <tr>
                   <td class="w-20">QQ</td>
@@ -47,9 +47,9 @@
               </table>
             </dd>
           </div>
-          <div class="bg-white tableCell">
-            <dt class="text-gray-500 tableHead">维修历史</dt>
-            <dd class="tableContent">
+          <div class="bg-white infoCell">
+            <dt class="text-gray-500 infoHead">维修历史</dt>
+            <dd class="infoContent">
               <div v-for="item in detail.repair_description" :key="item.time">
                 {{ item.description }}
               </div>
@@ -99,9 +99,7 @@
         </button>
       </div>
     </div>
-    <Dialog ref="Dialog">
-      <!-- <template #body class="h-96">123</template> -->
-    </Dialog>
+    <Dialog ref="Dialog"> </Dialog>
   </div>
 </template>
 //TODO:display repair_description

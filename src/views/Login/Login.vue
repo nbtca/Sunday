@@ -25,11 +25,7 @@
           class="w-full"
           v-model:content="account.password"
         />
-        <button
-          class="w-full btn bg-primary text-primaryContent"
-          type="submit"
-          @click="login()"
-        >
+        <button class="w-full btn bg-primary text-primaryContent" type="submit">
           登入
         </button>
       </form>
@@ -57,7 +53,8 @@ export default {
     };
   },
   methods: {
-    login() {
+    async login() {
+      console.log("123");
       var that = this;
       let account = isVaild(this.account);
       if (account != false) {
@@ -67,7 +64,7 @@ export default {
         //   hash.update(account.password);
         //   hashedPassword = hash.digest("hex");
         // }
-        Account.login(account)
+        await Account.login(account)
           .then((res) => {
             console.log(res);
             const resultCode = res.resultCode;

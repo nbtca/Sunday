@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="flex justify-between w-full px-8 pt-8 pb-2">
-      <div class="text-4xl">成员管理</div>
+    <div class="flex justify-between w-full p-8 pb-2">
+      <div class="textHeading">成员管理</div>
       <div>
-        <Menu as="div" class="text-left z-50">
+        <Menu as="div" class="z-50">
           <div>
             <MenuButton
               class="
@@ -14,18 +14,12 @@
                 w-30
                 text-primaryContent
                 bg-primary
-                focus-visible:ring-2 focus-visible:(ring-white
-                ring-opacity-75)
               "
             >
-              <PlusIcon
-                class="w-5 h-5 mr-2 text-primaryContent"
-                aria-hidden="true"
-              />
+              <PlusIcon class="text-white w-5 h-5 mr-2" />
               <div>添加成员</div>
             </MenuButton>
           </div>
-
           <transition
             enter-active-class="transition duration-100 ease-out"
             enter-from-class="transform scale-95 opacity-0"
@@ -91,31 +85,25 @@
         </Menu>
       </div>
     </div>
-    <div class="py-2 align-middle inline-block min-w-full">
+    <div class="py-2 align-middle w-full">
       <table class="min-w-full divide-y divide-gray-200">
-        <thead class="text-center">
+        <thead class="">
           <tr>
             <th
               scope="col"
-              class="px-6 py-3 textDescription uppercase tracking-wider"
+              class="px-6 py-3 textDescription whitespace-nowrap"
             ></th>
-            <th
-              scope="col"
-              class="px-6 py-3 textDescription uppercase tracking-wider"
-            >
+            <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap">
               联系方式
             </th>
-            <th
-              scope="col"
-              class="px-6 py-3 textDescription uppercase tracking-wider"
-            >
-              Status
+            <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap">
+              完成事件数
             </th>
-            <th
-              scope="col"
-              class="px-6 py-3 textDescription uppercase tracking-wider"
-            >
-              身份
+            <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap">
+              状态
+            </th>
+            <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap">
+              创建日期
             </th>
             <th scope="col" class="px-6 py-3">
               <span class="sr-only">Edit</span>
@@ -124,10 +112,12 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
           <tr v-for="element in elementList" :key="element.email">
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td class="tableCell">
               <div class="flex items-center">
                 <div
                   class="
+                    hidden
+                    lg:block
                     relative
                     flex-shrink-0
                     h-14
@@ -145,79 +135,54 @@
                   />
                   <UserIcon
                     v-if="!element.ravatar"
-                    class="object-fill p-1 bg-gray-200"
+                    class="object-fill p-1 bg-base-standout"
                   />
                 </div>
-                <div class="ml-4">
-                  <div
-                    class="
-                      text-lg text-left
-                      font-medium
-                      tracking-wider
-                      text-gray-900
-                    "
-                  >
-                    {{ element.ralias }}
+                <div class="ml-4 flex flex-col items-start">
+                  <div class="inline-flex items-center">
+                    <div
+                      class="text-lg font-medium tracking-wider text-gray-900"
+                    >
+                      {{ element.ralias || "null" }}
+                    </div>
+                    <span
+                      v-if="element.role == 2"
+                      class="badge bg-green-100 text-green-800"
+                    >
+                      管理员
+                    </span>
                   </div>
-                  <div class="text-gray-500">
+                  <div class="textDescription">
                     {{ element.rid }}
                   </div>
                 </div>
               </div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td class="tableCell">
               <table class="w-full">
                 <tr>
                   <td class="w-20">QQ</td>
                   <td class="text-left">
-                    {{ element.rqq }}
+                    {{ element.rqq || "null" }}
                   </td>
                 </tr>
                 <tr>
                   <td>手机</td>
                   <td class="text-left">
-                    {{ element.rphone }}
+                    {{ element.rphone || "null" }}
                   </td>
                 </tr>
               </table>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <span
-                class="
-                  px-2
-                  inline-flex
-                  text-xs
-                  leading-5
-                  font-semibold
-                  rounded-full
-                  bg-green-100
-                  text-green-800
-                "
-              >
-                {{ element.isActivated }}
-              </span>
+            <td class="tableCell">
+              {{ element.event_count }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              <span
-                class="
-                  px-2
-                  inline-flex
-                  text-xs
-                  leading-5
-                  font-semibold
-                  rounded-full
-                  bg-green-100
-                  text-green-800
-                "
-              >
-                Active
-              </span>
-              {{ element.role }}
+            <td class="tableCell">{{ element.isActivated }}</td>
+            <td class="tableCell">
+              {{ element.gmt_modified }}
             </td>
-            <td
-              class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-            >
-              <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+            <td class="tableCell text-right text-sm font-medium">
+              <a href="#" class="textLink">Edit</a>
             </td>
           </tr>
         </tbody>
