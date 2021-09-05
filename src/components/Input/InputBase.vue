@@ -64,12 +64,15 @@ export default {
       return this.required ? this.subject + "*" : this.subject;
     },
     isVaild() {
-      return !this.warning && (this.input != "" || !this.required)
+      return !this.warning &&
+        this.warn == "" &&
+        (this.input != "" || !this.required)
         ? true
         : false;
     },
   },
   mounted() {
+    this.warning = this.warn;
     this.$emit("update:content", {
       value: this.isVaild ? this.input : null,
       isVaild: this.isVaild,
@@ -78,22 +81,26 @@ export default {
   watch: {
     warn() {
       this.warning = this.warn;
+      console.log(this.warning);
     },
     input() {
       let tmp = "";
-      for (let item of this.rules) {
-        if (!item.rule.test(this.input)) {
-          tmp = item.warning;
+      if (this.warn != "") {
+        this.waning = this.warn;
+      } else {
+        for (let item of this.rules) {
+          if (!item.rule.test(this.input)) {
+            tmp = item.warning;
+          }
+        }
+        if (!this.required && this.input == "") {
+          this.warning = "";
+        } else {
+          this.warning = tmp;
         }
       }
-      //   this.vaild = flag ? false : true;
-      if (!this.required && this.input == "") {
-        this.warning = "";
-      } else {
-        this.warning = tmp;
-      }
       this.$emit("update:content", {
-        value: this.isVaild ? this.input : null,
+        value: this.input,
         isVaild: this.isVaild,
       });
     },
