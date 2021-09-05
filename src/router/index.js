@@ -2,8 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import constantRoutes from "./constantRoutes";
 import asyncRoutes from "./asyncRoutes";
 // TODO: router
-const routes = constantRoutes.concat(asyncRoutes);
-const routes = [
+const routeTable = [
   {
     path: "/login",
     name: "Login",
@@ -41,9 +40,15 @@ const routes = [
         name: "ElementManage",
         component: () => import("@/views/ElementManage/ElementManage.vue"),
       },
+      {
+        path: "/Design",
+        name: "design",
+        component: () => import("@/views/Design/Design.vue"),
+      },
     ],
   },
 ];
+const routes = constantRoutes.concat(routeTable);
 
 const router = createRouter({
   history: createWebHashHistory(),

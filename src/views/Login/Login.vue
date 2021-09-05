@@ -76,11 +76,11 @@ export default {
               sessionStorage.setItem("alias", res.data.alias);
               sessionStorage.setItem("rid", res.data.rid);
               sessionStorage.setItem("avatar", res.data.avatar);
-              if (res.data.isPasswordEmpty) {
-                that.$router.push("/register");
-              } else {
-                that.$router.push("/");
-              }
+              // if (res.data.isPasswordEmpty) {
+              //   that.$router.push("/register");
+              // } else {
+              that.$router.push("/");
+              // }
             } else if (resultCode === 101) {
               that.isIDValid = "账号不存在";
               console.log(that.isIDValid);
