@@ -1,3 +1,0 @@
-# TODOs
-+ vue-cli
-+ tailwind

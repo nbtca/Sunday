@@ -2,7 +2,7 @@
   <div class="flex flex-col items-center" style="height: 100vh">
     <div class="flex flex-col items-center mt-20 md:mt-28">
       <form
-        @submit="login"
+        @submit.prevent="login"
         class="grid gap-4 place-items-center"
         style="width: 17vw; min-width: 300px"
       >

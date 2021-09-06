@@ -12,14 +12,10 @@
             leave-from="opacity-20"
             leave-to="opacity-0"
           >
-            <DialogOverlay
-              :class="['fixed inset-0', focus ? 'bg-black opacity-20' : '']"
-            />
+            <DialogOverlay :class="['fixed inset-0', focus ? 'bg-black opacity-20' : '']" />
           </TransitionChild>
 
-          <span class="inline-block h-screen align-middle" aria-hidden="true">
-            &#8203;
-          </span>
+          <span class="inline-block h-screen align-middle" aria-hidden="true"> &#8203; </span>
 
           <TransitionChild
             as="template"
@@ -46,32 +42,22 @@
               "
             >
               <slot name="entire">
-                <DialogTitle
-                  as="h3"
-                  class="
-                    text-xl text-center
-                    font-medium
-                    leading-6
-                  "
-                >
+                <DialogTitle as="h3" class="text-xl text-center font-semibold leading-6">
                   {{ heading }}
                 </DialogTitle>
                 <slot name="body">
-                  <div class="mt-2">
+                  <div class="mt-6">
                     <p class="textDescription text-center">
                       {{ content }}
                     </p>
                   </div>
                 </slot>
-                <div class="mt-4 flex justify-center">
+                <div class="mt-4 flex justify-center ">
                   <button
+                    class="btn text-sm w-20 mx-3 sm:mx-5"
                     v-for="btn in btnList"
                     :key="btn.title"
-                    :class="[
-                      'btn mx-5 text-sm',
-                      'bg-' + btn.color,
-                      'text-' + btn.color + 'Content',
-                    ]"
+                    :class="['bg-' + btn.color, 'text-' + btn.color + 'Content']"
                     @click="emitValue(btn.value)"
                   >
                     {{ btn.title }}
@@ -87,13 +73,7 @@
 </template>
 
 <script>
-import {
-  TransitionRoot,
-  TransitionChild,
-  Dialog,
-  DialogOverlay,
-  DialogTitle,
-} from "@headlessui/vue";
+import { TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle } from "@headlessui/vue";
 
 export default {
   name: "dialog",
@@ -139,8 +119,7 @@ export default {
       open: false,
       value: "",
       heading: "Payment successful",
-      content:
-        "Your payment has been successfully submitted. We’ve sent your an email with all of the details of your order.",
+      content: "Your payment has been successfully submitted. We’ve sent your an email with all of the details of your order.",
     };
   },
   created() {
