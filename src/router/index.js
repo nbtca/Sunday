@@ -9,7 +9,7 @@ const routeTable = [
     component: () => import("@/views/Login/Login.vue"),
   },
   {
-    path: "/LoginActivate",
+    path: "/activate",
     name: "LoginActivate",
     component: () => import("@/views/Login/LoginActivate.vue"),
   },

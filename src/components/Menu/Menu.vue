@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-between w-full sm:(bg-base-self flex-col h-full border-r p-2)">
     <div class="relative flex flex-col-reverse sm:block w-full">
-      <div class="h-15 p-2 md:(p-0 h-24) flex justify-between items-center z-50">
+      <div class="h-15 p-2 md:(p-0 h-24) flex justify-between items-center z-40">
         <div class="text-center text-3xl sm:(w-full) lg:text-4xl font-bold font-mono italic tracking-wide uppercase text-gray-900">
           sunday
         </div>
@@ -18,15 +18,17 @@
           sm:(hidden)
           absolute
           inset-x-0
-          z-40
+          z-30
           pb-12
           px-1.5
           pt-2
-          bg-bg-base-self
-          rounded-xl
+          bg-gradient-to-t
+          from-gray-100/50
+          via-gray-200/70
+          to-gray-200/90
+          rounded-t-xl
           border
-          opacity-95
-          backdrop-filter backdrop-blur-sm
+          backdrop-filter backdrop-blur-lg
         "
         enter="transition-opacity ease-out duration-150"
         enter-from="opacity-0"
@@ -36,7 +38,7 @@
         leave-to="opacity-0"
       >
         <div class="">
-          <div class="bg-white rounded-xl border shadow-sm border-gray-200 divide-y overflow-hidden">
+          <div class="bg-gray-50/90 rounded-xl shadow-sm divide-y divide-gray-400/30 overflow-hidden">
             <button
               v-for="item in menuitems"
               :key="item.name"
@@ -46,7 +48,7 @@
               {{ item.name }}
             </button>
           </div>
-          <div class="h-13 border bg-white p-1 my-1.5 rounded-xl shadow-sm flex items-center justify-between">
+          <div class="h-13 bg-gray-50/90 p-1 my-1.5 rounded-xl shadow-sm flex items-center justify-between">
             <div class="flex items-center">
               <div class="overflow-hidden rounded-lg h-11 w-11 block">
                 <img class="" :src="avatar" alt="" />
@@ -56,7 +58,7 @@
                   <div class="textSubHeading">{{ alias }}</div>
                   <span v-if="role == 'admin'" class="h-5 badge bg-green-100 text-green-800"> 管理员 </span>
                 </div>
-                <div class="textDescription text-left">
+                <div class="textDescription text-left leading-tight">
                   {{ rid }}
                 </div>
               </div>

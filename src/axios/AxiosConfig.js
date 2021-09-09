@@ -1,38 +1,38 @@
 import axios from "axios";
-// import qs from "qs";
+import qs from "qs";
 
 axios.defaults.baseURL = "api/"; //正式
 // axios.defaults.baseURL =
 //   "http://activitytest.hpl001.cn/crm_api/app/sinceOrder/"; //测试
 
-axios.defaults.headers.post["Content-Type"] =
-  "application/x-www-form-urlencoded;charset=UTF-8";
+axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8";
 axios.defaults.timeout = 10000;
 
 axios.interceptors.request.use(
-  (config) => {
+  config => {
+    console.log(config);
     const token = sessionStorage.getItem("access_token");
     config.headers.authorization = "bearer " + token;
-    // if (config.type) {
-    //   switch (config.type) {
-    //     case "FORM-DATA":
-    //       config.transformRequest = [
-    //         (data) => {
-    //           return "args=" + JSON.stringify(data);
-    //         },
-    //       ];
-    //       break;
-    //     case "FORM":
-    //       config.headers["Content-Type"] = "application/x-www-form-urlencoded";
-    //       config.data = qs.stringify(config.data);
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    // }
+    if (config.type) {
+      switch (config.type) {
+        case "FORM-DATA":
+          config.transformRequest = [
+            data => {
+              return "args=" + JSON.stringify(data);
+            },
+          ];
+          break;
+        case "FORM":
+          config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+          config.data = qs.stringify(config.data);
+          break;
+        default:
+          break;
+      }
+    }
     return config;
   },
-  (error) => {
+  error => {
     return Promise.reject(error);
   }
 );
@@ -110,22 +110,22 @@ export default function axiosApi(url, data, method) {
         url,
         params: data,
       })
-        .then((res) => {
+        .then(res => {
           resolve(res.data);
         })
-        .catch((err) => {
+        .catch(err => {
           reject(err);
         });
     } else {
       axios({
         method,
         url,
-        data,
+        data
       })
-        .then((res) => {
+        .then(res => {
           resolve(res.data);
         })
-        .catch((err) => {
+        .catch(err => {
           reject(err);
         });
     }

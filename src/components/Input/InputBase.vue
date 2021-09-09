@@ -1,6 +1,6 @@
 <template>
   <div class="select-none flex flex-col items-center">
-    <div v-if="subject" class="self-start mx-1 mb-1 text-lg">
+    <div v-if="subject" class="self-start mx-1 mb-1 font-semibold sm:text-lg">
       {{ isSubjectRequired }}
     </div>
     <input
@@ -64,11 +64,7 @@ export default {
       return this.required ? this.subject + "*" : this.subject;
     },
     isVaild() {
-      return !this.warning &&
-        this.warn == "" &&
-        (this.input != "" || !this.required)
-        ? true
-        : false;
+      return !this.warning && this.warn == "" && (this.input != "" || !this.required) ? true : false;
     },
   },
   mounted() {
@@ -81,6 +77,10 @@ export default {
   watch: {
     warn() {
       this.warning = this.warn;
+      this.$emit("update:content", {
+        value: this.input,
+        isVaild: this.isVaild,
+      });
       console.log(this.warning);
     },
     input() {
@@ -99,6 +99,7 @@ export default {
           this.warning = tmp;
         }
       }
+      console.log(this.isVaild);
       this.$emit("update:content", {
         value: this.input,
         isVaild: this.isVaild,

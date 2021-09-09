@@ -1,5 +1,5 @@
 import axiosApi from "../axios/AxiosConfig";
-
+import axios from "axios";
 const Event = {
   async get(eid) {
     if (eid) return await axiosApi("/events/" + eid, "get");
@@ -25,6 +25,12 @@ const Element = {
   },
   async create(element) {
     return await axiosApi("/elements", element, "post");
+  },
+  async update(element) {
+    return await axiosApi("/elements", element, "put");
+  },
+  async test(file) {
+    return axios.post()
   },
 };
 // export async function getEvents(eid) {

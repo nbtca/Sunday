@@ -65,7 +65,7 @@
         </div>
       </div>
       <div class="py-2 align-middle w-full">
-        <table class="min-w-full divide-y divide-gray-200">
+        <table class="w-full divide-y divide-gray-200">
           <thead class="">
             <tr>
               <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap"></th>
@@ -74,11 +74,11 @@
               <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap">状态</th>
               <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap">创建日期</th>
               <th scope="col" class="px-6 py-3">
-                <span class="sr-only">Edit</span>
+                <span>Edit</span>
               </th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody class="bg-white divide-y divide-gray-200 h-screen overflow-auto">
             <tr v-for="element in elementList" :key="element.email">
               <td class="tableCell">
                 <div class="flex items-center">
@@ -88,7 +88,7 @@
                   </div>
                   <div class="ml-4 flex flex-col items-start">
                     <div class="inline-flex items-center">
-                      <div class="text-lg font-medium tracking-wider text-gray-900">
+                      <div class="text-lg font-medium tracking-wider">
                         {{ element.ralias || "null" }}
                       </div>
                       <span v-if="element.role == 2" class="badge bg-green-100 text-green-800"> 管理员 </span>
@@ -130,7 +130,7 @@
         </table>
       </div>
     </div>
-    <div class=" sm:hidden">
+    <div class="sm:hidden">
       <div
         class="flex flex-col-reverse px-2 overflow-x-scroll"
         style="height: 100vh"
@@ -164,18 +164,23 @@
             </div>
           </div>
         </div>
-        <div class="py-12">123123</div>
+        <div class="py-14"></div>
       </div>
-      <div class="h-12 w-full px-1 pt-2 border-t">
-        <button class="btn bg-primary text-primaryContent mx-2 w-2/5">添加成员</button>
-        <button class="btn bg-green-500 mx-2 w-2/5">导入成员</button>
+      <div class="flex justify-center h-12 w-full px-1 pt-2 border-t">
+        <button class="btn bg-primary text-primaryContent align-middle mx-2 w-2/5" @click="addElement">
+          <PlusIcon class="text-white w-5 h-5 mr-2" />
+          <div>添加成员</div>
+        </button>
+        <button class="btn bg-green-500 mx-2 w-2/5">
+          <UploadIcon :active="active" class="w-5 h-5 text-gray-900" aria-hidden="true" />
+          <div>导入成员</div>
+        </button>
       </div>
     </div>
-    <Dialog focus ref="Dialog">
-      <template #entire>
-        <div class="text-2xl">添加成员</div>
-        <form @submit="submit" @close="$refs.Dialog.closeModal()" class="mt-5">
-          <div class="grid gap-3">
+    <Dialog  focus ref="Dialog">
+      <template #body>
+        <form @submit="submit" @close="$refs.Dialog.closeModal()" class="">
+          <div class="grid gap-1 sm:gap-3">
             <InputBase
               placeholder=""
               hint="学号"
@@ -284,7 +289,7 @@ export default {
       });
     },
     addElement() {
-      this.$refs.Dialog.openModal()
+      this.$refs.Dialog.openModal({ heading: "添加成员" })
         .then(async () => {})
         .catch(() => {});
     },

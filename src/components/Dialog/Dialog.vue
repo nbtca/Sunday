@@ -59,30 +59,42 @@
                     </div>
                   </slot>
                 </div>
-                <div class="">
-                  <!-- <div class="hidden sm:block flex flex-row pb-6">
-                    <button
-                      class=" btn font-medium mx-5 w-20"
-                      :class="['bg-' + btn.color, 'text-' + btn.color + 'Content']"
-                      v-for="btn in btnList"
-                      :key="btn.title"
-                      @click="emitValue(btn.value)"
-                    >
-                      {{ btn.title }}
-                    </button>
-                  </div> -->
-                  <div class="sm:hidden divide-y">
-                    <button
-                      v-for="btn in constructColor"
-                      :key="btn.title"
-                      class="h-11 w-full select-none font-medium hover:bg-gray-200 focus:(outline-none) transition duration-300 ease-in-out"
-                      :class="btn.textcolor"
-                      @click="emitValue(btn.value)"
-                    >
-                      {{ btn.title }}
-                    </button>
+                <slot name="action">
+                  <div class="">
+                    <div class="hidden sm:block flex flex-row pb-6">
+                      <button
+                        class="btn font-medium mx-5 w-20"
+                        :class="[btn.bgcolor, 'text-' + btn.color + 'Content']"
+                        v-for="btn in btnList"
+                        :key="btn.title"
+                        @click="emitValue(btn.value)"
+                      >
+                        {{ btn.title }}
+                      </button>
+                    </div>
+                    <div class="sm:hidden text-primary text-warning" :class="[row ? 'flex' : 'divide-y']">
+                      <button
+                        v-for="btn in constructColor"
+                        :key="btn.title"
+                        class="
+                          h-11
+                          w-full
+                          select-none
+                          font-medium
+                          hover:bg-gray-200
+                          focus:(outline-none)
+                          transition
+                          duration-300
+                          ease-in-out
+                        "
+                        :class="btn.textcolor"
+                        @click="emitValue(btn.value)"
+                      >
+                        {{ btn.title }}
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </slot>
               </slot>
             </div>
           </TransitionChild>
@@ -125,6 +137,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    row: {
+      type: Boolean,
+      default: false,
+    },
     noDecline: {
       type: Boolean,
       default: false,
@@ -133,7 +149,7 @@ export default {
   data() {
     return {
       btnList: [
-        { title: "确认", value: "accept", color: "positive" },
+        { title: "确认", value: "accept", color: "primary" },
         { title: "取消", value: "decline", color: "warning" },
       ],
       open: false,
@@ -149,7 +165,7 @@ export default {
         btn.textcolor = "text-" + btn.color;
         btn.bgcolor = "bg-" + btn.color;
       }
-      console.log(tempBtnList)
+      console.log(tempBtnList);
       return tempBtnList;
     },
   },

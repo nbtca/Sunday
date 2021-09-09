@@ -1,12 +1,21 @@
 module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
+    divideWidth: {
+      DEFAULT: "1px",
+      0: "0",
+      2: "2px",
+      3: "3px",
+      4: "4px",
+      6: "6px",
+      8: "8px",
+    },
     extend: {
       colors: {
         primary: "#134991",
         primaryContent: "#ffffff",
         positive: "#4f46e5",
-        positiveContent: "#ffffff",
+        positiveContent: "#f9fafb",
         warning: "#a40e26",
         warningContent: "#ffffff",
         active: "#2150d5",
@@ -21,7 +30,7 @@ module.exports = {
   },
   shortcuts: {
     textInput: "p-2 m-2 focus:(outline-none ring-indigo-500 border-indigo-500)  border-grey-300 shadow-sm rounded-md",
-    btn: "w-15 h-11 py-2 rounded-md whitespace-nowrap shadow-sm select-none hover:(shadow-lg) focus:(outline-none ring-indigo-500) transition duration-300 ease-in-out",
+    btn: "w-15 h-11 py-2 inline-flex items-center justify-center rounded-md whitespace-nowrap shadow-sm select-none hover:(shadow-lg) focus:(outline-none ring-indigo-500) transition duration-300 ease-in-out",
     btnsm: "btn text-sm h-8 w-18 p-1",
     cell: "flex items-center justify-center w-full p-3 my-1 transition-all duration-300 ease-in-out rounded-md cursor-pointer select-none hover:(shadow-md bg-gray-300) focus:(outline-none)",
     infoCell: "px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6",

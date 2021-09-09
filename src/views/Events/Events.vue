@@ -68,7 +68,15 @@
                 接受
               </button>
               <button
-                v-if="item.status == 2"
+                v-if="item.status == 1 && item.rid == rid"
+                @click="submitEvent(item)"
+                class="btnsm text-xs w-13 h-7 rounded-full bg-green-500"
+              >
+                提交
+              </button>
+              <button v-if="item.status == 2 && item.rid == rid" @click="" class="text-xs w-13 h-7 rounded-full">修改</button>
+              <button
+                v-if="item.status == 2 && role == 'admin' && item.rid != rid"
                 @click="acceptEvent(item)"
                 class="btnsm text-xs w-13 h-7 rounded-full bg-primary text-primaryContent"
               >
@@ -82,7 +90,57 @@
     <div class="w-full hidden sm:block">
       <router-view @update="setEvents()"></router-view>
     </div>
-    <Dialog focus ref="Dialog"> </Dialog>
+    <!-- <Dialog focus ref="Dialog"> </Dialog> -->
+    <bottom-dialog ref="BottomDialog" :parms="parms">
+      <template #body>
+        <div v-if="currentEvent.status == 0" class="flex flex-col items-center justify-center h-44">
+          <table class="divide-y divide-gray-400/30">
+            <tr>
+              <td class="py-2 w-[40vw] pr-10 whitespace-normal text-right">型号</td>
+              <td class="py-2 text-sm text-left font-medium pr-5">{{ currentEvent.model }}</td>
+            </tr>
+            <tr>
+              <td class="py-2 w-[40vw] pr-10 whitespace-normal text-right">问题描述</td>
+              <td class="py-2 text-sm text-left font-medium pr-5">{{ currentEvent.user_description }}</td>
+            </tr>
+            <tr>
+              <td class="py-2 w-[40vw] pr-10 whitespace-normal text-right">提交时间</td>
+              <td class="py-2 text-sm text-left pr-5">{{ currentEvent.gmt_create }}</td>
+            </tr>
+          </table>
+        </div>
+        <div v-if="currentEvent.status == 1" class="flex flex-col items-center justify-center h-88">
+          <table class="divide-y divide-gray-400/30 border-b border-gray-400/30">
+            <tr>
+              <td class="py-2 w-[40vw] pr-10 whitespace-normal text-right">型号</td>
+              <td class="py-2 text-sm text-left font-medium pr-5">{{ currentEvent.model }}</td>
+            </tr>
+            <tr>
+              <td class="py-2 w-[40vw] pr-10 whitespace-normal text-right">问题描述</td>
+              <td class="py-2 text-sm text-left font-medium pr-5">{{ currentEvent.user_description }}</td>
+            </tr>
+            <tr>
+              <td class="py-2 w-[40vw] pr-10 whitespace-normal text-right">提交时间</td>
+              <td class="py-2 text-sm text-left pr-5">{{ currentEvent.gmt_create }}</td>
+            </tr>
+          </table>
+          <div class="self-start ml-11 font-semibold mt-5">维修描述*</div>
+          <form class="w-full" action="">
+            <textarea
+              class="resize-none border-none w-5/6 h-36 rounded-xl mt-1 p-3 bg-gray-400/40 placeholder-gray-600"
+              name=""
+              id=""
+              cols="30"
+              rows="4"
+              type="textarea"
+              placeholder="讲三句话...热烈地竹霍...衷心的感谢...办成功..."
+              v-model="parms.description"
+              required
+            ></textarea>
+          </form>
+        </div>
+      </template>
+    </bottom-dialog>
   </div>
 </template>
 
@@ -90,6 +148,7 @@
 import { Event } from "@/api/api";
 import { TabGroup, TabList, Tab } from "@headlessui/vue";
 import Dialog from "@/components/Dialog/Dialog.vue";
+import BottomDialog from "@/components/Dialog/BottomDialog.vue";
 export default {
   name: "Events",
   components: {
@@ -97,19 +156,23 @@ export default {
     TabList,
     Tab,
     Dialog,
+    BottomDialog,
   },
   setup() {},
   data() {
     return {
       rid: "",
+      role: "",
       filterOptions: ["待接受", "我的"],
       statusToText: ["取消", "待接受", "已接受", "待审核", "关闭"],
       currentList: "全部",
+      currentEvent: "",
       events: [],
       searchQuery: "",
       checkOnly: false, //审核
       eventsMatchingByRID: false,
       isSafari: false,
+      parms: {},
     };
   },
   computed: {
@@ -126,6 +189,9 @@ export default {
   },
   watch: {
     $route() {},
+    parms() {
+      console.log(this.parms);
+    },
   },
   async created() {
     var userAgent = navigator.userAgent;
@@ -133,7 +199,8 @@ export default {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty("---vh", `${vh}px`);
     this.rid = sessionStorage.getItem("rid");
-    if (sessionStorage.getItem("user_role") == "admin") {
+    this.role = sessionStorage.getItem("user_role");
+    if (this.role == "admin") {
       this.filterOptions = ["全部", "我的", "审核"];
     }
     this.setEvents();
@@ -157,18 +224,58 @@ export default {
         this.checkOnly = true;
       }
     },
-    acceptEvent(item) {
-      this.$refs.Dialog.openModal({
-        heading: "确认接受事件",
-        content: item.user_description,
-      })
-        .then(async () => {
-          console.log(item.eid);
-          await Event.accept({ eid: item.eid });
+    acceptEvent(event) {
+      this.currentEvent = event;
+      console.log(this.currentEvent);
+      this.$refs.BottomDialog.openModal(
+        {
+          subject: "接受事件",
+        },
+        function () {
+          return () => {
+            console.log("aceeeeee");
+            return Event.accept({ eid: event.eid });
+          };
+        }
+      )
+        .then(() => this.setEvents())
+        .catch(() => {});
+    },
+    submitEvent(event) {
+      this.parms.eid = event.eid;
+      this.currentEvent = event;
+      console.log(this.currentEvent);
+      this.$refs.BottomDialog.openModal(
+        {
+          subject: "提交维修",
+          actionName: "提交",
+          rounded: true,
+        },
+        function () {
+          return e => {
+            console.log(e);
+            return Event.submit(e);
+          };
+        }
+      )
+        .then(() => {
+          this.parms = {};
           this.setEvents();
         })
         .catch(() => {});
     },
+    // acceptEvent(item) {
+    //   this.$refs.Dialog.openModal({
+    //     heading: "确认接受事件",
+    //     content: item.user_description,
+    //   })
+    //     .then(async () => {
+    //       console.log(item.eid);
+    //       await Event.accept({ eid: item.eid });
+    //       this.setEvents();
+    //     })
+    //     .catch(() => {});
+    // },
   },
 };
 </script>
