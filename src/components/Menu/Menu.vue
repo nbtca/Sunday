@@ -5,7 +5,7 @@
         <div class="text-center text-3xl sm:(w-full) lg:text-4xl font-bold font-mono italic tracking-wide uppercase text-gray-900">
           sunday
         </div>
-        <MenuIcon class="w-10 h-10 sm:(hidden)" @click="isOpen = !isOpen"></MenuIcon>
+        <MenuIcon class="w-9 h-9 bg-bg-gray-900 sm:(hidden)" @click="isOpen = !isOpen"></MenuIcon>
       </div>
       <div class="hidden sm:(block)">
         <button v-for="item in menuitems" :key="item.name" class="cell text-xl whitespace-nowrap" @click="toRepairEvents(item.link)">
@@ -19,7 +19,7 @@
           absolute
           inset-x-0
           z-40
-          pb-15
+          pb-12
           px-1.5
           pt-2
           bg-bg-base-self
@@ -48,7 +48,7 @@
           </div>
           <div class="h-13 border bg-white p-1 my-1.5 rounded-xl shadow-sm flex items-center justify-between">
             <div class="flex items-center">
-              <div class="overflow-hidden rounded-xl h-11 w-11 block">
+              <div class="overflow-hidden rounded-lg h-11 w-11 block">
                 <img class="" :src="avatar" alt="" />
               </div>
               <div class="ml-2">

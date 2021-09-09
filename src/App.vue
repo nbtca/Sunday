@@ -11,7 +11,7 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   --tw-bg-opacity: 1;
-
+  color: #111827;
   background-color: rgba(249, 250, 251, var(--tw-bg-opacity));
 }
 </style>

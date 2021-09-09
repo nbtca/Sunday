@@ -60,13 +60,7 @@
     </div>
     <div class="w-full mb-20 px-20">
       <div>
-        <button
-          v-if="detail.status == 0"
-          class="btn bg-primary text-primaryContent w-20"
-          @click="acceptEvent"
-        >
-          接受
-        </button>
+        <button v-if="detail.status == 0" class="btn bg-primary text-primaryContent w-20" @click="acceptEvent">接受</button>
       </div>
       <div v-if="detail.rid == rid && detail.status == 1" class="flex flex-col">
         <textarea
@@ -76,27 +70,12 @@
         ></textarea>
         <div>
           <button class="btn bg-warning mx-5" @click="dropEvent">放弃</button>
-          <button
-            class="btn bg-primary text-primaryContent"
-            @click="submitEvnet"
-          >
-            提交
-          </button>
+          <button class="btn bg-primary text-primaryContent" @click="submitEvnet">提交</button>
         </div>
       </div>
-      <div
-        v-if="detail.status == 2 && role == 'admin'"
-        class="flex justify-center flex-nowrap"
-      >
-        <button class="btn w-20 mx-4 bg-warning" @click="rejectEvent()">
-          退回
-        </button>
-        <button
-          class="btn w-20 mx-4 bg-primary text-primaryContent"
-          @click="closeEvent()"
-        >
-          通过
-        </button>
+      <div v-if="detail.status == 2 && role == 'admin'" class="flex justify-center flex-nowrap">
+        <button class="btn w-20 mx-4 bg-warning" @click="rejectEvent()">退回</button>
+        <button class="btn w-20 mx-4 bg-primary text-primaryContent" @click="closeEvent()">通过</button>
       </div>
     </div>
     <Dialog ref="Dialog"> </Dialog>
@@ -116,7 +95,6 @@ export default {
       role: "",
       rid: "",
       eid: "",
-      promise: () => {},
       statusToText: ["取消", "待接受", "已接受", "待确认", "关闭"],
       contactPreference: ["QQ", "微信", "电话/短信"],
       descriptionToSubmit: "",
@@ -137,11 +115,11 @@ export default {
     this.setDetail();
   },
   methods: {
-    async setDetail() {
-      await Event.get(this.eid).then((res) => {
+    setDetail() {
+      Event.get(this.eid).then(res => {
+        console.log(res);
         this.detail = res.data;
       });
-      console.log(this.detail);
     },
     acceptEvent() {
       this.$refs.Dialog.openModal({
@@ -150,7 +128,7 @@ export default {
       })
         .then(async () => {
           await Event.accept({ eid: this.eid });
-          await this.setDetail();
+          this.setDetail();
           this.$emit("update");
         })
         .catch(() => {});
@@ -162,7 +140,7 @@ export default {
       })
         .then(async () => {
           await Event.drop({ eid: this.eid });
-          await this.setDetail();
+          this.setDetail();
           this.$emit("update");
         })
         .catch(() => {});
@@ -174,7 +152,7 @@ export default {
       })
         .then(async () => {
           await Event.close({ accept: 1, eid: this.eid });
-          await this.setDetail();
+          this.setDetail();
           this.$emit("update");
         })
         .catch(() => {});
@@ -186,7 +164,7 @@ export default {
       })
         .then(async () => {
           await Event.close({ accept: 0, eid: this.eid });
-          await this.setDetail();
+          this.setDetail();
           this.$emit("update");
         })
         .catch(() => {});
@@ -201,7 +179,7 @@ export default {
             eid: this.eid,
             description: this.descriptionToSubmit,
           });
-          await this.setDetail();
+          this.setDetail();
           this.$emit("update");
         })
         .catch(() => {});

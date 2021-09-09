@@ -29,9 +29,12 @@
             <div
               class="
                 inline-block
+                sm:(
                 min-w-xs
                 max-w-md
-                p-6
+                w-auto
+                )
+                w-[70vw]
                 align-middle
                 transition-all
                 transform
@@ -39,29 +42,46 @@
                 bg-white
                 shadow-xl
                 rounded-xl
+                overflow-hidden
+                select-none
               "
             >
               <slot name="entire">
-                <DialogTitle as="h3" class="text-xl text-center font-semibold leading-6">
-                  {{ heading }}
-                </DialogTitle>
-                <slot name="body">
-                  <div class="mt-6">
-                    <p class="textDescription text-center">
-                      {{ content }}
-                    </p>
+                <div class="p-4 border-b sm:(border-b-0 p-8)">
+                  <DialogTitle as="h3" class="text-base sm:(text-xl leading-6) text-center font-semibold">
+                    {{ heading }}
+                  </DialogTitle>
+                  <slot name="body">
+                    <div class="sm:mt-2">
+                      <p class="textDescription text-center">
+                        {{ content }}
+                      </p>
+                    </div>
+                  </slot>
+                </div>
+                <div class="">
+                  <!-- <div class="hidden sm:block flex flex-row pb-6">
+                    <button
+                      class=" btn font-medium mx-5 w-20"
+                      :class="['bg-' + btn.color, 'text-' + btn.color + 'Content']"
+                      v-for="btn in btnList"
+                      :key="btn.title"
+                      @click="emitValue(btn.value)"
+                    >
+                      {{ btn.title }}
+                    </button>
+                  </div> -->
+                  <div class="sm:hidden divide-y">
+                    <button
+                      v-for="btn in constructColor"
+                      :key="btn.title"
+                      class="h-11 w-full select-none font-medium hover:bg-gray-200 focus:(outline-none) transition duration-300 ease-in-out"
+                      :class="btn.textcolor"
+                      @click="emitValue(btn.value)"
+                    >
+                      {{ btn.title }}
+                    </button>
                   </div>
-                </slot>
-                <div class="mt-4 flex justify-center ">
-                  <button
-                    class="btn text-sm w-20 mx-3 sm:mx-5"
-                    v-for="btn in btnList"
-                    :key="btn.title"
-                    :class="['bg-' + btn.color, 'text-' + btn.color + 'Content']"
-                    @click="emitValue(btn.value)"
-                  >
-                    {{ btn.title }}
-                  </button>
                 </div>
               </slot>
             </div>
@@ -112,15 +132,26 @@ export default {
   },
   data() {
     return {
-      btnList: {
-        decline: { title: "取消", value: "decline", color: "warning" },
-        accept: { title: "确认", value: "accept", color: "primary" },
-      },
+      btnList: [
+        { title: "确认", value: "accept", color: "positive" },
+        { title: "取消", value: "decline", color: "warning" },
+      ],
       open: false,
       value: "",
       heading: "Payment successful",
       content: "Your payment has been successfully submitted. We’ve sent your an email with all of the details of your order.",
     };
+  },
+  computed: {
+    constructColor() {
+      let tempBtnList = this.btnList;
+      for (let btn of tempBtnList) {
+        btn.textcolor = "text-" + btn.color;
+        btn.bgcolor = "bg-" + btn.color;
+      }
+      console.log(tempBtnList)
+      return tempBtnList;
+    },
   },
   created() {
     if (this.noDecline) {

@@ -23,7 +23,11 @@
           </TabList>
         </TabGroup>
       </div>
-      <div class="px-2 overflow-auto w-full h-screen flex flex-col-reverse sm:flex-col">
+      <div
+        class="px-2 overflow-auto w-full flex flex-col-reverse sm:flex-col"
+        style="height: 100vh"
+        :style="[isSafari ? '' : 'height: calc(var(---vh, 1vh) * 100)']"
+      >
         <div class="hidden sm:block">
           <button
             v-for="item in fiilteredList"
@@ -39,7 +43,8 @@
             </div>
           </button>
         </div>
-        <div class="sm:hidden pt-40">
+        <div class="sm:hidden">
+          <div class="py-20"></div>
           <div
             v-for="item in fiilteredList"
             :key="item.eid"
@@ -49,9 +54,9 @@
               <p class="h-10 font-medium overflow-ellipsis overflow-hidden line-clamp-2 text-left">
                 {{ item.user_description }}
               </p>
-              <div class="text-left">
-                <span class="align-baseline">{{ item.model }}</span>
-                <span class="textDescription ml-4 text-xs align-baseline">{{ item.gmt_create }}</span>
+              <div class="flex items-center justify-start text-left">
+                <div class="w-15">{{ item.model }}</div>
+                <span class="textDescription ml-4 text-xs mt-1">{{ item.gmt_create }}</span>
               </div>
             </div>
             <div class="">
@@ -102,16 +107,17 @@ export default {
       currentList: "全部",
       events: [],
       searchQuery: "",
-      checkOnly: false,
-      eventsMatchingByID: false,
+      checkOnly: false, //审核
+      eventsMatchingByRID: false,
+      isSafari: false,
     };
   },
   computed: {
     fiilteredList() {
       return this.events.filter(events => {
         return (
-          ((!this.checkOnly && this.eventsMatchingByID && events.rid === this.rid) ||
-            (!this.checkOnly && !this.eventsMatchingByID && events.status == 0) ||
+          ((!this.checkOnly && this.eventsMatchingByRID && events.rid === this.rid) ||
+            (!this.checkOnly && !this.eventsMatchingByRID && events.status == 0) ||
             (this.checkOnly && events.status == 2)) &&
           events.user_description.indexOf(this.searchQuery) >= 0
         );
@@ -122,6 +128,10 @@ export default {
     $route() {},
   },
   async created() {
+    var userAgent = navigator.userAgent;
+    this.isSafari = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1;
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("---vh", `${vh}px`);
     this.rid = sessionStorage.getItem("rid");
     if (sessionStorage.getItem("user_role") == "admin") {
       this.filterOptions = ["全部", "我的", "审核"];
@@ -138,11 +148,11 @@ export default {
     },
     filterHandler(e) {
       this.checkOnly = false;
-      this.eventsMatchingByID = false;
+      this.eventsMatchingByRID = false;
       if (e == "全部") {
-        this.eventsMatchingByID = false;
+        this.eventsMatchingByRID = false;
       } else if (e == "我的") {
-        this.eventsMatchingByID = true;
+        this.eventsMatchingByRID = true;
       } else if (e == "审核") {
         this.checkOnly = true;
       }

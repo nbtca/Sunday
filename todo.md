@@ -2,17 +2,24 @@
 + [x] 添加dialog
 + [x] API管理
 + [x] 添加成员(手动)
-  + id
++ [x] 404
++ [x] getElement返回身份
 + [ ] 个人信息完善页
-+ [ ] getElement返回身份
++ [ ] 后台Event Action修复
++ [ ] 移动端适配
+  + [ ] Event Card 不同状态
+  + [ ] element card
+  + [ ] dialog 
++ [ ] Loading and complete anime
++ [ ] not activated 登入跳转LoginActivate
++ [ ] 后台限流
++ [ ] 图片上传
 + [ ] 表格filter
 + [ ] Menu item从router获取
 + [ ] 添加图标
 + [ ] 动态生成router
-+ [x] 404
 + [ ] 数据展示
 + [ ] ui统一
-+ [ ] 移动端适配
 + [ ] API文档
 + [ ] 通知
 

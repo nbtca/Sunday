@@ -1,156 +1,174 @@
 <template>
-  <div>
-    <div class="flex justify-between w-full p-8 pb-2">
-      <div class="textHeading">成员管理</div>
-      <div>
-        <Menu as="div" class="z-50">
-          <div>
-            <MenuButton class="btn flex justify-center items-center w-30 text-primaryContent bg-primary">
-              <PlusIcon class="text-white w-5 h-5 mr-2" />
-              <div>添加成员</div>
-            </MenuButton>
-          </div>
-          <transition
-            enter-active-class="transition duration-100 ease-out"
-            enter-from-class="transform scale-95 opacity-0"
-            enter-to-class="transform scale-100 opacity-100"
-            leave-active-class="transition duration-75 ease-in"
-            leave-from-class="transform scale-100 opacity-100"
-            leave-to-class="transform scale-95 opacity-0"
-          >
-            <MenuItems
-              class="
-                absolute
-                right-4
-                w-40
-                mt-2
-                origin-top-right
-                bg-white
-                divide-y divide-gray-100
-                rounded-md
-                shadow-lg
-                ring-1 ring-black ring-opacity-5
-                focus:outline-none
-              "
+  <div class="h-full">
+    <div class="hidden sm:block">
+      <div class="flex justify-between w-full p-8 pb-2">
+        <div class="textHeading">成员管理</div>
+        <div>
+          <Menu as="div" class="z-50">
+            <div>
+              <MenuButton class="btn flex justify-center items-center w-30 text-primaryContent bg-primary">
+                <PlusIcon class="text-white w-5 h-5 mr-2" />
+                <div>添加成员</div>
+              </MenuButton>
+            </div>
+            <transition
+              enter-active-class="transition duration-100 ease-out"
+              enter-from-class="transform scale-95 opacity-0"
+              enter-to-class="transform scale-100 opacity-100"
+              leave-active-class="transition duration-75 ease-in"
+              leave-from-class="transform scale-100 opacity-100"
+              leave-to-class="transform scale-95 opacity-0"
             >
-              <div class="px-1 py-1">
-                <MenuItem v-slot="{ active }">
-                  <button
-                    @click="addElement"
-                    :class="[
-                      active ? 'text-primaryContent bg-primary' : 'text-gray-900',
-                      'group flex rounded-md items-center w-full h-full p-2 text-sm',
-                    ]"
-                  >
-                    <UserAddIcon :active="active" class="w-5 h-5 mr-2 text-violet-300" aria-hidden="true" />
-                    手动添加
-                  </button>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <button
-                    :class="[
-                      active ? 'text-primaryContent bg-primary' : 'text-gray-900',
-                      'group flex rounded-md items-center w-full px-2 py-2 text-sm',
-                    ]"
-                  >
-                    <UploadIcon :active="active" class="w-5 h-5 mr-2 text-violet-300" aria-hidden="true" />
-                    从表格导入
-                  </button>
-                </MenuItem>
-              </div>
-            </MenuItems>
-          </transition>
-        </Menu>
+              <MenuItems
+                class="
+                  absolute
+                  right-4
+                  w-40
+                  mt-2
+                  origin-top-right
+                  bg-white
+                  divide-y divide-gray-100
+                  rounded-md
+                  shadow-lg
+                  ring-1 ring-black ring-opacity-5
+                  focus:outline-none
+                "
+              >
+                <div class="px-1 py-1">
+                  <MenuItem v-slot="{ active }">
+                    <button
+                      @click="addElement"
+                      :class="[
+                        active ? 'text-primaryContent bg-primary' : 'text-gray-900',
+                        'group flex rounded-md items-center w-full h-full p-2 text-sm',
+                      ]"
+                    >
+                      <UserAddIcon :active="active" class="w-5 h-5 mr-2 text-violet-300" aria-hidden="true" />
+                      手动添加
+                    </button>
+                  </MenuItem>
+                  <MenuItem v-slot="{ active }">
+                    <button
+                      :class="[
+                        active ? 'text-primaryContent bg-primary' : 'text-gray-900',
+                        'group flex rounded-md items-center w-full px-2 py-2 text-sm',
+                      ]"
+                    >
+                      <UploadIcon :active="active" class="w-5 h-5 mr-2 text-violet-300" aria-hidden="true" />
+                      从表格导入
+                    </button>
+                  </MenuItem>
+                </div>
+              </MenuItems>
+            </transition>
+          </Menu>
+        </div>
+      </div>
+      <div class="py-2 align-middle w-full">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="">
+            <tr>
+              <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap"></th>
+              <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap">联系方式</th>
+              <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap">完成事件数</th>
+              <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap">状态</th>
+              <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap">创建日期</th>
+              <th scope="col" class="px-6 py-3">
+                <span class="sr-only">Edit</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr v-for="element in elementList" :key="element.email">
+              <td class="tableCell">
+                <div class="flex items-center">
+                  <div class="hidden lg:block relative flex-shrink-0 h-14 w-14 rounded-full border overflow-hidden">
+                    <img v-if="element.ravatar" class="absolute object-fill" :src="element.ravatar" alt="" />
+                    <UserIcon v-if="!element.ravatar" class="object-fill p-1 bg-base-standout" />
+                  </div>
+                  <div class="ml-4 flex flex-col items-start">
+                    <div class="inline-flex items-center">
+                      <div class="text-lg font-medium tracking-wider text-gray-900">
+                        {{ element.ralias || "null" }}
+                      </div>
+                      <span v-if="element.role == 2" class="badge bg-green-100 text-green-800"> 管理员 </span>
+                    </div>
+                    <div class="textDescription">
+                      {{ element.rid }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="tableCell">
+                <table class="w-full">
+                  <tr>
+                    <td class="w-20">QQ</td>
+                    <td class="text-left">
+                      {{ element.rqq || "null" }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>手机</td>
+                    <td class="text-left">
+                      {{ element.rphone || "null" }}
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td class="tableCell">
+                {{ element.event_count }}
+              </td>
+              <td class="tableCell">{{ element.isActivated }}</td>
+              <td class="tableCell">
+                {{ element.gmt_modified }}
+              </td>
+              <td class="tableCell text-right text-sm font-medium">
+                <a href="#" class="textLink">Edit</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="py-2 align-middle w-full hidden sm:block">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="">
-          <tr>
-            <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap"></th>
-            <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap">联系方式</th>
-            <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap">完成事件数</th>
-            <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap">状态</th>
-            <th scope="col" class="px-6 py-3 textDescription whitespace-nowrap">创建日期</th>
-            <th scope="col" class="px-6 py-3">
-              <span class="sr-only">Edit</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-for="element in elementList" :key="element.email">
-            <td class="tableCell">
-              <div class="flex items-center">
-                <div class="hidden lg:block relative flex-shrink-0 h-14 w-14 rounded-full border overflow-hidden">
-                  <img v-if="element.ravatar" class="absolute object-fill" :src="element.ravatar" alt="" />
-                  <UserIcon v-if="!element.ravatar" class="object-fill p-1 bg-base-standout" />
-                </div>
-                <div class="ml-4 flex flex-col items-start">
-                  <div class="inline-flex items-center">
-                    <div class="text-lg font-medium tracking-wider text-gray-900">
-                      {{ element.ralias || "null" }}
-                    </div>
-                    <span v-if="element.role == 2" class="badge bg-green-100 text-green-800"> 管理员 </span>
-                  </div>
-                  <div class="textDescription">
-                    {{ element.rid }}
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td class="tableCell">
-              <table class="w-full">
-                <tr>
-                  <td class="w-20">QQ</td>
-                  <td class="text-left">
-                    {{ element.rqq || "null" }}
-                  </td>
-                </tr>
-                <tr>
-                  <td>手机</td>
-                  <td class="text-left">
-                    {{ element.rphone || "null" }}
-                  </td>
-                </tr>
-              </table>
-            </td>
-            <td class="tableCell">
-              {{ element.event_count }}
-            </td>
-            <td class="tableCell">{{ element.isActivated }}</td>
-            <td class="tableCell">
-              {{ element.gmt_modified }}
-            </td>
-            <td class="tableCell text-right text-sm font-medium">
-              <a href="#" class="textLink">Edit</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="px-2 sm:hidden h-full overflow-auto">
+    <div class=" sm:hidden">
       <div
-        v-for="element in elementList"
-        :key="element.rid"
-        class="w-full h-20 px-2 py-1 my-1 bg-white rounded-xl border border-gray-200 flex justify-between items-center text-sm"
+        class="flex flex-col-reverse px-2 overflow-x-scroll"
+        style="height: 100vh"
+        :style="[isSafari ? '' : 'height: calc(var(---vh, 1vh) * 100)']"
       >
-        <div class="flex">
-          <div class="relative flex-shrink-0 h-14 w-14 rounded-full border overflow-hidden">
-            <img v-if="element.ravatar" class="absolute object-fill z-0" :src="element.ravatar" alt="" />
-            <UserIcon v-if="!element.ravatar" class="object-fill p-1 bg-base-standout" />
-          </div>
-          <div class="flex flex-col items-start ml-2">
-            <div class="flex items-center">
-              <div class="font-semibold">
-                {{ element.ralias || "null" }}
-              </div>
-              <span v-if="element.role == '2'" class="h-5 badge bg-green-100 text-green-800"> 管理员 </span>
+        <div
+          v-for="element in elementList"
+          :key="element.rid"
+          class="w-full h-20 px-2 py-1 my-1 bg-white rounded-xl border border-gray-200 flex justify-between items-center text-sm"
+        >
+          <div class="flex">
+            <div class="relative flex-shrink-0 h-14 w-14 rounded-full border overflow-hidden">
+              <img v-if="element.ravatar" class="absolute object-fill object-center z-0" :src="element.ravatar" alt="" />
+              <UserIcon v-if="!element.ravatar" class="m-1" />
             </div>
-            <div class="textDescription">
-              {{ element.rid }}
+            <div class="flex flex-col items-start justify-center text-left ml-2">
+              <div class="flex items-center">
+                <div class="font-semibold text-base leading-tight">
+                  {{ element.ralias || "null" }}
+                </div>
+                <span v-if="element.role == '2'" class="h-5 badge bg-green-100 text-green-800"> 管理员 </span>
+              </div>
+              <div>
+                <div class="textDescription text-xs">
+                  {{ element.rid }}
+                </div>
+                <div class="textDescription text-xs">
+                  {{ element.gmt_modified }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <div class="py-12">123123</div>
+      </div>
+      <div class="h-12 w-full px-1 pt-2 border-t">
+        <button class="btn bg-primary text-primaryContent mx-2 w-2/5">添加成员</button>
+        <button class="btn bg-green-500 mx-2 w-2/5">导入成员</button>
       </div>
     </div>
     <Dialog focus ref="Dialog">
@@ -224,6 +242,7 @@ export default {
         class: {},
       },
       elementList: [],
+      isSafari: false,
     };
   },
   computed: {
@@ -241,6 +260,10 @@ export default {
     },
   },
   async created() {
+    var userAgent = navigator.userAgent;
+    this.isSafari = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1;
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("---vh", `${vh}px`);
     await this.setElement();
   },
   methods: {
@@ -255,7 +278,7 @@ export default {
       }
     },
     async setElement() {
-      await Element.get().then(res => {
+      Element.get().then(res => {
         console.log(res.data);
         this.elementList = res.data;
       });
@@ -267,9 +290,6 @@ export default {
     },
   },
 };
-
 </script>
 
-<style>
-
-</style>
+<style></style>
