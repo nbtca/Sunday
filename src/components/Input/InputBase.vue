@@ -1,15 +1,12 @@
 <template>
   <div class="select-none flex flex-col items-center">
-    <div v-if="subject" class="self-start mx-1 mb-1 font-semibold sm:text-lg">
+    <div v-if="subject" class="self-start mx-1 mb-0.5 font-medium text-sm sm:(text-lg font-semibold mb-1 )">
       {{ isSubjectRequired }}
     </div>
     <input
       :type="type"
-      :class="[
-        'textInput my-0 w-full',
-        warning ? 'ring-[2px] ring-warning' : '',
-        isVaild && input ? 'ring-[2px] ring-green-500 border-0' : '',
-      ]"
+      class="my-0 p-2 w-full materialInput rounded-lg shadow-innersm border-0 sm:(bg-transparent border textInput)"
+      :class="[warning ? 'ring-[2px] ring-warning' : '', isValid && input ? '' : '', center ? 'text-center' : '']"
       :required="required"
       :placeholder="placeholder"
       v-model.lazy="input"
@@ -42,6 +39,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    center: {
+      type: Boolean,
+      default: false,
+    },
     hint: {
       type: String,
       default: "",
@@ -63,15 +64,15 @@ export default {
     isSubjectRequired() {
       return this.required ? this.subject + "*" : this.subject;
     },
-    isVaild() {
+    isValid() {
       return !this.warning && this.warn == "" && (this.input != "" || !this.required) ? true : false;
     },
   },
   mounted() {
     this.warning = this.warn;
     this.$emit("update:content", {
-      value: this.isVaild ? this.input : null,
-      isVaild: this.isVaild,
+      value: this.isValid ? this.input : null,
+      isValid: this.isValid,
     });
   },
   watch: {
@@ -79,7 +80,7 @@ export default {
       this.warning = this.warn;
       this.$emit("update:content", {
         value: this.input,
-        isVaild: this.isVaild,
+        isValid: this.isValid,
       });
       console.log(this.warning);
     },
@@ -99,10 +100,9 @@ export default {
           this.warning = tmp;
         }
       }
-      console.log(this.isVaild);
       this.$emit("update:content", {
         value: this.input,
-        isVaild: this.isVaild,
+        isValid: this.isValid,
       });
     },
   },

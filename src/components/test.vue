@@ -1,25 +1,12 @@
 <template>
   <div class="h-96 w-96 flex flex-col justify-center items-center w-full">
-    <form @submit="submit">
-      <InputBase
-        placeholder=""
-        subject="ID"
-        required
-        v-model:content="content"
-        :rules="[{ rule: /^[0-9]*$/, warning: 'number only' }]"
-      ></InputBase>
-      <button type="submit" class="btn bg-primary text-primaryContent">
-        123
-      </button>
-    </form>
-  </div>
-  <div>
-    {{ content }}
+    <button>12322</button>
   </div>
 </template>
 
 <script>
 import InputBase from "@/components/Input/InputBase.vue";
+// import CallButtomDialog from "@/components/Dialog/ButtomDialog.js";
 export default {
   components: {
     InputBase,
@@ -27,7 +14,7 @@ export default {
   data() {
     return {
       content: "",
-      isFormVaild: true,
+      isFormValid: true,
     };
   },
   watch() {},

@@ -1,8 +1,8 @@
 <template>
   <TransitionRoot appear :show="open" as="template">
     <Dialog as="div" @close="closeModal('outter')">
-      <div class="fixed inset-0 z-10 overflow-y-auto">
-        <div class="min-h-screen px-4 text-center">
+      <div class="inset-0 z-10 fixed overflow-y-auto">
+        <div class="min-h-screen text-center px-4">
           <TransitionChild
             as="template"
             enter="duration-300 ease-out "
@@ -15,7 +15,7 @@
             <DialogOverlay :class="['fixed inset-0', focus ? 'bg-black opacity-20' : '']" />
           </TransitionChild>
 
-          <span class="inline-block h-screen align-middle" aria-hidden="true"> &#8203; </span>
+          <span class="h-screen inline-block align-middle" aria-hidden="true"> &#8203; </span>
 
           <TransitionChild
             as="template"
@@ -28,32 +28,32 @@
           >
             <div
               class="
+                bg-white
+                border
+                rounded-xl
+                border-gray-100
+                shadow-xl
+                transform
+                transition-all
+                w-[70vw]
                 inline-block
+                align-middle
+                overflow-hidden select-none
                 sm:(
                 min-w-xs
                 max-w-md
                 w-auto
                 )
-                w-[70vw]
-                align-middle
-                transition-all
-                transform
-                border border-gray-100
-                bg-white
-                shadow-xl
-                rounded-xl
-                overflow-hidden
-                select-none
-              "
+                "
             >
               <slot name="entire">
-                <div class="p-4 border-b sm:(border-b-0 p-8)">
-                  <DialogTitle as="h3" class="text-base sm:(text-xl leading-6) text-center font-semibold">
+                <div class="border-b p-4 sm:(border-b-0 p-8) ">
+                  <DialogTitle as="h3" class="font-semibold text-base text-center sm:(text-xl leading-6) ">
                     {{ heading }}
                   </DialogTitle>
                   <slot name="body">
                     <div class="sm:mt-2">
-                      <p class="textDescription text-center">
+                      <p class="text-center textDescription">
                         {{ content }}
                       </p>
                     </div>
@@ -61,9 +61,9 @@
                 </div>
                 <slot name="action">
                   <div class="">
-                    <div class="hidden sm:block flex flex-row pb-6">
+                    <div class="flex flex-row pb-6 hidden sm:block">
                       <button
-                        class="btn font-medium mx-5 w-20"
+                        class="font-medium mx-5 w-20 btn"
                         :class="[btn.bgcolor, 'text-' + btn.color + 'Content']"
                         v-for="btn in btnList"
                         :key="btn.title"
@@ -72,20 +72,20 @@
                         {{ btn.title }}
                       </button>
                     </div>
-                    <div class="sm:hidden text-primary text-warning" :class="[row ? 'flex' : 'divide-y']">
+                    <div class="flex text-primary text-warning sm:hidden" :class="[btnList.length > 2 ? 'flex-col' : 'flex-cel']">
                       <button
                         v-for="btn in constructColor"
                         :key="btn.title"
                         class="
+                          font-medium
                           h-11
                           w-full
+                          transition
+                          ease-in-out
+                          duration-300
                           select-none
-                          font-medium
                           hover:bg-gray-200
                           focus:(outline-none)
-                          transition
-                          duration-300
-                          ease-in-out
                         "
                         :class="btn.textcolor"
                         @click="emitValue(btn.value)"

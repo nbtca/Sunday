@@ -1,14 +1,14 @@
 <template>
-  <div class="flex flex-col justify-between h-screen">
+  <div class="flex flex-col h-screen justify-between">
     <div>
-      <div class="flex items-center justify-between px-4 py-5 sm:px-10">
+      <div class="flex py-5 px-4 items-center justify-between sm:px-10">
         <div class="text-left">
-          <h3 class="pt-4 text-4xl font-medium text-gray-900">事件详情</h3>
+          <h3 class="font-medium pt-4 text-4xl">事件详情</h3>
           <p class="ml-0.5 textDescription">Eid:{{ eid }}</p>
         </div>
         <div class="textSubHeading">{{ statusToText[detail.status + 1] }}</div>
       </div>
-      <div class="border-gray-200">
+      <div class="border-base-standout">
         <dl>
           <div class="bg-gray-50 infoCell">
             <dt class="text-gray-500 infoHead">型号</dt>
@@ -24,7 +24,7 @@
           </div>
           <div class="bg-gray-50 infoCell">
             <dt class="text-gray-500 infoHead">联系方式</dt>
-            <dd class="infoContent flex justify-center">
+            <dd class="flex infoContent justify-center">
               <table>
                 <tr>
                   <td class="w-20">QQ</td>
@@ -58,24 +58,24 @@
         </dl>
       </div>
     </div>
-    <div class="w-full mb-20 px-20">
+    <div class="mb-20 w-full px-20">
       <div>
-        <button v-if="detail.status == 0" class="btn bg-primary text-primaryContent w-20" @click="acceptEvent">接受</button>
+        <button v-if="detail.status == 0" class="bg-primary text-primaryContent w-20 btn" @click="acceptEvent">接受</button>
       </div>
       <div v-if="detail.rid == rid && detail.status == 1" class="flex flex-col">
         <textarea
           v-model="descriptionToSubmit"
-          class="textInput border-2 shadow-inner h-28 w-80 mb-7 self-center"
+          class="border-2 h-28 shadow-inner mb-7 w-80 textInput self-center"
           style="resize: none"
         ></textarea>
         <div>
-          <button class="btn bg-warning mx-5" @click="dropEvent">放弃</button>
-          <button class="btn bg-primary text-primaryContent" @click="submitEvnet">提交</button>
+          <button class="bg-warning mx-5 btn" @click="dropEvent">放弃</button>
+          <button class="bg-primary text-primaryContent btn" @click="submitEvnet">提交</button>
         </div>
       </div>
-      <div v-if="detail.status == 2 && role == 'admin'" class="flex justify-center flex-nowrap">
-        <button class="btn w-20 mx-4 bg-warning" @click="rejectEvent()">退回</button>
-        <button class="btn w-20 mx-4 bg-primary text-primaryContent" @click="closeEvent()">通过</button>
+      <div v-if="detail.status == 2 && role == 'admin'" class="flex flex-nowrap justify-center">
+        <button class="bg-warning mx-4 w-20 btn" @click="rejectEvent()">退回</button>
+        <button class="bg-primary mx-4 text-primaryContent w-20 btn" @click="closeEvent()">通过</button>
       </div>
     </div>
     <Dialog ref="Dialog"> </Dialog>

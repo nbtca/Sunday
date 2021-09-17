@@ -1,9 +1,9 @@
 import axios from "axios";
 import qs from "qs";
 
-axios.defaults.baseURL = "api/"; //正式
+axios.defaults.baseURL = "api/";
 // axios.defaults.baseURL =
-//   "http://activitytest.hpl001.cn/crm_api/app/sinceOrder/"; //测试
+//   "http://61774500-1018390206127906.test.functioncompute.com/"; //测试
 
 axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8";
 axios.defaults.timeout = 10000;
@@ -120,7 +120,7 @@ export default function axiosApi(url, data, method) {
       axios({
         method,
         url,
-        data
+        data,
       })
         .then(res => {
           resolve(res.data);

@@ -3,7 +3,7 @@
     <div class="flex flex-col items-center mt-20 md:mt-28">
       <form @submit.prevent="login" class="grid gap-4 place-items-center" style="width: 17vw; min-width: 300px">
         <div class="" style="width: 15vw; min-width: 250px">
-          <img src="../../assets/logo.png" alt="" />
+          <img src="../../assets/logo.png" alt="" class="filter drop-shadow" />
         </div>
         <InputBase
           placeholder="ID"
@@ -14,8 +14,8 @@
           v-model:content="account.id"
           :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]"
         />
-        <InputBase placeholder="密码" :warn="isPasswordValid" class="w-full" v-model:content="account.password" />
-        <button class="w-full btn bg-primary text-primaryContent" type="submit">登入</button>
+        <InputBase placeholder="密码" :warn="isPasswordValid" type="password" class="w-full" v-model:content="account.password" />
+        <button class="w-full btn bg-primary text-primaryContent shadow-lg" type="submit">登入</button>
       </form>
     </div>
   </div>
@@ -23,7 +23,7 @@
 <script>
 import { Account } from "@/api/api";
 import InputBase from "@/components/Input/InputBase.vue";
-import isVaild from "@/Utils/isVaild";
+import isValid from "@/Utils/isValid";
 // import crypto from "crypto";
 export default {
   name: "Login",
@@ -42,9 +42,9 @@ export default {
   },
   methods: {
     async login() {
-      console.log("123");
       var that = this;
-      let account = isVaild(this.account);
+      this.isPasswordValid = "";
+      let account = isValid(this.account);
       if (account != false) {
         // var hashedPassword = null;
         // if (account.password !== "") {

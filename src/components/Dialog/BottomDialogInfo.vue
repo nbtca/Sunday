@@ -1,0 +1,35 @@
+<template>
+  <table class="divide-y divide-gray-400/30 w-full">
+    <tr v-for="item in contentList" :key="item.key">
+      <td class="py-2 w-[40vw] pr-10 whitespace-normal text-right">{{ item.name }}</td>
+      <td class="py-2 text-sm text-left font-medium pr-5">{{ item.value }}</td>
+    </tr>
+  </table>
+</template>
+
+<script>
+export default {
+  name: "ButtomDialogInfo",
+  props: {
+    content: {},
+  },
+  computed: {
+    contentList() {
+      let ans = [];
+      if (this.content != null)
+        for (let item of this.content) {
+          for (let key in item) {
+            ans.push({
+              name: key,
+              value: item[key],
+            });
+          }
+        }
+      console.log(ans);
+      return ans;
+    },
+  },
+};
+</script>
+
+<style></style>

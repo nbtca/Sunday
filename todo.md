@@ -1,35 +1,36 @@
 # todo
-+ [x] 添加dialog
-+ [x] API管理
++ [x] dialog
 + [x] 添加成员(手动)
++ [x] API管理
 + [x] 404
 + [x] getElement返回身份
-+ [ ] 个人信息完善页
-+ [ ] 后台Event Action修复
-+ [ ] 移动端适配
-  + [ ] Event Card 不同状态
-  + [ ] element card
-  + [ ] dialog 
-+ [ ] Loading and complete anime
-+ [ ] not activated 登入跳转LoginActivate
++ [x] 个人信息完善页
++ [x] not activated 登入跳转LoginActivate
+  + [ ] active 风格统一
++ 移动端适配
+  + [x] Event Card 不同状态
+  + [x] element card
+  + [x] dialog 
+  + [ ] BottomDialog with option
++ 权限
+  + [ ] router meta
+  + [ ] 动态生成router
++ [ ] Menu item从router获取
++ [ ] notifier 组件
++ [ ] element edit
+  + [ ] to admin
++ [ ] 添加图标
++ [ ] 加载动画
++ [ ] 桌面端风格统一
++ [ ] 导入Element
++ [ ] 后台Event Action修复 ?
 + [ ] 后台限流
 + [ ] 图片上传
 + [ ] 表格filter
-+ [ ] Menu item从router获取
-+ [ ] 添加图标
-+ [ ] 动态生成router
 + [ ] 数据展示
-+ [ ] ui统一
-+ [ ] API文档
-+ [ ] 通知
 
-# to decide
-+ 成员导入
+
 + 成员信息核对
-+ 后端model重构 (换数据库？)
-  + 事物(event count)
-  + 并发
 + 维修日管理
-
 + 后端部署
   + 云函数接口替换

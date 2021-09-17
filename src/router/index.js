@@ -24,7 +24,7 @@ const routeTable = [
     component: () => import("@/views/index.vue"),
     children: [
       {
-        path: "/Events",
+        path: "/",
         name: "Events",
         component: () => import("@/views/Events/Events.vue"),
         children: [

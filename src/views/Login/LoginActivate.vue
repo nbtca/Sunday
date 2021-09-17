@@ -83,7 +83,7 @@
 </template>
 <script>
 import InputBase from "@/components/Input/InputBase.vue";
-import isVaild from "@/Utils/isVaild";
+import isValid from "@/Utils/isValid";
 import { Element } from "@/api/api";
 import axiosApi from "@/axios/AxiosConfig";
 export default {
@@ -140,7 +140,7 @@ export default {
     async upload() {},
     activate() {
       let that = this;
-      let account = isVaild(this.account);
+      let account = isValid(this.account);
       if (account) {
         Element.update(account)
           .Account.login()

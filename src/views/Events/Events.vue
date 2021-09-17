@@ -1,20 +1,34 @@
 <template>
   <div class="flex">
-    <div class="flex flex-col items-center h-full w-full sm:(w-[24vw] min-w-[250px] border-r)">
-      <div class="flex flex-col order-last self-end items-center w-full px-0.5 bg-base border-t sm:(order-first border-b px-0)">
+    <div class="flex flex-col h-full w-full items-center sm:(w-[24vw] min-w-[250px] border-r)">
+      <div
+        class="
+          bg-base
+          border-t border-base-standout/70
+          flex flex-col
+          order-last
+          w-full
+          px-0.5
+          self-end
+          items-center
+          sm:(order-first
+          border-b
+          px-0)
+        "
+      >
         <input
           type="text"
-          class="border-base-standout rounded-lg sm:(rounded text-left) shadow-inner h-10 my-0.5 mx-0.5 order-last text-center"
-          style="width: 99%"
+          class="border-base-standout rounded-lg order-last h-10 shadow-inner my-0.5 mx-0.5 text-center sm:(rounded text-left)"
+          style="width: 98%"
           v-model="searchQuery"
           placeholder="搜索"
         />
         <TabGroup class="w-full">
-          <TabList class="flex p-1 space-x-1">
+          <TabList class="flex space-x-1 p-1">
             <Tab v-for="item in filterOptions" as="template" :key="item" v-slot="{ selected }">
               <button
                 @click="filterHandler(item)"
-                class="w-full py-2.5 font-semibold leading-5 text-blue-700 rounded-lg focus:(outline-none border-gray-200 )"
+                class="rounded-lg font-semibold w-full py-2.5 text-indigo-600 leading-5 focus:(outline-none border-base-standout )"
                 :class="[selected ? 'bg-white shadow' : 'text-gray-400 hover:bg-gray-50/[0.12] hover:text-blue-400']"
               >
                 {{ item }}
@@ -24,7 +38,7 @@
         </TabGroup>
       </div>
       <div
-        class="px-2 overflow-auto w-full flex flex-col-reverse sm:flex-col"
+        class="flex flex-col-reverse w-full px-2 overflow-auto sm:flex-col"
         style="height: 100vh"
         :style="[isSafari ? '' : 'height: calc(var(---vh, 1vh) * 100)']"
       >
@@ -32,10 +46,10 @@
           <button
             v-for="item in fiilteredList"
             :key="item.eid"
-            class="cell flex flex-row justify-between flex-nowrap"
+            class="flex flex-row flex-nowrap cell justify-between"
             @click="showDetail(item.eid)"
           >
-            <div class="truncate w-2/3 text-left">
+            <div class="text-left w-2/3 truncate">
               {{ item.user_description }}
             </div>
             <div>
@@ -45,43 +59,67 @@
         </div>
         <div class="sm:hidden">
           <div class="py-20"></div>
-          <div
-            v-for="item in fiilteredList"
-            :key="item.eid"
-            class="w-full h-20 px-2 py-1 my-1 bg-white rounded-xl border border-gray-200 flex justify-between items-center text-sm"
-          >
-            <div class="w-3/4 h-full flex flex-col justify-between">
-              <p class="h-10 font-medium overflow-ellipsis overflow-hidden line-clamp-2 text-left">
+          <div v-for="item in fiilteredList" :key="item.eid" class="cellsm">
+            <div class="flex flex-col h-full w-3/4 justify-between">
+              <p class="font-medium h-10 text-left overflow-ellipsis overflow-hidden line-clamp-2">
                 {{ item.user_description }}
               </p>
-              <div class="flex items-center justify-start text-left">
-                <div class="w-15">{{ item.model }}</div>
-                <span class="textDescription ml-4 text-xs mt-1">{{ item.gmt_create }}</span>
+              <div class="flex text-left items-center justify-start">
+                <div class="w-17 truncate">{{ item.model }}</div>
+                <span class="text-xs ml-2 textDescription">{{ item.gmt_create }}</span>
+                <button
+                  v-if="(item.status == 1 || item.status == 2) && item.rid == rid && eventsMatchingByRID"
+                  @click="dropEvent(item)"
+                  class="text-xs font-medium text-warning w-8 rounded ml-2"
+                >
+                  放弃
+                </button>
               </div>
             </div>
             <div class="">
+              <button v-if="item.status == 0" @click="acceptEvent(item)" class="bg-primary text-primaryContent btnxs">接受</button>
+              <div class="relative">
+                <div>
+                  <button v-if="item.status == 1 && item.rid == rid" @click="submitEvent(item)" class="bg-gray-300/70 text-active btnxs">
+                    提交
+                  </button>
+                  <button
+                    v-if="item.status == 2 && item.rid == rid && eventsMatchingByRID"
+                    @click="alterSubmit(item)"
+                    class="btnxs bg-gray-300/70 text-warning"
+                  >
+                    修改
+                  </button>
+                </div>
+              </div>
               <button
-                v-if="item.status == 0"
+                v-if="item.status == 2 && role == 'admin' && checkOnly"
                 @click="acceptEvent(item)"
-                class="btnsm text-xs w-13 h-7 rounded-full bg-primary text-primaryContent"
-              >
-                接受
-              </button>
-              <button
-                v-if="item.status == 1 && item.rid == rid"
-                @click="submitEvent(item)"
-                class="btnsm text-xs w-13 h-7 rounded-full bg-green-500"
-              >
-                提交
-              </button>
-              <button v-if="item.status == 2 && item.rid == rid" @click="" class="text-xs w-13 h-7 rounded-full">修改</button>
-              <button
-                v-if="item.status == 2 && role == 'admin' && item.rid != rid"
-                @click="acceptEvent(item)"
-                class="btnsm text-xs w-13 h-7 rounded-full bg-primary text-primaryContent"
+                class="bg-primary text-primaryContent btnxs"
               >
                 审核
               </button>
+            </div>
+            <div
+              v-if="item.status == 2 && eventsMatchingByRID"
+              class="
+                absolute
+                flex
+                items-center
+                justify-center
+                h-5
+                w-20
+                transform
+                -rotate-45
+                top-2
+                -left-5
+                bg-primary
+                text-primaryContent
+                shadow-2xl
+                text-xs
+              "
+            >
+              已提交
             </div>
           </div>
         </div>
@@ -93,41 +131,11 @@
     <!-- <Dialog focus ref="Dialog"> </Dialog> -->
     <bottom-dialog ref="BottomDialog" :parms="parms">
       <template #body>
-        <div v-if="currentEvent.status == 0" class="flex flex-col items-center justify-center h-44">
-          <table class="divide-y divide-gray-400/30">
-            <tr>
-              <td class="py-2 w-[40vw] pr-10 whitespace-normal text-right">型号</td>
-              <td class="py-2 text-sm text-left font-medium pr-5">{{ currentEvent.model }}</td>
-            </tr>
-            <tr>
-              <td class="py-2 w-[40vw] pr-10 whitespace-normal text-right">问题描述</td>
-              <td class="py-2 text-sm text-left font-medium pr-5">{{ currentEvent.user_description }}</td>
-            </tr>
-            <tr>
-              <td class="py-2 w-[40vw] pr-10 whitespace-normal text-right">提交时间</td>
-              <td class="py-2 text-sm text-left pr-5">{{ currentEvent.gmt_create }}</td>
-            </tr>
-          </table>
-        </div>
-        <div v-if="currentEvent.status == 1" class="flex flex-col items-center justify-center h-88">
-          <table class="divide-y divide-gray-400/30 border-b border-gray-400/30">
-            <tr>
-              <td class="py-2 w-[40vw] pr-10 whitespace-normal text-right">型号</td>
-              <td class="py-2 text-sm text-left font-medium pr-5">{{ currentEvent.model }}</td>
-            </tr>
-            <tr>
-              <td class="py-2 w-[40vw] pr-10 whitespace-normal text-right">问题描述</td>
-              <td class="py-2 text-sm text-left font-medium pr-5">{{ currentEvent.user_description }}</td>
-            </tr>
-            <tr>
-              <td class="py-2 w-[40vw] pr-10 whitespace-normal text-right">提交时间</td>
-              <td class="py-2 text-sm text-left pr-5">{{ currentEvent.gmt_create }}</td>
-            </tr>
-          </table>
-          <div class="self-start ml-11 font-semibold mt-5">维修描述*</div>
+        <div v-if="action == 'submit' || action == 'alter'" class="flex flex-col items-center">
+          <div class="font-semibold mt-5 ml-11 self-start">维修描述*</div>
           <form class="w-full" action="">
             <textarea
-              class="resize-none border-none w-5/6 h-36 rounded-xl mt-1 p-3 bg-gray-400/40 placeholder-gray-600"
+              class="border-none rounded-xl materialInput h-36 mt-1 p-3 placeholder-gray-600 w-5/6 resize-none"
               name=""
               id=""
               cols="30"
@@ -166,7 +174,7 @@ export default {
       filterOptions: ["待接受", "我的"],
       statusToText: ["取消", "待接受", "已接受", "待审核", "关闭"],
       currentList: "全部",
-      currentEvent: "",
+      action: "",
       events: [],
       searchQuery: "",
       checkOnly: false, //审核
@@ -225,15 +233,16 @@ export default {
       }
     },
     acceptEvent(event) {
-      this.currentEvent = event;
-      console.log(this.currentEvent);
+      this.action = "accept";
+      console.log(event);
       this.$refs.BottomDialog.openModal(
         {
           subject: "接受事件",
+          actionName: "确定",
+          content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
         },
         function () {
           return () => {
-            console.log("aceeeeee");
             return Event.accept({ eid: event.eid });
           };
         }
@@ -243,17 +252,17 @@ export default {
     },
     submitEvent(event) {
       this.parms.eid = event.eid;
-      this.currentEvent = event;
-      console.log(this.currentEvent);
+      this.action = "submit";
+      console.log(event);
       this.$refs.BottomDialog.openModal(
         {
           subject: "提交维修",
           actionName: "提交",
           rounded: true,
+          content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
         },
         function () {
           return e => {
-            console.log(e);
             return Event.submit(e);
           };
         }
@@ -264,18 +273,53 @@ export default {
         })
         .catch(() => {});
     },
-    // acceptEvent(item) {
-    //   this.$refs.Dialog.openModal({
-    //     heading: "确认接受事件",
-    //     content: item.user_description,
-    //   })
-    //     .then(async () => {
-    //       console.log(item.eid);
-    //       await Event.accept({ eid: item.eid });
-    //       this.setEvents();
-    //     })
-    //     .catch(() => {});
-    // },
+    dropEvent(event) {
+      event = event;
+      this.action = "drop";
+      this.$refs.BottomDialog.openModal(
+        {
+          subject: "放弃事件",
+          actionName: "确定",
+          confirmMessage: "放弃",
+          content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+        },
+        function () {
+          return () => {
+            return Event.drop({ eid: event.eid });
+          };
+        }
+      )
+        .then(() => this.setEvents())
+        .catch(() => {});
+    },
+    async alterSubmit(event) {
+      this.action = "alter";
+      let eventDetail;
+      Event.get(event.eid).then(res => {
+        eventDetail = res.data.repair_description;
+        this.parms.description = eventDetail[eventDetail.length - 1].description;
+      });
+      await this.$refs.BottomDialog.openModal(
+        {
+          subject: "修改提交",
+          actionName: "提交",
+          rounded: true,
+          content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+        },
+        function () {
+          return e => {
+            //TODO add /event/alter
+            return Event.submit(e);
+          };
+        }
+      )
+        .then(() => {
+          this.parms = {};
+          this.setEvents();
+        })
+        .catch(() => {});
+      this.parms = {};
+    },
   },
 };
 </script>
