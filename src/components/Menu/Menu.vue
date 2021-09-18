@@ -23,8 +23,8 @@
         <MenuIcon class="bg-bg-gray-900 h-9 w-9 sm:(hidden)" @click="isOpen = !isOpen"></MenuIcon>
       </div>
       <div class="hidden sm:(block)">
-        <button v-for="item in menuitems" :key="item.name" class="text-xl cell whitespace-nowrap" @click="toLink(item.link)">
-          {{ item.name }}
+        <button v-for="item in menuList" :key="item.name" class="text-xl cell whitespace-nowrap" @click="toLink(item.path)">
+          {{ item.meta.title }}
         </button>
       </div>
       <TransitionRoot
@@ -40,12 +40,12 @@
         <div class="">
           <div class="divide-y rounded-xl divide-gray-400/30 bg-gray-50/90 shadow-sm overflow-hidden border border-gray-400/20">
             <button
-              v-for="item in menuitems"
+              v-for="item in menuList"
               :key="item.name"
               class="rounded-none h-10 m-0 font-medium cell whitespace-nowrap hover:shadow-none"
-              @click="toLink(item.link)"
+              @click="toLink(item.path)"
             >
-              {{ item.name }}
+              {{ item.meta.title }}
             </button>
           </div>
           <div class="rounded-xl flex bg-gray-50/90 h-13 shadow-sm my-1.5 p-1 items-center justify-between border">
@@ -101,23 +101,7 @@ export default {
       alias: "",
       avatar: "",
       role: "",
-      menuitems: [
-        {
-          name: "维修事件",
-          icon: "star",
-          link: "/",
-        },
-        {
-          name: "成员管理",
-          icon: "star",
-          link: "/ElementManage/",
-        },
-        {
-          name: "设计",
-          icon: "star",
-          link: "/Design/",
-        },
-      ],
+      menuIten: [],
     };
   },
   created() {
@@ -125,6 +109,8 @@ export default {
     this.avatar = sessionStorage.getItem("avatar");
     this.role = sessionStorage.getItem("user_role");
     this.rid = sessionStorage.getItem("rid");
+    this.menuList = this.$router.options.routes[0].children;
+    // console.log(this.menuList);
   },
   methods: {
     toLink(link) {

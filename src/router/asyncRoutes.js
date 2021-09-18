@@ -5,14 +5,22 @@ const asyncRoutes = [
     component: () => import("@/views/index.vue"),
     children: [
       {
-        path: "/Events",
+        path: "/",
         name: "Events",
         component: () => import("@/views/Events/Events.vue"),
+        meta: {
+          roles: ["admin", "element"],
+          title: "维修事件",
+        },
         children: [
           {
             path: ":eid",
             name: "EventsDetail",
             component: () => import("@/views/Events/EventsDetail.vue"),
+            meta: {
+              title: "事件详情",
+              roles: ["admin", "element"],
+            },
           },
         ],
       },
@@ -20,13 +28,26 @@ const asyncRoutes = [
         path: "/ElementManage",
         name: "ElementManage",
         component: () => import("@/views/ElementManage/ElementManage.vue"),
+        meta: {
+          roles: ["admin"],
+          title: "成员管理",
+        },
       },
       {
         path: "/Design",
         name: "design",
         component: () => import("@/views/Design/Design.vue"),
+        meta: {
+          roles: ["admin", "element"],
+          title: "设计",
+        },
       },
     ],
+  },
+  {
+    path: "/activate",
+    name: "LoginActivate",
+    component: () => import("@/views/Login/LoginActivate.vue"),
   },
 ];
 export default asyncRoutes;

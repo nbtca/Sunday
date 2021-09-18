@@ -11,11 +11,11 @@
   + [x] Event Card 不同状态
   + [x] element card
   + [x] dialog 
-  + [ ] BottomDialog with option
+  + [x] BottomDialog with option
 + 权限
   + [ ] router meta
   + [ ] 动态生成router
-+ [ ] Menu item从router获取
++ [x] Menu item从router获取
 + [ ] notifier 组件
 + [ ] element edit
   + [ ] to admin

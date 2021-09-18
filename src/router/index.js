@@ -1,54 +1,8 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import constantRoutes from "./constantRoutes";
 import asyncRoutes from "./asyncRoutes";
-// TODO: router
-const routeTable = [
-  {
-    path: "/login",
-    name: "Login",
-    component: () => import("@/views/Login/Login.vue"),
-  },
-  {
-    path: "/activate",
-    name: "LoginActivate",
-    component: () => import("@/views/Login/LoginActivate.vue"),
-  },
-  {
-    path: "/test",
-    name: "test",
-    component: () => import("@/components/test.vue"),
-  },
-  {
-    path: "/",
-    name: "Index",
-    component: () => import("@/views/index.vue"),
-    children: [
-      {
-        path: "/",
-        name: "Events",
-        component: () => import("@/views/Events/Events.vue"),
-        children: [
-          {
-            path: ":eid",
-            name: "EventsDetail",
-            component: () => import("@/views/Events/EventsDetail.vue"),
-          },
-        ],
-      },
-      {
-        path: "/ElementManage",
-        name: "ElementManage",
-        component: () => import("@/views/ElementManage/ElementManage.vue"),
-      },
-      {
-        path: "/Design",
-        name: "design",
-        component: () => import("@/views/Design/Design.vue"),
-      },
-    ],
-  },
-];
-const routes = constantRoutes.concat(routeTable);
+
+const routes = asyncRoutes.concat(constantRoutes);
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -56,12 +10,28 @@ const router = createRouter({
 });
 router.beforeEach((to, from, next) => {
   const token = sessionStorage.getItem("access_token");
+  const userRole = sessionStorage.getItem("user_role");
   if (to.matched.length !== 0) {
     if (token) {
       if (to.path === "/login") {
         next({ path: "/" });
       } else {
-        next();
+        if (userRole) {
+          next();
+        } else {
+          // 模拟不存在用户权限时，获取用户权限
+          // const userRole = sessionStorage.getItem("user_role");
+          // // 并根据权限设置对应的路由
+          // let constructed = constructionRouters(routes);
+          // console.log(constructed);
+          // // store.commit('SET_ROLES_AND_ROUTES', userRole)
+          // // 如果提示 addRoutes 已弃用，使用扩展运算符完成该操作
+          // // router.addRoute(...store.getters.getRoutes)
+          // router.addRoutes(getRoutes);
+          // // 如果 addRoutes 并未完成，路由守卫会再执行一次
+          // // next({ ...to, replace: true });
+          next();
+        }
       }
     } else {
       if (to.path === "/login") {
@@ -74,17 +44,17 @@ router.beforeEach((to, from, next) => {
     next({ path: "/NotFound" });
   }
 });
-// function constructionRouters(router, t) {
-//   t = router.filter((item) => {
-//     // 如果 roles 没有被设置，则所有人均可访问
-//     if (!item.meta.roles || item.meta.roles.length === 0) return true;
-//     return item.meta.roles.indexOf(sessionStorage.getItem("user_role")) !== -1;
-//   });
-//   for (const item of t) {
-//     if (item.children) {
-//       item.children = constructionRouters(item.children);
-//     }
-//   }
-//   return t;
-// }
+function constructionRouters(router, t) {
+  t = router.filter(item => {
+    // 如果 roles 没有被设置，则所有人均可访问
+    if (!item.meta || !item.meta.roles || item.meta.roles.length === 0) return true;
+    return item.meta.roles.indexOf(sessionStorage.getItem("user_role")) !== -1;
+  });
+  for (const item of t) {
+    if (item.children) {
+      item.children = constructionRouters(item.children);
+    }
+  }
+  return t;
+}
 export default router;

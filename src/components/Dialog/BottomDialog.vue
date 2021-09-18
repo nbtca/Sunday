@@ -13,7 +13,11 @@
     <div class="flex flex-col">
       <div class="flex h-11 p-3 justify-between items-center">
         <div class="font-semibold text-base">{{ subject }}</div>
-        <button :class="[closeAction ? 'text-gray-500/80' : '']" class="text-positive focus:outline-none h-6 w-12 rounded-lg" @click="emitValue('close')">
+        <button
+          :class="[closeAction ? 'text-gray-500/80' : '']"
+          class="text-positive focus:outline-none h-6 w-12 rounded-lg"
+          @click="emitValue('close')"
+        >
           取消
         </button>
       </div>
@@ -28,9 +32,14 @@
     </div>
     <div class="flex flex-col h-28 pt-4 items-center">
       {{ message }}
-      <button v-if="closeAction == false" @click="emitValue('accept')" class="bg-positive btnsm rounded-x-full text-positiveContent">
-        {{ actionName }}
-      </button>
+      <div v-if="closeAction == false" class="" :class="[showDecline ? 'flex justify-between w-[40vw]' : '']">
+        <button v-if="showDecline" @click="emitValue('decline')" class="bg-warning text-warningContent btnsm">
+          {{ declineActionName }}
+        </button>
+        <button @click="emitValue('accept')" class="bg-positive text-positiveContent btnsm" :class="[showDecline ? '' : 'rounded-x-full']">
+          {{ acceptActionName }}
+        </button>
+      </div>
     </div>
   </TransitionRoot>
 </template>
@@ -50,51 +59,58 @@ export default {
   },
   data() {
     return {
-      rounded: false,
-      open: false,
-      closeAction: false,
+      open: false, // 显示
+      closeAction: false, // 点击 取消/确认/拒绝
       value: "",
-      subject: "Subject",
-      actionName: "确认",
-      message: "",
-      confirmMessage: "",
+      subject: "Subject", // header 主题
+      acceptActionName: "",
+      declineActionName: "",
+      showDecline: false, // 显示拒绝按钮
+      rounded: false, // 上部圆角
+      message: "", // 操作feedback
+      content: [], // info列表内容
+      confirmMessage: "", // 输入来确认
       confirmInput: {},
       warning: "",
-      content: [],
     };
   },
   //         emitValue(accept)->closeAction=true\\
   //   openModal-------watch"closeAction"------->e.action->res notice->wait 50000->resolve
-  watch: {},
   methods: {
-    openModal(e, action) {
+    openModal(e) {
       this.open = true;
       this.rounded = e.rounded;
       this.subject = e.subject;
-      this.actionName = e.actionName;
+      this.acceptActionName = e.acceptActionName || "确认";
+      this.declineActionName = e.declineActionName || "拒绝";
+      this.showDecline = e.declineAction;
       this.content = e.content;
       this.confirmMessage = e.confirmMessage;
       return new Promise((resolve, reject) => {
+        let performAction = action => {
+          this.message = "processing";
+          action(this.value).then(res => {
+            console.log(res);
+            this.message = "success";
+            setTimeout(() => {
+              resolve(this.value);
+              this.cleanUp();
+            }, 1000);
+          });
+        };
         this.$watch("closeAction", () => {
           if (this.value === "accept") {
-            if (action != null) {
-              this.message = "processing";
-              let unpack = action();
-              unpack(this.parms).then(res => {
-                console.log(res);
-                this.message = "success";
-                setTimeout(() => {
-                  resolve(this.value);
-                  this.cleanUp();
-                }, 1000);
-              });
+            if (e.acceptAction) {
+              performAction(e.acceptAction());
             } else {
               resolve(this.value);
               this.cleanUp();
             }
+          } else if (this.value === "decline") {
+            performAction(e.declineAction());
           } else {
-            this.cleanUp();
             reject();
+            this.cleanUp();
           }
         });
       });
@@ -106,7 +122,7 @@ export default {
       this.value = "";
       this.subject = "";
       this.rounded = false;
-      this.actionName = "确认";
+      this.showDecline = false;
     },
     emitValue(e) {
       if (e != "accept" || this.confirmInput.value == this.confirmMessage || !this.confirmMessage) {

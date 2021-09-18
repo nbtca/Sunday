@@ -37,11 +37,7 @@
           </TabList>
         </TabGroup>
       </div>
-      <div
-        class="flex flex-col-reverse w-full px-2 overflow-auto sm:flex-col"
-        style="height: 100vh"
-        :style="[isSafari ? '' : 'height: calc(var(---vh, 1vh) * 100)']"
-      >
+      <scroll-area>
         <div class="hidden sm:block">
           <button
             v-for="item in fiilteredList"
@@ -94,7 +90,7 @@
               </div>
               <button
                 v-if="item.status == 2 && role == 'admin' && checkOnly"
-                @click="acceptEvent(item)"
+                @click="judgeSubmit(item)"
                 class="bg-primary text-primaryContent btnxs"
               >
                 审核
@@ -123,7 +119,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </scroll-area>
     </div>
     <div class="w-full hidden sm:block">
       <router-view @update="setEvents()"></router-view>
@@ -157,6 +153,7 @@ import { Event } from "@/api/api";
 import { TabGroup, TabList, Tab } from "@headlessui/vue";
 import Dialog from "@/components/Dialog/Dialog.vue";
 import BottomDialog from "@/components/Dialog/BottomDialog.vue";
+import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
 export default {
   name: "Events",
   components: {
@@ -165,6 +162,7 @@ export default {
     Tab,
     Dialog,
     BottomDialog,
+    ScrollArea,
   },
   setup() {},
   data() {
@@ -179,7 +177,6 @@ export default {
       searchQuery: "",
       checkOnly: false, //审核
       eventsMatchingByRID: false,
-      isSafari: false,
       parms: {},
     };
   },
@@ -197,26 +194,25 @@ export default {
   },
   watch: {
     $route() {},
+    action() {
+      this.parms = {};
+    },
     parms() {
-      console.log(this.parms);
+      // console.log(this.parms);
     },
   },
   async created() {
-    var userAgent = navigator.userAgent;
-    this.isSafari = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1;
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("---vh", `${vh}px`);
     this.rid = sessionStorage.getItem("rid");
     this.role = sessionStorage.getItem("user_role");
     if (this.role == "admin") {
       this.filterOptions = ["全部", "我的", "审核"];
     }
     this.setEvents();
-  },
+ },
   methods: {
     setEvents() {
       Event.get().then(res => (this.events = res.data));
-      console.log(this.events);
+      // console.log(this.events);
     },
     showDetail(e) {
       this.$router.push("/Events/" + e);
@@ -235,18 +231,15 @@ export default {
     acceptEvent(event) {
       this.action = "accept";
       console.log(event);
-      this.$refs.BottomDialog.openModal(
-        {
-          subject: "接受事件",
-          actionName: "确定",
-          content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
-        },
-        function () {
+      this.$refs.BottomDialog.openModal({
+        subject: "接受事件",
+        content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+        acceptAction: () => {
           return () => {
             return Event.accept({ eid: event.eid });
           };
-        }
-      )
+        },
+      })
         .then(() => this.setEvents())
         .catch(() => {});
     },
@@ -254,19 +247,17 @@ export default {
       this.parms.eid = event.eid;
       this.action = "submit";
       console.log(event);
-      this.$refs.BottomDialog.openModal(
-        {
-          subject: "提交维修",
-          actionName: "提交",
-          rounded: true,
-          content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
-        },
-        function () {
+      this.$refs.BottomDialog.openModal({
+        subject: "提交维修",
+        acceptActionName: "提交",
+        rounded: true,
+        content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+        acceptAction: () => {
           return e => {
             return Event.submit(e);
           };
-        }
-      )
+        },
+      })
         .then(() => {
           this.parms = {};
           this.setEvents();
@@ -274,51 +265,80 @@ export default {
         .catch(() => {});
     },
     dropEvent(event) {
-      event = event;
       this.action = "drop";
-      this.$refs.BottomDialog.openModal(
-        {
-          subject: "放弃事件",
-          actionName: "确定",
-          confirmMessage: "放弃",
-          content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
-        },
-        function () {
+      this.$refs.BottomDialog.openModal({
+        subject: "放弃事件",
+        confirmMessage: "放弃",
+        content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+        acceptAction: () => {
           return () => {
             return Event.drop({ eid: event.eid });
           };
-        }
-      )
+        },
+      })
         .then(() => this.setEvents())
         .catch(() => {});
     },
     async alterSubmit(event) {
       this.action = "alter";
+      this.parms = {};
       let eventDetail;
       Event.get(event.eid).then(res => {
         eventDetail = res.data.repair_description;
         this.parms.description = eventDetail[eventDetail.length - 1].description;
       });
-      await this.$refs.BottomDialog.openModal(
-        {
-          subject: "修改提交",
-          actionName: "提交",
-          rounded: true,
-          content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
-        },
-        function () {
+      await this.$refs.BottomDialog.openModal({
+        subject: "修改提交",
+        acceptActionName: "提交",
+        rounded: true,
+        content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+        acceptAction: () => {
           return e => {
             //TODO add /event/alter
             return Event.submit(e);
           };
-        }
-      )
+        },
+      })
         .then(() => {
-          this.parms = {};
           this.setEvents();
         })
         .catch(() => {});
-      this.parms = {};
+    },
+    async judgeSubmit(event) {
+      this.action = "judge";
+      var lastRepairDescription;
+      await Event.get(event.eid).then(res => {
+        var repairDesacription = res.data.repair_description;
+        lastRepairDescription = repairDesacription[repairDesacription.length - 1].description;
+      });
+      console.log(lastRepairDescription);
+      await this.$refs.BottomDialog.openModal({
+        subject: "审核提交",
+        acceptActionName: "通过",
+        rounded: true,
+        content: [
+          { 型号: event.model },
+          { 问题描述: event.user_description },
+          { 创建时间: event.gmt_create },
+          { 维修描述: lastRepairDescription },
+        ],
+        acceptAction: () => {
+          return e => {
+            //TODO add /event/alter
+            return Event.submit(e);
+          };
+        },
+        declineAction: () => {
+          return e => {
+            // TODO add /event/reject
+            return Event.reject(e);
+          };
+        },
+      })
+        .then(() => {
+          this.setEvents();
+        })
+        .catch(() => {});
     },
   },
 };

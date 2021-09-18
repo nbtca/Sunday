@@ -133,11 +133,7 @@
       </div>
     </div>
     <div class="sm:hidden">
-      <div
-        class="flex flex-col-reverse w-full px-2 overflow-auto"
-        style="height: 100vh"
-        :style="[isSafari ? '' : 'height: calc(var(---vh, 1vh) * 100)']"
-      >
+      <scroll-area>
         <div v-for="element in elementList" :key="element.rid" class="cellsm overflow-visible">
           <div class="flex">
             <div class="border rounded-full flex-shrink-0 h-14 w-14 relative overflow-hidden">
@@ -167,7 +163,7 @@
           </div>
         </div>
         <div class="py-14"></div>
-      </div>
+      </scroll-area>
       <div class="border-t flex h-12 w-full py-2 px-1 items-center">
         <input
           type="text"
@@ -263,6 +259,7 @@ import { Element } from "@/api/api";
 import Dialog from "@/components/Dialog/Dialog.vue";
 import InputBase from "@/components/Input/InputBase.vue";
 import BottomDialog from "@/components/Dialog/BottomDialog.vue";
+import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
 import isValid from "@/Utils/isValid.js";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import { UserIcon, UploadIcon, PlusIcon, UserAddIcon } from "@heroicons/vue/outline";
@@ -281,6 +278,7 @@ export default {
     Dialog,
     BottomDialog,
     InputBase,
+    ScrollArea,
   },
   data() {
     return {
@@ -290,17 +288,12 @@ export default {
         class: {},
       },
       elementList: [],
-      isSafari: false,
     };
   },
   watch: {},
   computed: {},
   async created() {
-    var userAgent = navigator.userAgent;
-    this.isSafari = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1;
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("---vh", `${vh}px`);
-    await this.setElement();
+    this.setElement();
   },
   methods: {
     submit() {
@@ -325,12 +318,15 @@ export default {
         .catch(() => {});
     },
     addElementByBottomDialog() {
-      this.$refs.BottomDialogAdd.openModal({ subject: "添加成员", actionName: "确定" }, function () {
-        return e => {
-          console.log(e);
-          let res = isValid(e);
-          return Element.create(res);
-        };
+      this.$refs.BottomDialogAdd.openModal({
+        subject: "添加成员",
+        acceptAction: () => {
+          return e => {
+            console.log(e);
+            let res = isValid(e);
+            return Element.create(res);
+          };
+        },
       })
         .then(() => {
           this.setElement();
