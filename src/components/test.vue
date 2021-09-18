@@ -8,7 +8,7 @@
 <script>
 import InputBase from "@/components/Input/InputBase.vue";
 import Success from "./Dialog/success.vue";
-import notify from "@/components/Notify/ButtomDialog.js";
+import notify from "@/components/Notify/Notify.js";
 export default {
   components: {
     InputBase,

@@ -64,8 +64,8 @@
               </div>
             </div>
             <div class="mr-1">
-              <button class="bg-neutral text-neutralContent btnsm">账号设置</button>
-              <button class="bg-warning text-warningContent ml-2 btnsm" @click="logout">登出</button>
+              <button @click="accountSetting" class="bg-neutral text-neutralContent btnsm">账号设置</button>
+              <button @click="logout" class="bg-warning text-warningContent ml-2 btnsm">登出</button>
             </div>
           </div>
         </div>
@@ -86,25 +86,9 @@
       <div><button>账号设置</button></div>
       <button class="bg-warning text-warningContent btn" @click="logout">登出</button>
     </div>
-  </div>
-</template>
-
-<script>
-import { MenuIcon } from "@heroicons/vue/outline";
-import { TransitionRoot } from "@headlessui/vue";
-export default {
-  name: "Menu",
-  components: { MenuIcon, TransitionRoot },
-  data() {
-    return {
-      isOpen: false,
-      alias: "",
-      avatar: "",
-      role: "",
-      menuIten: [],
-    };
-  },
-  created() {
+    <bottom-dialog ref="BottomDialog">
+      <template #body>
+        <div class="h-[40vh]">ß
     this.alias = sessionStorage.getItem("alias");
     this.avatar = sessionStorage.getItem("avatar");
     this.role = sessionStorage.getItem("user_role");
@@ -120,6 +104,19 @@ export default {
     logout() {
       sessionStorage.removeItem("access_token");
       this.$router.push("/login");
+    },
+    accountSetting() {
+      this.$refs.BottomDialog.openModal({
+        subject: "账号设置",
+        rounded: true,
+        acceptAction: () => {
+          return () => {
+            return Event.accept({ eid: event.eid });
+          };
+        },
+      })
+        .then(() => this.setEvents())
+        .catch(() => {});
     },
   },
 };

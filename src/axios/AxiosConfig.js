@@ -1,6 +1,6 @@
 import axios from "axios";
 import qs from "qs";
-
+// import notify from "@/components/Notify/Notify.js";
 axios.defaults.baseURL = "api/";
 // axios.defaults.baseURL =
 //   "http://61774500-1018390206127906.test.functioncompute.com/"; //测试
