@@ -96,6 +96,8 @@
                 审核
               </button>
             </div>
+
+            <!--//TODO show status <div class="absolute top-0 right-0 mt-1 mr-2 rounded-x-full w-13 shadow-innerlg bg-primary text-primaryContent text-shadow-xl ">123</div> -->
             <div
               v-if="item.status == 2 && eventsMatchingByRID"
               class="
@@ -208,7 +210,7 @@ export default {
       this.filterOptions = ["全部", "我的", "审核"];
     }
     this.setEvents();
- },
+  },
   methods: {
     setEvents() {
       Event.get().then(res => (this.events = res.data));
@@ -309,7 +311,7 @@ export default {
       var lastRepairDescription;
       await Event.get(event.eid).then(res => {
         var repairDesacription = res.data.repair_description;
-        lastRepairDescription = repairDesacription[repairDesacription.length - 1].description;
+        lastRepairDescription = repairDesacription[repairDesacription.length - 1];
       });
       console.log(lastRepairDescription);
       await this.$refs.BottomDialog.openModal({
@@ -320,7 +322,8 @@ export default {
           { 型号: event.model },
           { 问题描述: event.user_description },
           { 创建时间: event.gmt_create },
-          { 维修描述: lastRepairDescription },
+          { 维修描述: lastRepairDescription.description },
+          { 提交时间: lastRepairDescription.time },
         ],
         acceptAction: () => {
           return e => {

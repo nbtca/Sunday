@@ -32,11 +32,11 @@
     </div>
     <div class="flex flex-col h-28 pt-4 items-center">
       {{ message }}
-      <div v-if="closeAction == false" class="" :class="[showDecline ? 'flex justify-between w-[40vw]' : '']">
-        <button v-if="showDecline" @click="emitValue('decline')" class="bg-warning text-warningContent btnsm">
+      <div v-if="closeAction == false" class="" :class="[showDecline ? 'flex justify-around w-[80vw]' : '']">
+        <button v-if="showDecline" @click="emitValue('decline')" class="btnsm declineBtn text-warning">
           {{ declineActionName }}
         </button>
-        <button @click="emitValue('accept')" class="bg-positive text-positiveContent btnsm" :class="[showDecline ? '' : 'rounded-x-full']">
+        <button @click="emitValue('accept')" class="btnsm" :class="[showDecline ? 'declineBtn text-primary' : 'bg-positive text-positiveContent rounded-x-full']">
           {{ acceptActionName }}
         </button>
       </div>
@@ -137,4 +137,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.declineBtn {
+  @apply materialThin bg-gray-50/70 border border-gray-100 rounded-2xl h-11 w-3/7 shadow hover:shadow-lg text-base font-bold;
+}
+</style>
