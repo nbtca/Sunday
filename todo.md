@@ -16,6 +16,17 @@
   + [ ] router meta
   + [ ] 动态生成router
 + [x] Menu item从router获取
++ [ ] 账号设置
+  + 可编辑
+    + password
+    + alias
+    + phone
+    + qq
+    + avatar
+  + 展示
+    + id
+    + 创建时间
+    + 班级/姓名
 + [ ] notifier 组件
 + [ ] element edit
   + [ ] to admin

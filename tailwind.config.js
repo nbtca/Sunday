@@ -53,7 +53,7 @@ module.exports = {
     btnsm:
       "rounded-md whitespace-nowrap shadow-sm select-none hover:(shadow-lg) focus:(outline-none) transition duration-300 ease-in-out text-sm font-medium h-8 min-w-14 p-1",
     btnxs:
-      "whitespace-nowrap shadow-sm select-none focus:(outline-none) transition duration-300 ease-in-out min-w-13 text-xs font-bold p-1 h-7 rounded-full",
+      "rounded-full whitespace-nowrap shadow-sm select-none focus:(outline-none) transition duration-300 ease-in-out min-w-13 text-xs font-bold p-1 h-7 ",
     cellsm:"relative overflow-hidden bg-white/90 border border-base-standout/70 rounded-xl flex justify-between w-full h-21 mb-2 py-1 px-2 text-sm items-center shadow-sm",
     cell: "flex items-center justify-center w-full p-3 my-1 transition-all duration-300 ease-in-out rounded-md cursor-pointer select-none hover:(shadow-md bg-gray-300) focus:(outline-none)",
     infoCell: "px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6",

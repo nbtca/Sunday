@@ -181,7 +181,7 @@
         </button>
       </div>
     </div>
-    <bottom-dialog ref="BottomDialogAdd" :parms="newElement">
+    <bottom-dialog ref="BottomDialogAdd" :passData="newElement">
       <template #body>
         <form action="" class="mx-3">
           <InputBase
@@ -213,7 +213,7 @@
         </form>
       </template>
     </bottom-dialog>
-    <Dialog focus ref="Dialog" :parms="newElement">
+    <Dialog focus ref="Dialog" :passData="newElement">
       <template #body>
         <form @submit="submit" @close="$refs.Dialog.closeModal()" class="">
           <div class="grid gap-1 sm:gap-3">
@@ -292,7 +292,7 @@ export default {
   },
   watch: {},
   computed: {},
-  async created() {
+  created() {
     this.setElement();
   },
   methods: {
@@ -306,7 +306,7 @@ export default {
         });
       }
     },
-    async setElement() {
+    setElement() {
       Element.get().then(res => {
         console.log(res.data);
         this.elementList = res.data;

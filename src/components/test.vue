@@ -1,6 +1,9 @@
 <template>
   <div class="h-96 w-96 flex flex-col justify-center items-center w-full">
-    <button @click="call">12322</button>
+    <form action="">
+      <textarea name="" id="" cols="30" rows="10" required></textarea>
+    </form>
+      <button @click="call">12322</button>
     <success></success>
   </div>
 </template>

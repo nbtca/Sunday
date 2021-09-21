@@ -1,17 +1,48 @@
 <template>
   <div class="select-none flex flex-col items-center">
-    <div v-if="subject" class="self-start mx-1 mb-0.5 font-medium text-sm sm:(text-lg font-semibold mb-1 )">
-      {{ isSubjectRequired }}
+    <div class="w-full flex justify-between items-center mb-0.5">
+      <div v-if="subject" class="mx-1 font-medium text-sm sm:(text-lg font-semibold mb-1 )">
+        {{ isSubjectRequired }}
+      </div>
+      <div>
+        <button v-if="disabled" @click="disabled = false" class="mx-1 textLink font-medium text-xs">编辑</button>
+        <button
+          v-if="disabled == false && confirmBeforeInput"
+          @click="
+            disabled = true;
+            input = val;
+          "
+          class="mx-1 font-medium text-xs"
+        >
+          取消
+        </button>
+      </div>
     </div>
-    <input
-      :type="type"
-      class="my-0 p-2 w-full materialInput rounded-lg shadow-innersm border-0 sm:(bg-transparent border textInput)"
-      :class="[warning ? 'ring-[2px] ring-warning' : '', isValid && input ? '' : '', center ? 'text-center' : '']"
-      :required="required"
-      :placeholder="placeholder"
-      v-model.lazy="input"
-    />
-    <div class="h-5 w-full mt-0.5">
+    <div class="relative w-full mb-3 sm:mb-0">
+      <input
+        :type="type"
+        class="transition duration-100 my-0 p-2 w-full rounded-lg shadow-innersm materialInput sm:(bg-transparent border textInput)"
+        :class="[
+          warning ? 'ring-[2px] ring-warning' : '',
+          isValid && input ? '' : '',
+          center ? 'text-center' : '',
+          disabled ? ' bg-opacity-0 border-gray-400 shadow-none' : 'border-gray-400/10',
+        ]"
+        :required="required"
+        :placeholder="placeholder"
+        v-model.lazy="input"
+        :readonly="disabled"
+      />
+      <div class="absolute inset-y-0 right-0 pr-2 flex items-center sm:hidden">
+        <div v-if="warning == ''" class="textDescription">
+          {{ hint }}
+        </div>
+        <div class="text-left textDescription text-warning">
+          {{ warning }}
+        </div>
+      </div>
+    </div>
+    <div class="h-5 w-full mt-0.5 hidden sm:block">
       <div v-if="warning == ''" class="text-left mx-2 textDescription">
         {{ hint }}
       </div>
@@ -51,6 +82,14 @@ export default {
       type: String,
       default: "",
     },
+    confirmBeforeInput: {
+      type: Boolean,
+      default: false,
+    },
+    val: {
+      type: String,
+      default: "",
+    },
     content: Object,
     placeholder: String,
   },
@@ -58,6 +97,7 @@ export default {
     return {
       input: "",
       warning: "",
+      disabled: false,
     };
   },
   computed: {
@@ -70,6 +110,8 @@ export default {
   },
   mounted() {
     this.warning = this.warn;
+    this.input = this.val;
+    this.confirmBeforeInput ? (this.disabled = true) : "";
     this.$emit("update:content", {
       value: this.isValid ? this.input : null,
       isValid: this.isValid,
@@ -104,6 +146,9 @@ export default {
         value: this.input,
         isValid: this.isValid,
       });
+    },
+    val() {
+      this.input = this.val;
     },
   },
 };

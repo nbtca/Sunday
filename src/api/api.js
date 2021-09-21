@@ -20,7 +20,7 @@ const Event = {
 };
 const Element = {
   async get(rid) {
-    if (rid) return await axiosApi("/elements/" + eid, "get");
+    if (rid) return await axiosApi("/elements/" + rid, "get");
     else return await axiosApi("/elements", "get");
   },
   async create(element) {
