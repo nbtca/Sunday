@@ -16,7 +16,7 @@
   + [ ] router meta
   + [ ] 动态生成router
 + [x] Menu item从router获取
-+ [ ] 账号设置
++ [x] 账号设置
   + 可编辑
     + password
     + alias
@@ -33,6 +33,8 @@
 + [ ] 添加图标
 + [ ] 加载动画
 + [ ] 桌面端风格统一
+  + [ ] dialog
+  + [ ] notifier
 + [ ] 导入Element
 + [ ] 后台Event Action修复 ?
 + [ ] 后台限流

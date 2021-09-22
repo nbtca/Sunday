@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <div class="flex flex-col h-full w-full items-center sm:(w-[24vw] min-w-[250px] border-r)">
+    <div class="flex flex-col h-full w-full items-center sm:(w-[24vw] min-w-[250px] border-r border-gray-400/30)">
       <div
         class="
           bg-base

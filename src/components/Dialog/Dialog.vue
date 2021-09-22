@@ -28,10 +28,9 @@
           >
             <div
               class="
-                bg-white
+                materialMedium
                 border
                 rounded-xl
-                border-gray-100
                 shadow-xl
                 transform
                 transition-all

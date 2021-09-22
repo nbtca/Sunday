@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-center" style="height: 100vh">
     <div class="flex flex-col items-center mt-20 md:mt-28">
-      <form @submit.prevent="login" class="grid gap-4 place-items-center" style="width: 17vw; min-width: 300px">
+      <form @submit.prevent="login" class="grid gap-4 place-items-center" style="width: 20vw; min-width: 300px">
         <div class="" style="width: 15vw; min-width: 250px">
           <img src="../../assets/logo.png" alt="" class="filter drop-shadow" />
         </div>
@@ -15,7 +15,7 @@
           :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]"
         />
         <InputBase placeholder="密码" :warn="isPasswordValid" type="password" class="w-full" v-model:content="account.password" />
-        <button class="w-full btn bg-primary text-primaryContent shadow-lg" type="submit">登入</button>
+        <button class="w-full btn bg-primary text-primaryContent shadow-md" type="submit">登入</button>
       </form>
     </div>
   </div>
@@ -66,7 +66,7 @@ export default {
               if (!res.data.isActivated) {
                 that.$router.push("/activate");
               } else {
-                that.$router.push("/");
+                that.$router.push("/Events");
               }
             } else if (resultCode === 101) {
               that.isIDValid = "账号不存在";

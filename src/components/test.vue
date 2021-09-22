@@ -1,10 +1,6 @@
 <template>
-  <div class="h-96 w-96 flex flex-col justify-center items-center w-full">
-    <form action="">
-      <textarea name="" id="" cols="30" rows="10" required></textarea>
-    </form>
-      <button @click="call">12322</button>
-    <success></success>
+  <div class="h-96 w-full bg-green-700 flex flex-col justify-center items-center w-full">
+    <button class="btn bg-blue-400" @click="call">alart</button>
   </div>
 </template>
 

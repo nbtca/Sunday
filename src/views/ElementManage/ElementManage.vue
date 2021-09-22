@@ -3,79 +3,74 @@
     <div class="hidden sm:block">
       <div class="flex w-full p-8 pb-2 justify-between">
         <div class="textHeading">成员管理</div>
-        <div>
-          <Menu as="div" class="z-50">
-            <div>
-              <MenuButton class="bg-primary flex text-primaryContent w-30 btn justify-center items-center">
-                <PlusIcon class="h-5 text-white mr-2 w-5" />
-                <div>添加成员</div>
-              </MenuButton>
-            </div>
-            <transition
-              enter-active-class="transition duration-100 ease-out"
-              enter-from-class="transform scale-95 opacity-0"
-              enter-to-class="transform scale-100 opacity-100"
-              leave-active-class="transition duration-75 ease-in"
-              leave-from-class="transform scale-100 opacity-100"
-              leave-to-class="transform scale-95 opacity-0"
+        <Menu as="div" class="z-50">
+          <div>
+            <MenuButton class="bg-primary flex text-primaryContent w-30 btn justify-center items-center">
+              <PlusIcon class="h-5 text-white mr-2 w-5" />
+              <div>添加成员</div>
+            </MenuButton>
+          </div>
+          <transition
+            enter-active-class="transition duration-100 ease-out"
+            enter-from-class="transform scale-95 opacity-0"
+            enter-to-class="transform scale-100 opacity-100"
+            leave-active-class="transition duration-75 ease-in"
+            leave-from-class="transform scale-100 opacity-100"
+            leave-to-class="transform scale-95 opacity-0"
+          >
+            <MenuItems
+              class="
+                divide-y
+                bg-white
+                rounded-md
+                divide-gray-100
+                shadow-lg
+                ring-black
+                mt-2
+                origin-top-right
+                right-4
+                ring-1 ring-opacity-5
+                w-40
+                absolute
+                focus:outline-none
+              "
             >
-              <MenuItems
-                class="
-                  divide-y
-                  bg-white
-                  rounded-md
-                  divide-gray-100
-                  shadow-lg
-                  ring-black
-                  mt-2
-                  origin-top-right
-                  right-4
-                  ring-1 ring-opacity-5
-                  w-40
-                  absolute
-                  focus:outline-none
-                "
-              >
-                <div class="py-1 px-1">
-                  <MenuItem v-slot="{ active }">
-                    <button
-                      @click="addElement"
-                      :class="[
-                        active ? 'text-primaryContent bg-primary' : '',
-                        'group flex rounded-md items-center w-full h-full p-2 text-sm',
-                      ]"
-                    >
-                      <UserAddIcon :active="active" class="h-5 mr-2 text-violet-300 w-5" aria-hidden="true" />
-                      手动添加
-                    </button>
-                  </MenuItem>
-                  <MenuItem v-slot="{ active }">
-                    <button
-                      :class="[
-                        active ? 'text-primaryContent bg-primary' : '',
-                        'group flex rounded-md items-center w-full px-2 py-2 text-sm',
-                      ]"
-                    >
-                      <UploadIcon :active="active" class="h-5 mr-2 text-violet-300 w-5" aria-hidden="true" />
-                      从表格导入
-                    </button>
-                  </MenuItem>
-                </div>
-              </MenuItems>
-            </transition>
-          </Menu>
-        </div>
+              <div class="py-1 px-1">
+                <MenuItem v-slot="{ active }">
+                  <button
+                    @click="addElement"
+                    :class="[
+                      active ? 'text-primaryContent bg-primary' : '',
+                      'group flex rounded-md items-center w-full h-full p-2 text-sm',
+                    ]"
+                  >
+                    <UserAddIcon :active="active" class="h-5 mr-2 text-violet-300 w-5" aria-hidden="true" />
+                    手动添加
+                  </button>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                  <button
+                    :class="[active ? 'text-primaryContent bg-primary' : '', 'group flex rounded-md items-center w-full px-2 py-2 text-sm']"
+                  >
+                    <UploadIcon :active="active" class="h-5 mr-2 text-violet-300 w-5" aria-hidden="true" />
+                    从表格导入
+                  </button>
+                </MenuItem>
+              </div>
+            </MenuItems>
+          </transition>
+        </Menu>
       </div>
       <div class="w-full py-2 align-middle">
         <table class="divide-y divide-gray-200 w-full">
           <thead class="">
             <tr>
-              <th scope="col" class="py-3 px-6 textDescription whitespace-nowrap"></th>
-              <th scope="col" class="py-3 px-6 textDescription whitespace-nowrap">联系方式</th>
-              <th scope="col" class="py-3 px-6 textDescription whitespace-nowrap">完成事件数</th>
-              <th scope="col" class="py-3 px-6 textDescription whitespace-nowrap">状态</th>
-              <th scope="col" class="py-3 px-6 textDescription whitespace-nowrap">创建日期</th>
-              <th scope="col" class="py-3 px-6">
+              <th scope="col" class="tableHead"></th>
+              <th scope="col" class="tableHead">联系方式</th>
+              <th scope="col" class="tableHead hidden lg:block ">完成事件数</th>
+              <th scope="col" class="tableHead">状态</th>
+              <th scope="col" class="tableHead hidden md:block">创建日期</th>
+              <th scope="col" class="tableHead">
                 <span>Edit</span>
               </th>
             </tr>
@@ -88,7 +83,7 @@
                     <img v-if="element.ravatar" class="object-fill absolute" :src="element.ravatar" alt="" />
                     <UserIcon v-if="!element.ravatar" class="bg-base-standout object-fill p-1" />
                   </div>
-                  <div class="flex flex-col ml-4 items-start">
+                  <div class="flex flex-col md:ml-4 items-start">
                     <div class="inline-flex items-center">
                       <div class="font-medium text-lg tracking-wider">
                         {{ element.ralias || "null" }}
@@ -117,11 +112,11 @@
                   </tr>
                 </table>
               </td>
-              <td class="tableCell">
+              <td class="tableCell hidden lg:block">
                 {{ element.event_count }}
               </td>
               <td class="tableCell">{{ element.isActivated }}</td>
-              <td class="tableCell">
+              <td class="tableCell hidden md:block">
                 {{ element.gmt_modified }}
               </td>
               <td class="font-medium text-right text-sm tableCell">

@@ -5,7 +5,7 @@ const asyncRoutes = [
     component: () => import("@/views/index.vue"),
     children: [
       {
-        path: "/",
+        path: "/Events",
         name: "Events",
         component: () => import("@/views/Events/Events.vue"),
         meta: {

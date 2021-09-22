@@ -4,7 +4,9 @@
       <div v-if="subject" class="mx-1 font-medium text-sm sm:(text-lg font-semibold mb-1 )">
         {{ isSubjectRequired }}
       </div>
-      <div>
+    </div>
+    <div class="relative w-full mb-3 sm:mb-0">
+      <div class="absolute -top-6 right-0">
         <button v-if="disabled" @click="disabled = false" class="mx-1 textLink font-medium text-xs">编辑</button>
         <button
           v-if="disabled == false && confirmBeforeInput"
@@ -17,17 +19,27 @@
           取消
         </button>
       </div>
-    </div>
-    <div class="relative w-full mb-3 sm:mb-0">
       <input
         :type="type"
-        class="transition duration-100 my-0 p-2 w-full rounded-lg shadow-innersm materialInput sm:(bg-transparent border textInput)"
         :class="[
           warning ? 'ring-[2px] ring-warning' : '',
           isValid && input ? '' : '',
           center ? 'text-center' : '',
-          disabled ? ' bg-opacity-0 border-gray-400 shadow-none' : 'border-gray-400/10',
+          disabled ? ' bg-opacity-0 border-gray-400 shadow-none cursor-default pointer-events-none' : 'border-gray-400/10',
         ]"
+        class="
+          transition
+          duration-100
+          p-2
+          w-full
+          rounded-lg
+          shadow-innersm
+          materialInput
+          sm:(bg-transparent
+          border border-gray-500
+          textInput
+          )
+        "
         :required="required"
         :placeholder="placeholder"
         v-model.lazy="input"

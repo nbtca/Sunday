@@ -4,11 +4,11 @@
       <div class="flex py-5 px-4 items-center justify-between sm:px-10">
         <div class="text-left">
           <h3 class="font-medium pt-4 text-4xl">事件详情</h3>
-          <p class="ml-0.5 textDescription">Eid:{{ eid }}</p>
+          <p class="ml-0.5 textDescription">{{ detail.gmt_create }}</p>
         </div>
         <div class="textSubHeading">{{ statusToText[detail.status + 1] }}</div>
       </div>
-      <div class="border-base-standout">
+      <div class="">
         <dl>
           <div class="bg-gray-50 infoCell">
             <dt class="text-gray-500 infoHead">型号</dt>
@@ -65,7 +65,7 @@
       <div v-if="detail.rid == rid && detail.status == 1" class="flex flex-col">
         <textarea
           v-model="descriptionToSubmit"
-          class="border-2 h-28 shadow-inner mb-7 w-80 textInput self-center"
+          class="border h-28 shadow-inner mb-7 w-60 textInput self-center md:(w-72) lg:(w-80)"
           style="resize: none"
         ></textarea>
         <div>
