@@ -17,6 +17,9 @@ const Event = {
   async submit(e) {
     return await axiosApi("/events/submit", e, "post");
   },
+  async alterSubmit(e) {
+    return await axiosApi("/events/alterSubmit", e, "post");
+  },
 };
 const Element = {
   async get(rid) {

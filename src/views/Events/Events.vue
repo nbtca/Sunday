@@ -256,7 +256,7 @@ export default {
         content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
         acceptAction: () => {
           return e => {
-            return Event.submit({ description: e.description });
+            return Event.submit({ eid: event.eid, description: e.description });
           };
         },
       })
@@ -280,7 +280,7 @@ export default {
           acceptAction: () => {
             return e => {
               //TODO add /event/alter
-              return Event.submit(e);
+              return Event.alterSubmit({eid: event.eid, description: e.description});
             };
           },
         })
