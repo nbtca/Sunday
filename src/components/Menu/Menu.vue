@@ -97,8 +97,8 @@
             "
           >
             <div class="flex items-center">
-              <div class="rounded-lg h-11 w-11 overflow-hidden block shadow-innerlg">
-                <img class="opacity-90" :src="avatar" alt="" />
+              <div class="rounded-lg h-11 w-11 overflow-hidden border block">
+                <img class="" :src="avatar" alt="" />
               </div>
               <div class="ml-2">
                 <div class="flex items-center">
@@ -143,20 +143,20 @@
       <template #body>
         <div class="cellsm h-26 materialMedium bg-opacity-30">
           <div class="flex items-center">
-            <div class="flex mr-4">
-              <div class="rounded-full h-20 w-20 overflow-hidden">
-                <img class="" :src="accountInfo.ravatar" alt="" />
+            <div class="relative flex">
+              <div class="rounded-full border border-black h-20 w-20 overflow-hidden">
+                <img class="object-cover" :src="accountInfo.ravatar" alt="" />
               </div>
-              <button class="textLink text-xs self-end">上传</button>
+              <button class="absolute bottom-0 -right-10 textLink text-xs self-end">修改头像</button>
             </div>
-            <div class="flex flex-col items-start">
-              <div class="flex text-base font-medium">
-                <div class="mr-2">{{ accountInfo.name }}</div>
-                <div>{{ accountInfo.class }}</div>
-              </div>
-              <div class="leading-tight textDescription">{{ accountInfo.rid }}</div>
-              <div>{{ accountInfo.gmt_create }}</div>
+          </div>
+          <div class="flex flex-col items-start pr-5">
+            <div class="flex text-base font-medium">
+              <div class="mr-2">{{ accountInfo.name }}</div>
+              <div>{{ accountInfo.class }}</div>
             </div>
+            <div class="leading-tight textDescription">{{ accountInfo.rid }}</div>
+            <div>{{ accountInfo.gmt_create }}</div>
           </div>
         </div>
         <form class="">

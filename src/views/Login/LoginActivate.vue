@@ -1,12 +1,12 @@
 <template>
-  <div class="flex flex-col items-center" style="height: 100vh">
-    <div class="flex flex-col items-center mt-20 md:mt-28">
-      <form @submit="activate" class="grid place-items-center" style="width: 17vw; min-width: 300px">
-        <div class="text-3xl font-bold mb-7">完善个人信息</div>
+  <div class="flex flex-col justify-start" style="height: 100vh">
+    <div class="flex flex-col items-center">
+      <form @submit="activate" class="grid gap-y-1 place-items-center" style="width: 17vw; min-width: 300px">
+        <div class="text-3xl font-bold my-12 md:mt-18">完善个人信息</div>
         <InputBase subject="密码" required class="w-full" v-model:content="account.password" />
         <InputBase subject="确认密码" required :warn="isPasswordConsistent" class="w-full" v-model:content.lazy="account.passwordConfirm" />
         <InputBase subject="昵称" required class="w-full" v-model:content="account.alias" />
-        <InputBase
+        <!-- <InputBase
           subject="姓名"
           required
           class="w-full"
@@ -25,10 +25,11 @@
               warning: '格式错误',
             },
           ]"
-        />
+        /> -->
         <InputBase
           subject="电话"
           class="w-full"
+          required
           v-model:content="account.phone"
           :rules="[
             {
@@ -37,8 +38,14 @@
             },
           ]"
         />
-        <InputBase subject="QQ" class="w-full" v-model:content="account.qq" :rules="[{ rule: /[1-9][0-9]{4,14}/, warning: '格式错误' }]" />
-        <div>
+        <InputBase
+          required
+          subject="QQ"
+          class="w-full"
+          v-model:content="account.qq"
+          :rules="[{ rule: /[1-9][0-9]{4,14}/, warning: '格式错误' }]"
+        />
+        <!-- <div>
           <div>
             <label class="block text-sm font-medium text-gray-700"> Cover photo </label>
             <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
@@ -74,22 +81,23 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
+        <button class="w-3/5 btn materialThick" @click="upload">上传头像</button>
         <button class="w-full btn bg-primary text-primaryContent mt-5" type="submit">提交</button>
       </form>
     </div>
-    <button class="btn bg-red-200" @click="upload">upload img</button>
   </div>
 </template>
 <script>
 import InputBase from "@/components/Input/InputBase.vue";
+import InputSection from "@/components/Input/InputSection.vue";
 import isValid from "@/Utils/isValid";
 import { Element } from "@/api/api";
 import axiosApi from "@/axios/AxiosConfig";
 export default {
   name: "LoginActivate",
   setup() {},
-  components: { InputBase },
+  components: { InputBase, InputSection },
   data() {
     return {
       account: {
