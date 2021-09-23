@@ -151,7 +151,7 @@ export default {
         content: "",
       })
         .then(async () => {
-          await Event.close({ accept: 1, eid: this.eid });
+          await Event.close({ eid: this.eid });
           this.setDetail();
           this.$emit("update");
         })
@@ -163,7 +163,7 @@ export default {
         content: "",
       })
         .then(async () => {
-          await Event.close({ accept: 0, eid: this.eid });
+          await Event.reject({  eid: this.eid });
           this.setDetail();
           this.$emit("update");
         })

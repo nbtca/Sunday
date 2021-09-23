@@ -256,7 +256,7 @@ export default {
         content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
         acceptAction: () => {
           return e => {
-            return Event.submit({ description: e.description });
+            return Event.submit({ eid: event.eid, description: e.description });
           };
         },
       })
@@ -280,7 +280,7 @@ export default {
           acceptAction: () => {
             return e => {
               //TODO add /event/alter
-              return Event.submit(e);
+              return Event.alterSubmit({eid: event.eid, description: e.description});
             };
           },
         })
@@ -313,7 +313,6 @@ export default {
         var repairDesacription = res.data.repair_description;
         lastRepairDescription = repairDesacription[repairDesacription.length - 1];
       });
-      console.log(lastRepairDescription);
       await this.$refs.BottomDialog.openModal({
         subject: "审核提交",
         acceptActionName: "通过",
@@ -327,14 +326,12 @@ export default {
         ],
         acceptAction: () => {
           return e => {
-            //TODO add /event/alter
-            return Event.submit(e);
+            return Event.close({eid:event.eid});
           };
         },
         declineAction: () => {
           return e => {
-            // TODO add /event/reject
-            return Event.reject(e);
+            return Event.reject({eid:event.eid});
           };
         },
       })
