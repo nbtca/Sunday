@@ -14,6 +14,9 @@ const Event = {
   async close(action) {
     return await axiosApi("/events/close", action, "post");
   },
+  async reject(action) {
+    return await axiosApi("/events/reject", action, "post");
+  },
   async submit(e) {
     return await axiosApi("/events/submit", e, "post");
   },
