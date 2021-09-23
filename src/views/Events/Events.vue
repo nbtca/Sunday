@@ -141,7 +141,7 @@
               required
             ></textarea>
             <div class="absolute inset-x-0 -bottom-12">
-              <button type="submit" class="btnsm rounded-x-full text-center"></button>
+              <button type="submit" class="btnsm rounded-x-full text-center hover:shadow-transparent"></button>
             </div>
           </form>
         </div>
