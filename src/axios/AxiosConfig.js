@@ -1,6 +1,6 @@
 import axios from "axios";
 import qs from "qs";
-// import notify from "@/components/Notify/Notify.js";
+import Notify from "@/components/Notify";
 axios.defaults.baseURL = "api/";
 // axios.defaults.baseURL =
 //   "http://61774500-1018390206127906.test.functioncompute.com/"; //测试
@@ -37,70 +37,69 @@ axios.interceptors.request.use(
   }
 );
 
-// axios.interceptors.response.use(
-//   (response) => {
-//     return response;
-//   },
-//   (error) => {
-//     const defaultNotify = {
-//       message: "未知错误",
-//       icon: "warning",
-//       color: "warning",
-//       position: "top",
-//       timeout: 1500,
-//     };
-//     if (
-//       error.code === "ECONNABORTED" ||
-//       error.message.indexOf("timeout") !== -1 ||
-//       error.message === "Network Error"
-//     ) {
-//       defaultNotify.message = "网络异常";
-//       Notify.create(defaultNotify);
-//       return Promise.reject(error);
-//     }
-//     switch (error.response.status) {
-//       case 403:
-//         defaultNotify.message = "拒绝访问(403)";
-//         Notify.create(defaultNotify);
-//         break;
-//       case 404:
-//         defaultNotify.message = "资源不存在(404)";
-//         Notify.create(defaultNotify);
-//         break;
-//       case 408:
-//         defaultNotify.message = "请求超时(404)";
-//         Notify.create(defaultNotify);
-//         break;
-//       case 500:
-//         defaultNotify.message = "服务器错误(500)";
-//         Notify.create(defaultNotify);
-//         break;
-//       case 501:
-//         defaultNotify.message = "服务未实现(501)";
-//         Notify.create(defaultNotify);
-//         break;
-//       case 502:
-//         defaultNotify.message = "网络错误(502)";
-//         Notify.create(defaultNotify);
-//         break;
-//       case 503:
-//         defaultNotify.message = "服务不可用(503)";
-//         Notify.create(defaultNotify);
-//         break;
-//       case 504:
-//         defaultNotify.message = "网络超时(504)";
-//         Notify.create(defaultNotify);
-//         break;
-//       case 505:
-//         defaultNotify.message = "HTTP版本不受支持(505)";
-//         Notify.create(defaultNotify);
-//         break;
-//       default:
-//         break;
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+axios.interceptors.response.use(
+  response => {
+    if (response.data.resultCode != 0) {
+      Notify("warning", response.data.resultMsg);
+    }
+    return response;
+  },
+  error => {
+    const defaultNotify = {
+      message: "未知错误",
+      icon: "warning",
+      color: "warning",
+      position: "top",
+      timeout: 1500,
+    };
+    if (error.code === "ECONNABORTED" || error.message.indexOf("timeout") !== -1 || error.message === "Network Error") {
+      defaultNotify.message = "网络异常";
+      Notify(defaultNotify.color, defaultNotify.message);
+      return Promise.reject(error);
+    }
+    switch (error.response.status) {
+      case 403:
+        defaultNotify.message = "拒绝访问(403)";
+        Notify(defaultNotify.color, defaultNotify.message);
+        break;
+      case 404:
+        defaultNotify.message = "资源不存在(404)";
+        Notify(defaultNotify.color, defaultNotify.message);
+        break;
+      case 408:
+        defaultNotify.message = "请求超时(404)";
+        Notify(defaultNotify.color, defaultNotify.message);
+        break;
+      case 500:
+        defaultNotify.message = "服务器错误(500)";
+        Notify(defaultNotify.color, defaultNotify.message);
+        break;
+      case 501:
+        defaultNotify.message = "服务未实现(501)";
+        Notify(defaultNotify.color, defaultNotify.message);
+        break;
+      case 502:
+        defaultNotify.message = "网络错误(502)";
+        Notify(defaultNotify.color, defaultNotify.message);
+        break;
+      case 503:
+        defaultNotify.message = "服务不可用(503)";
+        Notify(defaultNotify.color, defaultNotify.message);
+        break;
+      case 504:
+        defaultNotify.message = "网络超时(504)";
+        Notify(defaultNotify.color, defaultNotify.message);
+        break;
+      case 505:
+        defaultNotify.message = "HTTP版本不受支持(505)";
+        Notify(defaultNotify.color, defaultNotify.message);
+        break;
+      default:
+        break;
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default function axiosApi(url, data, method) {
   return new Promise((resolve, reject) => {

@@ -9,6 +9,7 @@ const asyncRoutes = [
         name: "Events",
         component: () => import("@/views/Events/Events.vue"),
         meta: {
+          menuIcon: "true",
           roles: ["admin", "element"],
           title: "维修事件",
         },
@@ -29,6 +30,7 @@ const asyncRoutes = [
         name: "ElementManage",
         component: () => import("@/views/ElementManage/ElementManage.vue"),
         meta: {
+          menuIcon: "true",
           roles: ["admin"],
           title: "成员管理",
         },
@@ -38,7 +40,8 @@ const asyncRoutes = [
         name: "design",
         component: () => import("@/views/Design/Design.vue"),
         meta: {
-          roles: ["admin", "element"],
+          menuIcon: "true",
+          roles: ["admin"],
           title: "设计",
         },
       },

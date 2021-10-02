@@ -46,7 +46,9 @@ module.exports = {
   shortcuts: {
     materialThin: "bg-gray-100/70 backdrop-filter backdrop-blur-sm",
     materialMedium: "bg-gray-200/80 backdrop-filter backdrop-blur",
-    materialThick: "bg-gray-200/90 backdrop-filter backdrop-blur-lg",
+    materialThick: "bg-gray-200/70 backdrop-filter backdrop-blur-xl",
+    materialCard:
+      "bg-gray-400/30  border border-gray-500/30 rounded-2xl ring ring-inset ring-1 ring-light-600/70 backdrop-filter backdrop-blur-[26px]",
     textInput: "p-2 focus:(outline-none ring-indigo-500 border-indigo-500)  border-grey-300 shadow-sm rounded-md",
     materialInput: "bg-gray-400/30",
     btn: "w-15 h-11 py-2 inline-flex items-center justify-center rounded-md whitespace-nowrap font-medium shadow-sm select-none hover:(shadow-lg) focus:(outline-none ring-indigo-500) transition duration-300 ease-in-out",
@@ -54,8 +56,9 @@ module.exports = {
       "rounded-md whitespace-nowrap shadow-sm select-none hover:(shadow-lg) focus:(outline-none) transition duration-300 ease-in-out text-sm font-medium h-8 min-w-14 p-1",
     btnxs:
       "rounded-full whitespace-nowrap shadow-sm select-none focus:(outline-none) transition duration-300 ease-in-out min-w-13 text-xs font-bold p-1 h-7 ",
-    cellsm:"relative overflow-hidden bg-white/90 border border-base-standout/70 rounded-xl flex justify-between w-full h-21 mb-2 py-1 px-2 text-sm items-center shadow-sm",
-    cell: "flex items-center justify-center w-full p-3 my-1 transition-all duration-300 ease-in-out rounded-md cursor-pointer select-none hover:(shadow-sm materialThick) focus:(outline-none)",
+    cellsm:
+      "relative overflow-hidden bg-white/90 border border-base-standout/70 rounded-xl flex justify-between w-full h-21 mb-2 py-1 px-2 text-sm items-center shadow-sm",
+    cell: "flex items-center justify-center w-full p-3 my-1 transition-all duration-300 ease-in-out rounded-md cursor-pointer select-none hover:( materialThick bg-gray-400/40) focus:(outline-none)",
     infoCell: "px-1 py-4 sm:grid md:grid-cols-3 sm:gap-4 sm:px-3",
     infoHead: "text-sm font-medium  flex flex-col justify-center",
     infoContent: "mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2",
@@ -65,8 +68,7 @@ module.exports = {
     textLink: "text-indigo-600 hover:text-indigo-900",
     badge: "px-2 inline-flex text-xs leading-5 font-semibold rounded-full item-center ",
     tableCell: "px-4 py-1 md:px-6 md:py-4 whitespace-nowrap",
-    tableHead:"px-2 py-1 md:py-3 md:px-6 textDescription whitespace-nowrap",
-    
+    tableHead: "px-2 py-1 md:py-3 md:px-6 textDescription whitespace-nowrap",
   },
   plugins: [require("windicss/plugin/forms"), require("windicss/plugin/line-clamp")],
 };

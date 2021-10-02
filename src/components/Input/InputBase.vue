@@ -25,7 +25,7 @@
           warning ? 'ring-[2px] ring-warning' : '',
           isValid && input ? '' : '',
           center ? 'text-center' : '',
-          disabled ? ' bg-opacity-0 border-gray-400 shadow-none cursor-default pointer-events-none' : 'border-gray-400/10',
+          disabled ? ' bg-opacity-0 border-gray-400/60 shadow-none cursor-default pointer-events-none' : 'border-gray-400/10',
         ]"
         class="
           transition

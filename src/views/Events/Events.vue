@@ -29,7 +29,7 @@
               <button
                 @click="filterHandler(item)"
                 class="rounded-lg font-semibold w-full py-2.5 text-indigo-600 leading-5 focus:(outline-none border-base-standout )"
-                :class="[selected ? 'bg-white shadow' : 'text-gray-400 hover:bg-gray-50/[0.12] hover:text-blue-400']"
+                :class="[selected ? 'bg-white shadow cursor-default' : 'text-gray-400 hover:bg-gray-50/[0.12] hover:text-blue-400']"
               >
                 {{ item }}
               </button>
@@ -43,6 +43,7 @@
             v-for="item in fiilteredList"
             :key="item.eid"
             class="flex flex-row flex-nowrap cell justify-between"
+            :class="[item.eid == selected ? 'bg-gray-400/40 cursor-default' : '']"
             @click="showDetail(item.eid)"
           >
             <div class="text-left w-2/3 truncate">
@@ -154,7 +155,7 @@
 import { Event } from "@/api/api";
 import { TabGroup, TabList, Tab } from "@headlessui/vue";
 import Dialog from "@/components/Dialog/Dialog.vue";
-import BottomDialog from "@/components/Dialog/BottomDialog.vue";
+import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue";
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
 export default {
   name: "Events",
@@ -166,6 +167,7 @@ export default {
     BottomDialog,
     ScrollArea,
   },
+  inject: ["BottomDialog"],
   setup() {},
   data() {
     return {
@@ -176,6 +178,7 @@ export default {
       currentList: "全部",
       action: "",
       events: [],
+      selected: "",
       searchQuery: "",
       checkOnly: false, //审核
       eventsMatchingByRID: false,
@@ -217,6 +220,7 @@ export default {
       // console.log(this.events);
     },
     showDetail(e) {
+      this.selected = e;
       this.$router.push("/Events/" + e);
     },
     filterHandler(e) {
@@ -231,19 +235,14 @@ export default {
       }
     },
     acceptEvent(event) {
-      this.action = "accept";
-      console.log(event);
-      this.$refs.BottomDialog.openModal({
+      let config = {
         subject: "接受事件",
         content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
         acceptAction: () => {
-          return () => {
-            return Event.accept({ eid: event.eid });
-          };
+          return Event.accept({ eid: event.eid });
         },
-      })
-        .then(() => this.setEvents())
-        .catch(() => {});
+      };
+      this.BottomDialog(config).then(() => this.setEvents());
     },
     submitEvent(event) {
       this.passData.eid = event.eid;
@@ -280,7 +279,7 @@ export default {
           acceptAction: () => {
             return e => {
               //TODO add /event/alter
-              return Event.alterSubmit({eid: event.eid, description: e.description});
+              return Event.alterSubmit({ eid: event.eid, description: e.description });
             };
           },
         })
@@ -291,21 +290,16 @@ export default {
       });
     },
     dropEvent(event) {
-      this.action = "drop";
-      this.$refs.BottomDialog.openModal({
+      let config = {
         subject: "放弃事件",
         confirmMessage: "放弃",
         content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
         acceptAction: () => {
-          return () => {
-            return Event.drop({ eid: event.eid });
-          };
+          return Event.drop({ eid: event.eid });
         },
-      })
-        .then(() => this.setEvents())
-        .catch(() => {});
+      };
+      this.BottomDialog(config).then(() => this.setEvents());
     },
-
     async judgeSubmit(event) {
       this.action = "judge";
       var lastRepairDescription;
@@ -313,7 +307,7 @@ export default {
         var repairDesacription = res.data.repair_description;
         lastRepairDescription = repairDesacription[repairDesacription.length - 1];
       });
-      await this.$refs.BottomDialog.openModal({
+      let config = {
         subject: "审核提交",
         acceptActionName: "通过",
         rounded: true,
@@ -324,21 +318,41 @@ export default {
           { 维修描述: lastRepairDescription.description },
           { 提交时间: lastRepairDescription.time },
         ],
+        // TODO test
         acceptAction: () => {
-          return e => {
-            return Event.close({eid:event.eid});
-          };
+          return Event.close({ eid: event.eid });
         },
         declineAction: () => {
-          return e => {
-            return Event.reject({eid:event.eid});
-          };
+          return Event.reject({ eid: event.eid });
         },
-      })
-        .then(() => {
-          this.setEvents();
-        })
-        .catch(() => {});
+      };
+      this.BottomDialog(config).then(() => this.setEvents());
+      // await this.$refs.BottomDialog.openModal({
+      //   subject: "审核提交",
+      //   acceptActionName: "通过",
+      //   rounded: true,
+      //   content: [
+      //     { 型号: event.model },
+      //     { 问题描述: event.user_description },
+      //     { 创建时间: event.gmt_create },
+      //     { 维修描述: lastRepairDescription.description },
+      //     { 提交时间: lastRepairDescription.time },
+      //   ],
+      //   acceptAction: () => {
+      //     return e => {
+      //       return Event.close({ eid: event.eid });
+      //     };
+      //   },
+      //   declineAction: () => {
+      //     return e => {
+      //       return Event.reject({ eid: event.eid });
+      //     };
+      //   },
+      // })
+      //   .then(() => {
+      //     this.setEvents();
+      //   })
+      //   .catch(() => {});
     },
   },
 };

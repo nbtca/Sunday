@@ -1,22 +1,33 @@
 <template>
-  <div class="transform pt-3 px-2">
-    <div class="cellsm rounded-xl materialThick bg-gray-300/90  h-18 shadow-md">
+  <TransitionRoot
+    class="pt-3 px-2 sm:(flex flex-row-reverse)"
+    enter="transition ease-out  duration-200 transform"
+    enter-from="opacity-0 -translate-y-18 "
+    enter-to="opacity-100 translate-y-0 "
+    leave="transition ease-in duration-100 "
+    leave-from="opacity-100  "
+    leave-to="opacity-0"
+    :show="isShow"
+  >
+    <div class="cellsm sm:w-[20vw] rounded-xl materialMedium border border-gray-300/30 h-16 shadow-md">
       <div class="w-1/5 p-2">
         <ExclamationIcon class="" />
       </div>
-      <div class="w-4/5 text-center text-base font-semibold p-3">
+      <div class="w-4/5 text-center text-base font-semibold p-3 select-none">
         {{ content }}
       </div>
     </div>
-  </div>
+  </TransitionRoot>
 </template>
 
 <script>
+import { TransitionRoot } from "@headlessui/vue";
 import { ExclamationIcon } from "@heroicons/vue/outline";
 
 export default {
   name: "notify",
   components: {
+    TransitionRoot,
     ExclamationIcon,
   },
   props: {
@@ -24,8 +35,15 @@ export default {
   },
   data() {
     return {
-      isShowing: false,
+      isShow: false,
     };
+  },
+  mounted() {
+    console.log("123");
+    this.isShow = true;
+    setTimeout(() => {
+      this.isShow = false;
+    }, 3000);
   },
 };
 </script>

@@ -2,7 +2,7 @@
   <TransitionRoot appear :show="open" as="template">
     <Dialog as="div" @close="closeModal('outter')">
       <div class="inset-0 z-10 fixed overflow-y-auto">
-        <div class="min-h-screen text-center px-4">
+        <div class="min-h-screen text-center px-4 flex items-center justify-center">
           <TransitionChild
             as="template"
             enter="duration-300 ease-out "
@@ -18,7 +18,8 @@
           <span class="h-screen inline-block align-middle" aria-hidden="true"> &#8203; </span>
 
           <TransitionChild
-            as="template"
+            as="div"
+            class=""
             enter="duration-300 ease-out"
             enter-from="opacity-0 scale-95"
             enter-to="opacity-100 scale-100"
@@ -26,7 +27,7 @@
             leave-from="opacity-100 scale-100"
             leave-to="opacity-0 scale-95"
           >
-            <div
+            <!-- <div
               class="
                 materialMedium
                 border
@@ -68,8 +69,7 @@
                         :key="btn.title"
                         @click="emitValue(btn.value)"
                       >
-                        {{ btn.title }}
-                      </button>
+k3                      </button>
                     </div>
                     <div class="flex text-primary text-warning sm:hidden" :class="[btnList.length > 2 ? 'flex-col' : 'flex-cel']">
                       <button
@@ -95,6 +95,23 @@
                   </div>
                 </slot>
               </slot>
+            </div> -->
+
+            <div class="flex items-center justify-center select-none">
+              <div class="flex flex-col justify-between materialCard w-72 p-3 shadow-3xl">
+                <div class="py-3 font-medium text-lg">
+                  <div class="">{{ heading }}</div>
+                  <p class="mt-3 w-full text-base overflow-ellipsis overflow-hidden">
+                    {{ content }}
+                  </p>
+                  <dialog-info :content="[{ 123: 123 }, { 123: 123 }, { 123: 123 }, { 123: 123 }]"></dialog-info>
+                </div>
+                <div class="w-full bg-transparent border border-t border-gray-900/10 px-6"></div>
+                <div class="pt-3">
+                  <button class="materialButton bg-gray-400/20 text-gray-800 hover:(bg-gray-400/40)">确认</button>
+                  <button class="mt-3 w-full h-10 materialThick bg-warning/90 text-warningContent rounded-lg font-bold">确认</button>
+                </div>
+              </div>
             </div>
           </TransitionChild>
         </div>
@@ -105,6 +122,7 @@
 
 <script>
 import { TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle } from "@headlessui/vue";
+import DialogInfo from "./DialogInfo.vue";
 
 export default {
   name: "dialog",
@@ -114,6 +132,7 @@ export default {
     Dialog,
     DialogOverlay,
     DialogTitle,
+    DialogInfo,
   },
   props: {
     // heading: {
@@ -153,8 +172,8 @@ export default {
       ],
       open: false,
       value: "",
-      heading: "Payment successful",
-      content: "Your payment has been successfully submitted. We’ve sent your an email with all of the details of your order.",
+      heading: "",
+      content: "",
     };
   },
   computed: {
@@ -202,3 +221,8 @@ export default {
   },
 };
 </script>
+<style>
+.materialButton {
+  @apply w-full h-10 materialThick rounded-lg font-bold transition duration-300 ease-in-out focus:(outline-none);
+}
+</style>

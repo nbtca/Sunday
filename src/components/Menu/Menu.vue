@@ -3,31 +3,27 @@
     <div class="flex flex-col-reverse sm:(items-center) w-full relative sm:block">
       <div class="flex h-15 p-2 z-40 justify-between items-center sm:(p-0) md:(w-full h-24) lg:(p-2)">
         <div
-          class="
-            font-bold font-mono
-            text-center
-            tracking-wide
-            text-3xl
-            italic
-            text-shadow-sm
-            uppercase
-            sm:(text-2xl
-            w-full
-            self-center)
-            md:(text-3xl)
-            lg:text-4xl
-          "
+          class="logo"
           @click="
-            $router.push('/');
+            $router.push('/Events');
             isOpen = false;
           "
         >
           sunday
         </div>
-        <MenuIcon class="bg-bg-gray-900 h-9 w-9 sm:(hidden)" @click="isOpen = !isOpen"></MenuIcon>
+        <div v-if="menuList.length == 1" @click="accountSetting" class="rounded-full h-11 w-11 overflow-hidden border block">
+          <img class="" :src="avatar" alt="" />
+        </div>
+        <MenuIcon v-if="menuList.length > 1" class="bg-bg-gray-900 h-9 w-9 sm:(hidden)" @click="isOpen = !isOpen"></MenuIcon>
       </div>
       <div class="hidden sm:(block)">
-        <button v-for="item in menuList" :key="item.name" class="text-xl cell whitespace-nowrap" @click="toLink(item.path)">
+        <button
+          v-for="item in menuList"
+          :key="item.name"
+          class="text-xl cell whitespace-nowrap"
+          :class="[item.name == selected ? 'bg-gray-400/40 cursor-default' : '']"
+          @click="toLink(item)"
+        >
           {{ item.meta.title }}
         </button>
       </div>
@@ -69,13 +65,8 @@
                   bg-gray-400/50
                   backdrop-filter backdrop-blur)
                 "
-                @click="toLink(item.path)"
+                @click="toLink(item)"
               >
-                <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 115.99 114.94" class="h-6 mx-8">
-                <path
-                  d="M37.21,66.92l4.68-4.59L9.52,29.81a7.83,7.83,0,0,1-2.64-5.42A7.83,7.83,0,0,1,9.52,19L16.41,12A7.49,7.49,0,0,1,21.8,9.42a7.88,7.88,0,0,1,5.45,2.67L62.11,46.9,67,42.55,32.37,7.69q-5.11-5.13-10.5-5.15t-10.4,5L5,14q-5,5-5,10.37T5.13,34.89ZM34,45.19a1.82,1.82,0,0,0,2.59,0,1.76,1.76,0,0,0,0-2.54L18.36,24.39a1.91,1.91,0,0,0-1.27-.46,1.77,1.77,0,0,0-1.32.46,2.24,2.24,0,0,0-.51,1.37A1.55,1.55,0,0,0,15.77,27Zm6-6a1.74,1.74,0,0,0,1.32.52,1.81,1.81,0,0,0,1.27-.52,2.12,2.12,0,0,0,.53-1.39,1.69,1.69,0,0,0-.48-1.24L24.41,18.38a1.72,1.72,0,0,0-1.29-.51,1.74,1.74,0,0,0-1.76,1.81,1.92,1.92,0,0,0,.51,1.24Zm62.84,74.91,8.74-8.74a2.49,2.49,0,0,0,.71-1.93,4.57,4.57,0,0,0-.81-2.22L101.32,86A6.19,6.19,0,0,0,97,83.18l-4.39-.68L68.9,58.81,64.36,64,89.75,89.33l5.46.93,9.33,12.4-4.44,4.44L87.74,97.78l-1-5.47L61.62,67.11,57,72.29l22.9,22.85.69,4.4a5.14,5.14,0,0,0,.92,2.44,6.86,6.86,0,0,0,1.91,1.85l15.28,10.35a3.82,3.82,0,0,0,2.25.76A2.76,2.76,0,0,0,102.88,114.14ZM7.62,108.37a21.7,21.7,0,0,0,9.2,5.64,17.68,17.68,0,0,0,9.91,0,20.62,20.62,0,0,0,9.11-5.59,34.18,34.18,0,0,0,4.59-5.64q1.91-3,3.76-6.44t4.37-7.84q2.52-4.35,6.37-9.79t9.72-12.3Q70.5,59.59,79.1,51l-4.25-4.3Q65.43,56.14,59.3,63.21T49.39,75.54q-3.78,5.25-6.08,9.2t-4,7.08q-1.68,3.12-3.56,5.93a39.43,39.43,0,0,1-4.91,5.84,12.65,12.65,0,0,1-9.11,4.13,12.94,12.94,0,0,1-9.3-4.18,13.14,13.14,0,0,1-4.2-9.33,12.56,12.56,0,0,1,4.05-9.08,42.34,42.34,0,0,1,5.89-4.91q2.8-1.87,6-3.56t7.08-4q3.93-2.3,9.2-6.08t12.33-9.91q7.05-6.13,16.48-15.55L65,36.89Q56.4,45.49,49.54,51.34T37.23,61q-5.44,3.83-9.79,6.34t-7.84,4.4q-3.48,1.88-6.44,3.76A33,33,0,0,0,7.52,80.1a21,21,0,0,0-5.59,9.13A17.71,17.71,0,0,0,2,99.15,21.65,21.65,0,0,0,7.62,108.37Zm13.91-7.76a6.08,6.08,0,0,0,6.06-6,5.78,5.78,0,0,0-1.78-4.25,5.9,5.9,0,0,0-4.28-1.76,6,6,0,0,0-6,6,5.84,5.84,0,0,0,1.76,4.27A5.72,5.72,0,0,0,21.53,100.61Zm46.83-53a28.68,28.68,0,0,0,9.4,6.35A29.47,29.47,0,0,0,88.43,56.2,27.78,27.78,0,0,0,99,54.37a26.66,26.66,0,0,0,15.51-16.16A28.8,28.8,0,0,0,112,14.48l-4.73,4.78a22.45,22.45,0,0,1,2.29,8.67,21.66,21.66,0,0,1-1.24,8.59A20.18,20.18,0,0,1,94,49.19a22,22,0,0,1-11.08-.29A23.28,23.28,0,0,1,67,33.11,22,22,0,0,1,66.77,22a19.61,19.61,0,0,1,5.45-9.62A19.85,19.85,0,0,1,83.76,6.64,21.2,21.2,0,0,1,96.63,8.81L101.42,4A28.37,28.37,0,0,0,89.7.15,28,28,0,0,0,77.81,1.47,25.35,25.35,0,0,0,67.68,7.84a25.53,25.53,0,0,0-6,9.13,27.6,27.6,0,0,0-1.88,10.57,28.91,28.91,0,0,0,8.59,20ZM83.15,25.66l7.23,7.18a8.44,8.44,0,0,0,5.91,2.78,7.79,7.79,0,0,0,5.76-2.54l10.25-10.3L108,18.53l-9.33,9.23c-1.46,1.5-2.93,1.5-4.39,0l-6-6q-2.34-2.38-.24-4.49l9.42-9.33L93.07,3.64,82.91,13.84a7.79,7.79,0,0,0-2.64,5.86A8.8,8.8,0,0,0,83.15,25.66Z"
-                />
-              </svg> -->
                 <div class="w-24">
                   {{ item.meta.title }}
                 </div>
@@ -112,7 +103,7 @@
             </div>
             <div class="mr-1">
               <button @click="accountSetting" class="text-green-600 materialThick btnsm">设置</button>
-              <button @click="logout" class="bg-warning text-warningContent ml-2 btnsm">登出</button>
+              <!-- <button @click="logout" class="bg-warning text-warningContent ml-2 btnsm">登出</button> -->
             </div>
           </div>
         </div>
@@ -120,8 +111,8 @@
     </div>
     <div class="flex flex-col mb-4 hidden items-center sm:(flex)">
       <div class="flex flex-col items-center xl:(flex-row mb-4)">
-        <div class="rounded-full hidden overflow-hidden sm:(h-20 w-20 block) md:(h-28 w-28)">
-          <img class="" :src="avatar" alt="" />
+        <div class="rounded-full hidden overflow-hidden border shadow-innerlg sm:(h-20 w-20 block) md:(h-28 w-28)">
+          <img class="opacity-90" :src="avatar" alt="" />
         </div>
         <div class="relative xl:(self-end ml-2)">
           <div class="flex justify-center items-center xl:(flex-col items-start)">
@@ -144,10 +135,14 @@
         <div class="cellsm h-26 materialMedium bg-opacity-30">
           <div class="flex items-center">
             <div class="relative flex">
-              <div class="rounded-full border border-black h-20 w-20 overflow-hidden">
+              <div class="rounded-full border border-gray-400/30 h-20 w-20 overflow-hidden">
                 <img class="object-cover" :src="accountInfo.ravatar" alt="" />
               </div>
-              <button class="absolute bottom-0 -right-10 textLink text-xs self-end">修改头像</button>
+              <label for="file-upload" class="absolute relative textLink text-xs self-end cursor-pointer p-1 rounded-xl">
+                <span>修改头像</span>
+                <input id="file-upload" name="file-upload" type="file" class="sr-only" accept="image/*" @change="updateAvatar" />
+              </label>
+              <!-- <button @click="updataAvatar" class="">修改头像</button> -->
             </div>
           </div>
           <div class="flex flex-col items-start pr-5">
@@ -159,7 +154,7 @@
             <div>{{ accountInfo.gmt_create }}</div>
           </div>
         </div>
-        <form class="">
+        <form class="relative">
           <input-section subject="昵称">
             <input-base subject="" :val="accountInfo.ralias" confirmBeforeInput></input-base>
           </input-section>
@@ -167,7 +162,13 @@
             <input-base subject="手机" :val="accountInfo.rphone" confirmBeforeInput></input-base>
             <input-base subject="QQ" :val="accountInfo.rqq" confirmBeforeInput></input-base>
           </input-section>
+          <button @click="logout">登出</button>
+          <div class="absolute inset-x-0 -bottom-12">
+            <button type="submit" class="btnsm rounded-x-full text-center hover:shadow-transparent"></button>
+          </div>
         </form>
+        <div>
+        </div>
       </template>
     </bottom-dialog>
   </div>
@@ -177,7 +178,7 @@
 import { MenuIcon } from "@heroicons/vue/outline";
 import { TransitionRoot } from "@headlessui/vue";
 import { Element } from "@/api/api";
-import BottomDialog from "@/components/Dialog/BottomDialog.vue";
+import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue";
 import InputSection from "@/components/Input/InputSection.vue";
 import InputBase from "@/components/Input/InputBase.vue";
 
@@ -192,7 +193,7 @@ export default {
       role: "",
       rid: "",
       accountInfo: {},
-      menuIten: [],
+      selected: "",
     };
   },
   created() {
@@ -200,22 +201,37 @@ export default {
     this.avatar = sessionStorage.getItem("avatar");
     this.role = sessionStorage.getItem("user_role");
     this.rid = sessionStorage.getItem("rid");
-    this.menuList = this.$router.options.routes[0].children;
+    // this.menuList = this.$router.options.routes[0].children;
     // console.log(this.menuList);
   },
-  methods: {
-    toLink(link) {
-      // this.isOpen = false;
-      this.$router.push(link);
+  computed: {
+    menuList() {
+      return this.$router.options.routes[0].children.filter(item => {
+        for (let i of item.meta.roles) {
+          if (i == this.role) {
+            return item.meta.menuIcon != null;
+          }
+        }
+      });
     },
-    logout() {
-      sessionStorage.removeItem("access_token");
-      this.$router.push("/login");
+  },
+  methods: {
+    toLink(item) {
+      // this.isOpen = false;
+      if (item.name != this.selected) {
+        this.selected = item.name;
+        this.$router.push(item.path);
+      }
+    },
+    setAccountInfo() {
+      return Element.get(this.rid).then(res => {
+        this.accountInfo = res.data[0];
+      });
     },
     accountSetting() {
-      Element.get(this.rid).then(res => {
-        console.log(res.data[0]);
-        this.accountInfo = res.data[0];
+      this.loading = true;
+      this.setAccountInfo().then(res => {
+        this.loading = false;
         this.$refs.BottomDialog.openModal({
           subject: "账号设置",
           rounded: true,
@@ -229,6 +245,26 @@ export default {
           .catch(() => {});
       });
     },
+    updateAvatar(event) {
+      var file = event.target.files[0];
+      let param = new FormData(); // 创建form对象
+      param.append("file", file); // 通过append向form对象添加数据
+      Element.updateAvatar(param).then(res => {
+        this.accountInfo.ravatar = res.data.avatar;
+        sessionStorage.setItem("avatar", res.data.avatar);
+        this.avatar = sessionStorage.getItem("avatar");
+      });
+    },
+
+    logout() {
+      sessionStorage.removeItem("access_token");
+      this.$router.push("/login");
+    },
   },
 };
 </script>
+<style>
+.logo {
+  @apply font-bold font-mono text-center tracking-wide text-3xl italic text-shadow-sm uppercase sm:(text-2xl w-full self-center) md:(text-3xl) lg:text-4xl;
+}
+</style>

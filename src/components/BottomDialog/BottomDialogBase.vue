@@ -24,7 +24,7 @@
         leave-to="opacity-0 translate-y-96"
       >
         <div class="flex flex-col">
-          <div class="flex h-11 px-2 justify-between items-center">
+          <div class="flex py-2.5 px-2 justify-between items-center">
             <div class="font-semibold text-base">{{ subject }}</div>
             <button
               :class="[closeAction ? 'text-gray-500/80' : '']"
@@ -68,7 +68,7 @@
 
 <script>
 import { TransitionRoot, TransitionChild, Dialog, DialogOverlay } from "@headlessui/vue";
-import BottomDialogInfo from "@/components/Dialog/BottomDialogInfo.vue";
+import BottomDialogInfo from "@/components/BottomDialog/BottomDialogInfo.vue";
 import InputBase from "../Input/InputBase.vue";
 export default {
   name: "BottomDialog",
@@ -116,7 +116,7 @@ export default {
         let performAction = action => {
           this.message = "processing";
           action(this.passData).then(res => {
-            console.log(res);
+            console.log(res);//TODO rescode 判断 success
             this.message = "success";
             setTimeout(() => {
               resolve(this.value);
