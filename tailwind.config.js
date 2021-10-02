@@ -34,6 +34,7 @@ module.exports = {
         neutral: "#3ebb7d",
         neutralContent: "#394052",
         active: "#2150d5",
+        activeContent: "#ffffff",
         base: {
           self: "#f9fafb", //50
           emphasize: "#f3f4f6", //100
@@ -51,7 +52,18 @@ module.exports = {
       "bg-gray-400/30  border border-gray-500/30 rounded-2xl ring ring-inset ring-1 ring-light-600/70 backdrop-filter backdrop-blur-[26px]",
     textInput: "p-2 focus:(outline-none ring-indigo-500 border-indigo-500)  border-grey-300 shadow-sm rounded-md",
     materialInput: "bg-gray-400/30",
-    btn: "w-15 h-11 py-2 inline-flex items-center justify-center rounded-md whitespace-nowrap font-medium shadow-sm select-none hover:(shadow-lg) focus:(outline-none ring-indigo-500) transition duration-300 ease-in-out",
+    materialBtn: "w-full h-10 rounded-lg text-lg font-semibold transition duration-300 ease-in-out focus:(outline-none)",
+    btnPrimary: " bg-primary/95 hover:(bg-primary) text-primaryContent",
+    btnPrimaryReverse: " text-primary  bg-gray-400/20 hover:(bg-gray-400/40)",
+    btnActive: " bg-active/95 hover:(bg-active) text-activeContent",
+    btnActiveReverse: " text-active  bg-gray-400/20 hover:(bg-gray-400/40)",
+    btnPositive: " bg-positive/95 hover:(bg-positive) text-positiveContent",
+    btnPositiveReverse: " text-positive  bg-gray-400/20 hover:(bg-gray-400/40)",
+    btnNeutral: " bg-neutral/95 hover:(bg-neutral) text-neutralContent",
+    btnNeutralReverse: " text-neutral/90  bg-gray-400/20 hover:(bg-gray-400/40)",
+    btnWarning: " bg-warning/95 hover:(bg-warning) text-warningContent",
+    btnWarningReverse: " text-warning  bg-gray-400/20 hover:(bg-gray-400/40)",
+    btn: "min-w-15 h-11 py-2 inline-flex items-center justify-center rounded-md whitespace-nowrap font-medium shadow-sm select-none hover:(shadow-lg) focus:(outline-none ring-indigo-500) transition duration-300 ease-in-out",
     btnsm:
       "rounded-md whitespace-nowrap shadow-sm select-none hover:(shadow-lg) focus:(outline-none) transition duration-300 ease-in-out text-sm font-medium h-8 min-w-14 p-1",
     btnxs:

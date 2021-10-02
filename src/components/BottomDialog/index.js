@@ -1,7 +1,7 @@
 import { h, render } from "vue";
 import BottomDialogCustom from "./BottomDialogCustom.vue";
 
-const divVNode = h("div", { class: "fixed inset-x-0 bg-black bottom-0 z-50" });
+const divVNode = h("div", { class: "fixed inset-x-0 bottom-0 z-50" });
 
 const BottomDialog = config => {
   render(divVNode, document.body);

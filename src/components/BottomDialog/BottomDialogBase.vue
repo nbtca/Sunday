@@ -29,7 +29,7 @@
             <button
               :class="[closeAction ? 'text-gray-500/80' : '']"
               class="text-positive focus:outline-none h-6 font-medium rounded-lg"
-              @click="emitValue('close')"
+              @click="cancel"
             >
               取消
             </button>
@@ -44,7 +44,7 @@
             <input-base class="w-[80vw] pt-2" v-model:content="confirmInput" :warn="warning" center></input-base>
           </div>
         </div>
-        <div class="flex flex-col h-28 pt-4 items-center">
+        <div class="flex flex-col min-h-28 py-4 px-2 items-center">
           {{ message }}
           <slot name="actionSpace">
             <div v-if="closeAction == false" class="" :class="[showDecline ? 'flex justify-around w-[80vw]' : '']">
@@ -54,7 +54,7 @@
               <button
                 @click="emitValue('accept')"
                 class="btnsm"
-                :class="[showDecline ? 'declineBtn text-primary' : 'bg-positive text-positiveContent rounded-x-full', btnClass]"
+                :class="[showDecline ? 'declineBtn text-primary' : 'rounded-x-full btnPositive', btnClass]"
               >
                 {{ acceptActionName }}
               </button>
@@ -112,35 +112,39 @@ export default {
       this.showDecline = e.declineAction;
       this.content = e.content;
       this.confirmMessage = e.confirmMessage;
-      return new Promise((resolve, reject) => {
-        let performAction = action => {
-          this.message = "processing";
-          action(this.passData).then(res => {
-            console.log(res);//TODO rescode 判断 success
-            this.message = "success";
-            setTimeout(() => {
-              resolve(this.value);
-              this.cleanUp();
-            }, 1000);
-          });
-        };
-        this.$watch("closeAction", () => {
-          if (this.value === "accept") {
-            if (e.acceptAction) {
-              console.log(this.passData);
-              performAction(e.acceptAction());
-            } else {
-              resolve(this.value);
-              this.cleanUp();
-            }
-          } else if (this.value === "decline") {
-            performAction(e.declineAction());
-          } else {
-            reject();
-            this.cleanUp();
-          }
-        });
-      });
+      // return new Promise((resolve, reject) => {
+      //   let performAction = action => {
+      //     this.message = "processing";
+      //     action(this.passData).then(res => {
+      //       console.log(res);//TODO rescode 判断 success
+      //       this.message = "success";
+      //       setTimeout(() => {
+      //         resolve(this.value);
+      //         this.cleanUp();
+      //       }, 1000);
+      //     });
+      //   };
+      //   this.$watch("closeAction", () => {
+      //     if (this.value === "accept") {
+      //       if (e.acceptAction) {
+      //         console.log(this.passData);
+      //         performAction(e.acceptAction());
+      //       } else {
+      //         resolve(this.value);
+      //         this.cleanUp();
+      //       }
+      //     } else if (this.value === "decline") {
+      //       performAction(e.declineAction());
+      //     } else {
+      //       reject();
+      //       this.cleanUp();
+      //     }
+      //   });
+      // });
+    },
+    cancel() {
+      this.open = false;
+      this.cleanUp;
     },
     cleanUp() {
       this.closeAction = false;

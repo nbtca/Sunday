@@ -12,7 +12,7 @@
             leave-from="opacity-20"
             leave-to="opacity-0"
           >
-            <DialogOverlay :class="['fixed inset-0', focus ? 'bg-black opacity-20' : '']" />
+            <DialogOverlay :class="['fixed inset-0', focus ? 'bg-black/20' : '']" />
           </TransitionChild>
 
           <span class="h-screen inline-block align-middle" aria-hidden="true"> &#8203; </span>
@@ -107,9 +107,10 @@ k3                      </button>
                   <dialog-info :content="[{ 123: 123 }, { 123: 123 }, { 123: 123 }, { 123: 123 }]"></dialog-info>
                 </div>
                 <div class="w-full bg-transparent border border-t border-gray-900/10 px-6"></div>
-                <div class="pt-3">
-                  <button class="materialButton bg-gray-400/20 text-gray-800 hover:(bg-gray-400/40)">确认</button>
-                  <button class="mt-3 w-full h-10 materialThick bg-warning/90 text-warningContent rounded-lg font-bold">确认</button>
+                <div class="grid gap-y-3 pt-3">
+                  <button class="materialButton" :class="btn.class" v-for="btn in btnList" :key="btn.title" @click="emitValue(btn.value)">
+                    {{ btn.title }}
+                  </button>
                 </div>
               </div>
             </div>
@@ -123,7 +124,6 @@ k3                      </button>
 <script>
 import { TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle } from "@headlessui/vue";
 import DialogInfo from "./DialogInfo.vue";
-
 export default {
   name: "dialog",
   components: {
@@ -167,8 +167,8 @@ export default {
   data() {
     return {
       btnList: [
-        { title: "确认", value: "accept", color: "primary" },
-        { title: "取消", value: "decline", color: "warning" },
+        { title: "确认", value: "accept", class: "btnPrimary" },
+        { title: "取消", value: "decline", class: "btnWarningReverse" },
       ],
       open: false,
       value: "",
@@ -177,15 +177,15 @@ export default {
     };
   },
   computed: {
-    constructColor() {
-      let tempBtnList = this.btnList;
-      for (let btn of tempBtnList) {
-        btn.textcolor = "text-" + btn.color;
-        btn.bgcolor = "bg-" + btn.color;
-      }
-      console.log(tempBtnList);
-      return tempBtnList;
-    },
+    // constructColor() {
+    //   let tempBtnList = this.btnList;
+    //   for (let btn of tempBtnList) {
+    //     btn.textcolor = "text-" + btn.color;
+    //     btn.bgcolor = "bg-" + btn.color;
+    //   }
+    //   console.log(tempBtnList);
+    //   return tempBtnList;
+    // },
   },
   created() {
     if (this.noDecline) {
@@ -223,6 +223,6 @@ export default {
 </script>
 <style>
 .materialButton {
-  @apply w-full h-10 materialThick rounded-lg font-bold transition duration-300 ease-in-out focus:(outline-none);
+  @apply w-full h-10 rounded-lg font-bold transition duration-300 ease-in-out focus:(outline-none);
 }
 </style>

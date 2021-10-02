@@ -102,7 +102,7 @@
               </div>
             </div>
             <div class="mr-1">
-              <button @click="accountSetting" class="text-green-600 materialThick btnsm">设置</button>
+              <button @click="accountSetting" class="btnsm btnNeutralReverse">设置</button>
               <!-- <button @click="logout" class="bg-warning text-warningContent ml-2 btnsm">登出</button> -->
             </div>
           </div>
@@ -126,19 +126,19 @@
       </div>
       <!-- <div>event count</div> -->
       <div class="flex flex-col lg:(flex-row)">
-        <button class="btnsm m-2 materialThick text-green-700">账号设置</button>
+        <button class="btnsm m-2 btnNeutral">账号设置</button>
         <button class="btnsm m-2 bg-warning text-warningContent" @click="logout">登出</button>
       </div>
     </div>
     <bottom-dialog ref="BottomDialog">
       <template #body>
-        <div class="cellsm h-26 materialMedium bg-opacity-30">
+        <div class="cellsm mb-2.5 h-26 materialMedium bg-opacity-30">
           <div class="flex items-center">
             <div class="relative flex">
               <div class="rounded-full border border-gray-400/30 h-20 w-20 overflow-hidden">
                 <img class="object-cover" :src="accountInfo.ravatar" alt="" />
               </div>
-              <label for="file-upload" class="absolute relative textLink text-xs self-end cursor-pointer p-1 rounded-xl">
+              <label for="file-upload" class="absolute relative textLink text-xs self-end cursor-pointer rounded-xl">
                 <span>修改头像</span>
                 <input id="file-upload" name="file-upload" type="file" class="sr-only" accept="image/*" @change="updateAvatar" />
               </label>
@@ -152,6 +152,7 @@
             </div>
             <div class="leading-tight textDescription">{{ accountInfo.rid }}</div>
             <div>{{ accountInfo.gmt_create }}</div>
+            <!-- //TODO change the time format -->
           </div>
         </div>
         <form class="relative">
@@ -162,13 +163,11 @@
             <input-base subject="手机" :val="accountInfo.rphone" confirmBeforeInput></input-base>
             <input-base subject="QQ" :val="accountInfo.rqq" confirmBeforeInput></input-base>
           </input-section>
-          <button @click="logout">登出</button>
-          <div class="absolute inset-x-0 -bottom-12">
-            <button type="submit" class="btnsm rounded-x-full text-center hover:shadow-transparent"></button>
-          </div>
         </form>
-        <div>
-        </div>
+      </template>
+      <template #actionSpace>
+        <button type="submit" class="materialBtn btnPrimaryReverse">确定</button>
+        <button @click="logout" class="materialBtn btnWarning mt-3">登出</button>
       </template>
     </bottom-dialog>
   </div>

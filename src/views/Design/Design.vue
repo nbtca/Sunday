@@ -2,21 +2,29 @@
   <div class="relative h-[93vh] border">
     <img class="h-screen object-cover" src="https://sunday-res.oss-cn-hangzhou.aliyuncs.com/img/22405H211-0.jpg" alt="" />
     <div class="inset-x-0 top-0 absolute grid grid-cols-1 gap-3 p-2 overflow-auto h-full pt-10">
-      <div class="card materialThick">thick</div>
-      <div class="card materialMedium">md</div>
+      <!-- <div class="card materialThick">thick</div>
+      <div class="card materialMedium">md</div> -->
       <div class="card bg-base-self">
         none
-        <div class="col-span-2 grid grid-cols-5 gap-2 p-2 justify-items-center">
-          <button class="btn bg-primary text-primaryContent">确认</button>
-          <button class="btn bg-warning text-warningContent">warning</button>
-          <button class="btn bg-neutral text-gray-700">nutural</button>
-          <button class="btn bg-base-standout text-primary">primary</button>
-          <button class="btn bg-base-standout text-green-600">warning</button>
-          <button class="btnsm bg-primary text-primaryContent">确认</button>
-          <button class="btnsm bg-gray-300">confirm</button>
-          <button class="btnxs rounded-full bg-primary text-primaryContent">确认</button>
-          <button class="btnxs bg-warning text-warningContent font-bold">删除</button>
-          <button class="btnxs bg-base-standout text-blue-800 text-sm font-bold">确认</button>
+        <div class="col-span-2 grid grid-cols-3 sm:grid-cols-6 gap-6 p-2 justify-items-center">
+          <button class="btn btnPrimary">primary</button>
+          <button class="btn btnWarning">warning</button>
+          <button class="btn btnNeutral">neutral</button>
+          <button class="btn btnPrimaryReverse">primaryR</button>
+          <button class="btn btnWarningReverse">WarningR</button>
+          <button class="btn btnNeutralReverse">neutralR</button>
+          <button class="btnsm btnPrimary">确认</button>
+          <button class="btnsm btnWarning">确认</button>
+          <button class="btnsm btnNeutral">确认</button>
+          <button class="btnsm btnPrimaryReverse">confirm</button>
+          <button class="btnsm btnWarningReverse">confirm</button>
+          <button class="btnsm btnNeutralReverse">confirm</button>
+          <button class="btnxs btnPrimary">确认</button>
+          <button class="btnxs btnWarning">删除</button>
+          <button class="btnxs btnNeutral ">确认</button>
+          <button class="btnxs btnPrimaryReverse">确认</button>
+          <button class="btnxs btnWarningReverse">确认</button>
+          <button class="btnxs btnNeutralReverse">确认</button>
         </div>
       </div>
       <div class="card bg materialMedium felx flex-col">
@@ -48,11 +56,10 @@
 </template>
 
 <script>
-import notify from "@/components/Notify/Notify.js";
 import { Event } from "@/api/api";
 export default {
   name: "Design",
-  inject: ["BottomDialog"],
+  inject: ["BottomDialog", "Notify"],
   data() {
     return {
       isOpen: true,
@@ -74,7 +81,7 @@ export default {
       this.role = role;
     },
     callNotify() {
-      notify("warning", "123123");
+      this.Notify("warning", "123123");
     },
     async callBottomDialog() {
       let config = {
@@ -95,6 +102,6 @@ export default {
 
 <style>
 .card {
-  @apply h-30 rounded-lg shadow-lg;
+  @apply min-h-30 rounded-lg shadow-lg;
 }
 </style>

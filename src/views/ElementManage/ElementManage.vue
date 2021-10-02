@@ -154,7 +154,7 @@
           </div>
           <div class="flex flex-col h-full justify-center items-center">
             <!-- <button class="bg-green-500 btnxs">修改</button> -->
-            <button class="bg-warning text-warningContent btnxs">删除</button>
+            <!-- <button class="btnxs btnWarning">删除</button> -->
           </div>
         </div>
         <div class="py-14"></div>
@@ -165,7 +165,7 @@
           class="border-base-standout rounded-lg h-10 shadow-inner my-0.5 mx-0.5 text-center w-[80vw]"
           placeholder="搜索"
         />
-        <button class="flex h-8 mx-1 w-8 justify-center items-center">
+        <button disabled class="flex h-8 mx-1 w-8 justify-center items-center">
           <UploadIcon class="h-5 text-gray-900 w-5" />
         </button>
         <button
@@ -176,7 +176,7 @@
         </button>
       </div>
     </div>
-    <bottom-dialog ref="BottomDialogAdd" :passData="newElement">
+    <!-- <bottom-dialog ref="BottomDialogAdd" :passData="newElement">
       <template #body>
         <form action="" class="mx-3">
           <InputBase
@@ -207,7 +207,7 @@
           />
         </form>
       </template>
-    </bottom-dialog>
+    </bottom-dialog> -->
     <Dialog focus ref="Dialog" :passData="newElement">
       <template #body>
         <form @submit="submit" @close="$refs.Dialog.closeModal()" class="">
@@ -252,17 +252,17 @@
 </template>
 
 <script>
+import { ref, inject } from "vue";
 import { Element } from "@/api/api";
 import Dialog from "@/components/Dialog/Dialog.vue";
 import InputBase from "@/components/Input/InputBase.vue";
-import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue";
+// import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue";
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
 import isValid from "@/Utils/isValid.js";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import { UserIcon, UploadIcon, PlusIcon, UserAddIcon } from "@heroicons/vue/outline";
 export default {
   name: "ElementManage",
-  setup() {},
   components: {
     Menu,
     MenuButton,
@@ -273,9 +273,67 @@ export default {
     UploadIcon,
     UserIcon,
     Dialog,
-    BottomDialog,
+    // BottomDialog,
     InputBase,
     ScrollArea,
+  },
+  // inject: ["BottomDialog"],
+  setup() {
+    const elementList = ref([]);
+    const setElement = () => {
+      Element.get().then(res => {
+        elementList.value = res.data;
+      });
+    };
+    setElement();
+
+    const BottomDialog = inject("BottomDialog");
+    const addElementByBottomDialog = () => {
+      let config = {
+        subject: "添加成员",
+        formList: [
+          {
+            subject: "ID",
+            id: "rid",
+            required: true,
+            type: "text",
+            rules: [{ rule: /^\d{10}$/, warning: "格式错误" }],
+            value: "",
+          },
+          {
+            subject: "姓名",
+            id: "name",
+            required: true,
+            type: "text",
+            rules: [{ rule: /^[\u4e00-\u9fa5]{2,4}$/, warning: "格式错误" }],
+            value: "",
+          },
+          {
+            subject: "班级",
+            id: "class",
+            required: true,
+            type: "text",
+            hint: "示例: 计算机196",
+            rules: [
+              {
+                rule: /^([\u4e00-\u9fa5]{2,10})(\d{3})$/,
+                warning: "格式错误",
+              },
+            ],
+            value: "",
+          },
+        ],
+        acceptAction: e => {
+          return Element.create(e);
+        },
+      };
+      BottomDialog(config).then(() => setElement);
+    };
+    return {
+      elementList,
+      setElement,
+      addElementByBottomDialog,
+    };
   },
   data() {
     return {
@@ -284,17 +342,12 @@ export default {
         name: {},
         class: {},
       },
-      elementList: [],
-      loading: false,
+      // elementList: [],
     };
   },
-  watch: {},
-  computed: {},
-  async created() {
-    await this.setElement();
-    this.loading = true;
-    console.log(this.loading);
-  },
+  // async created() {
+  //   await this.setElement();
+  // },
   methods: {
     submit() {
       let tmp = isValid(this.newElement);
@@ -306,33 +359,33 @@ export default {
         });
       }
     },
-    async setElement() {
-      Element.get().then(res => {
-        console.log(res.data);
-        this.elementList = res.data;
-      });
-    },
+    // async setElement() {
+    //   Element.get().then(res => {
+    //     console.log(res.data);
+    //     this.elementList = res.data;
+    //   });
+    // },
     addElement() {
       this.$refs.Dialog.openModal({ heading: "添加成员" })
         .then(async () => {})
         .catch(() => {});
     },
-    addElementByBottomDialog() {
-      this.$refs.BottomDialogAdd.openModal({
-        subject: "添加成员",
-        acceptAction: () => {
-          return e => {
-            console.log(e);
-            let res = isValid(e);
-            return Element.create(res);
-          };
-        },
-      })
-        .then(() => {
-          this.setElement();
-        })
-        .catch(() => {});
-    },
+    // addElementByBottomDialog() {
+    //   this.$refs.BottomDialogAdd.openModal({
+    //     subject: "添加成员",
+    //     acceptAction: () => {
+    //       return e => {
+    //         console.log(e);
+    //         let res = isValid(e);
+    //         return Element.create(res);
+    //       };
+    //     },
+    //   })
+    //     .then(() => {
+    //       this.setElement();
+    //     })
+    //     .catch(() => {});
+    // },
   },
 };
 </script>

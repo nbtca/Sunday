@@ -27,7 +27,7 @@ export default {
             });
           }
         }
-      console.log(ans);
+      // console.log(ans);
       return ans;
     },
   },
