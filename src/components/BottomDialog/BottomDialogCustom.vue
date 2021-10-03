@@ -205,7 +205,7 @@ export default {
     declineAction: Function,
     rounded: false, // 上部圆角
     content: Array, // info列表内容
-    formList: { type: Array, default: [] },
+    formList:{type:Array,default:[]},
     confirmMessage: "", // 输入来确认
     parentNode: Object,
   },
