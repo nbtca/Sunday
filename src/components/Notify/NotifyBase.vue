@@ -20,31 +20,22 @@
   </TransitionRoot>
 </template>
 
-<script>
+<script setup>
+import { onMounted, ref } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
 import { ExclamationIcon } from "@heroicons/vue/outline";
 
-export default {
-  name: "notify",
-  components: {
-    TransitionRoot,
-    ExclamationIcon,
-  },
-  props: {
-    content: "",
-  },
-  data() {
-    return {
-      isShow: false,
-    };
-  },
-  mounted() {
-    this.isShow = true;
-    setTimeout(() => {
-      this.isShow = false;
-    }, 3000);
-  },
-};
+const props = defineProps({
+  content: "",
+});
+
+const isShow = ref(false);
+onMounted(() => {
+  isShow.value = true;
+  setTimeout(() => {
+    isShow.value = false;
+  }, 3000);
+});
 </script>
 
 <style></style>

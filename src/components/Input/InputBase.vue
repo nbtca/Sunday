@@ -58,7 +58,7 @@
         cols="30"
         rows="4"
         :required="required"
-        :placeholder="placeholder"
+        :placeholder="placeholder || '讲三句话...热烈地竹霍...衷心的感谢...办成功...'"
         v-model.lazy="input"
         :readonly="disabled"
         type="textarea"

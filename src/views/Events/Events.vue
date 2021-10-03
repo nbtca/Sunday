@@ -123,212 +123,151 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed, ref, inject } from "vue";
+import router from "@/router";
 import { Event } from "@/api/api";
 import { TabGroup, TabList, Tab } from "@headlessui/vue";
-import Dialog from "@/components/Dialog/Dialog.vue";
-import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue";
+// import Dialog from "@/components/Dialog/Dialog.vue";
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
-export default {
-  name: "Events",
-  components: {
-    TabGroup,
-    TabList,
-    Tab,
-    Dialog,
-    BottomDialog,
-    ScrollArea,
-  },
-  inject: ["BottomDialog"],
-  setup() {},
-  data() {
-    return {
-      rid: "",
-      role: "",
-      filterOptions: ["待接受", "我的"],
-      statusToText: ["取消", "待接受", "已接受", "待审核", "关闭"],
-      currentList: "全部",
-      action: "",
-      events: [],
-      selected: "",
-      searchQuery: "",
-      checkOnly: false, //审核
-      eventsMatchingByRID: false,
-      passData: {},
-    };
-  },
-  computed: {
-    fiilteredList() {
-      return this.events.filter(events => {
-        return (
-          ((!this.checkOnly && this.eventsMatchingByRID && events.rid === this.rid) ||
-            (!this.checkOnly && !this.eventsMatchingByRID && events.status == 0) ||
-            (this.checkOnly && events.status == 2)) &&
-          events.user_description.indexOf(this.searchQuery) >= 0
-        );
-      });
+
+const events = ref([]);
+
+const rid = ref(sessionStorage.getItem("rid"));
+const role = ref(sessionStorage.getItem("user_role"));
+
+const filterOptions = ref(role.value == "admin" ? ["全部", "我的", "审核"] : ["待接受", "我的"]);
+const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"]);
+
+const checkOnly = ref(false);
+const eventsMatchingByRID = ref(false);
+const searchQuery = ref("");
+const filterHandler = e => {
+  checkOnly.value = false;
+  eventsMatchingByRID.value = false;
+  if (e == "全部") {
+    eventsMatchingByRID.value = false;
+  } else if (e == "我的") {
+    eventsMatchingByRID.value = true;
+  } else if (e == "审核") {
+    checkOnly.value = true;
+  }
+};
+const fiilteredList = computed(() => {
+  return events.value.filter(events => {
+    return (
+      ((!checkOnly.value && eventsMatchingByRID.value && events.rid === rid.value) ||
+        (!checkOnly.value && !eventsMatchingByRID.value && events.status == 0) ||
+        (checkOnly.value && events.status == 2)) &&
+      events.user_description.indexOf(searchQuery.value) >= 0
+    );
+  });
+});
+
+const selected = ref("");
+const showDetail = e => {
+  selected.value = e;
+  router.push("/Events/" + e);
+};
+
+const setEvents = () => {
+  Event.get().then(res => (events.value = res.data));
+};
+setEvents();
+
+const BottomDialog = inject("BottomDialog");
+const eventBottomDialog = config => {
+  // TODO condition
+  BottomDialog(config).then(() => setEvents());
+};
+
+const acceptEvent = event => {
+  eventBottomDialog({
+    subject: "接受事件",
+    content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+    acceptAction: () => {
+      return Event.accept({ eid: event.eid });
     },
-  },
-  watch: {
-    $route() {},
-    action() {
-      this.passData = {};
+  });
+};
+const submitEvent = event => {
+  eventBottomDialog({
+    subject: "提交维修",
+    formList: [
+      {
+        subject: "维修描述",
+        id: "description",
+        required: true,
+        type: "textarea",
+      },
+    ],
+    rounded: true,
+    content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+    acceptActionName: "提交",
+    acceptAction: e => {
+      return Event.submit({ eid: event.eid, description: e.description });
     },
-    passData() {
-      console.log(this.passData);
-    },
-  },
-  created() {
-    this.rid = sessionStorage.getItem("rid");
-    this.role = sessionStorage.getItem("user_role");
-    if (this.role == "admin") {
-      this.filterOptions = ["全部", "我的", "审核"];
-    }
-    this.setEvents();
-  },
-  methods: {
-    setEvents() {
-      Event.get().then(res => (this.events = res.data));
-      // console.log(this.events);
-    },
-    showDetail(e) {
-      this.selected = e;
-      this.$router.push("/Events/" + e);
-    },
-    filterHandler(e) {
-      this.checkOnly = false;
-      this.eventsMatchingByRID = false;
-      if (e == "全部") {
-        this.eventsMatchingByRID = false;
-      } else if (e == "我的") {
-        this.eventsMatchingByRID = true;
-      } else if (e == "审核") {
-        this.checkOnly = true;
-      }
-    },
-    acceptEvent(event) {
-      let config = {
-        subject: "接受事件",
-        content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
-        acceptAction: () => {
-          return Event.accept({ eid: event.eid });
+  });
+};
+const alterSubmit = event => {
+  Event.get(event.eid).then(res => {
+    let eventDetail = res.data.repair_description;
+    eventBottomDialog({
+      subject: "修改提交",
+      formList: [
+        {
+          subject: "维修描述",
+          id: "description",
+          required: true,
+          type: "textarea",
+          val: eventDetail[eventDetail.length - 1].description,
         },
-      };
-      this.BottomDialog(config).then(() => this.setEvents());
+      ],
+      rounded: true,
+      content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+      acceptActionName: "提交",
+      acceptAction: e => {
+        return Event.alterSubmit({ eid: event.eid, description: e.description });
+      },
+    });
+  });
+};
+const dropEvent = event => {
+  eventBottomDialog({
+    subject: "放弃事件",
+    confirmMessage: "放弃",
+    content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+    acceptAction: () => {
+      return Event.drop({ eid: event.eid });
     },
-    submitEvent(event) {
-      let config = {
-        subject: "提交维修",
-        formList: [
-          {
-            subject: "维修描述",
-            id: "description",
-            required: true,
-            type: "textarea",
-            placeholder: "讲三句话...热烈地竹霍...衷心的感谢...办成功...",
-          },
-        ],
-        rounded: true,
-        content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
-        acceptActionName: "提交",
-        acceptAction: e => {
-          return Event.submit({ eid: event.eid, description: e.description });
-        },
-      };
-      this.BottomDialog(config).then(() => this.setEvents());
+  });
+};
+const judgeSubmit = async event => {
+  var previousRepairDescription;
+  await Event.get(event.eid).then(res => {
+    var repairDescription = res.data.repair_description;
+    previousRepairDescription = repairDescription[repairDescription.length - 1];
+  });
+  eventBottomDialog({
+    subject: "审核提交",
+    acceptActionName: "通过",
+    declineActionName: "退回",
+    rounded: true,
+    content: [
+      { 型号: event.model },
+      { 问题描述: event.user_description },
+      { 创建时间: event.gmt_create },
+      { 维修描述: previousRepairDescription.description },
+      { 提交时间: previousRepairDescription.time },
+    ],
+    // TODO test
+    acceptAction: () => {
+      return Event.close({ eid: event.eid });
     },
-    alterSubmit(event) {
-      Event.get(event.eid).then(res => {
-        let eventDetail = res.data.repair_description;
-        let config = {
-          subject: "修改提交",
-          formList: [
-            {
-              subject: "维修描述",
-              id: "description",
-              required: true,
-              type: "textarea",
-              placeholder: "讲三句话...热烈地竹霍...衷心的感谢...办成功...",
-              val: eventDetail[eventDetail.length - 1].description,
-            },
-          ],
-          rounded: true,
-          content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
-          acceptActionName: "提交",
-          acceptAction: e => {
-            return Event.alterSubmit({ eid: event.eid, description: e.description });
-          },
-        };
-        this.BottomDialog(config).then(() => this.setEvents());
-      });
+    declineAction: () => {
+      return Event.reject({ eid: event.eid });
     },
-    dropEvent(event) {
-      let config = {
-        subject: "放弃事件",
-        confirmMessage: "放弃",
-        content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
-        acceptAction: () => {
-          return Event.drop({ eid: event.eid });
-        },
-      };
-      this.BottomDialog(config).then(() => this.setEvents());
-    },
-    async judgeSubmit(event) {
-      this.action = "judge";
-      var lastRepairDescription;
-      await Event.get(event.eid).then(res => {
-        var repairDesacription = res.data.repair_description;
-        lastRepairDescription = repairDesacription[repairDesacription.length - 1];
-      });
-      let config = {
-        subject: "审核提交",
-        acceptActionName: "通过",
-        declineActionName: "退回",
-        rounded: true,
-        content: [
-          { 型号: event.model },
-          { 问题描述: event.user_description },
-          { 创建时间: event.gmt_create },
-          { 维修描述: lastRepairDescription.description },
-          { 提交时间: lastRepairDescription.time },
-        ],
-        // TODO test
-        acceptAction: () => {
-          return Event.close({ eid: event.eid });
-        },
-        declineAction: () => {
-          return Event.reject({ eid: event.eid });
-        },
-      };
-      this.BottomDialog(config).then(() => this.setEvents());
-      // await this.$refs.BottomDialog.openModal({
-      //   subject: "审核提交",
-      //   acceptActionName: "通过",
-      //   rounded: true,
-      //   content: [
-      //     { 型号: event.model },
-      //     { 问题描述: event.user_description },
-      //     { 创建时间: event.gmt_create },
-      //     { 维修描述: lastRepairDescription.description },
-      //     { 提交时间: lastRepairDescription.time },
-      //   ],
-      //   acceptAction: () => {
-      //     return e => {
-      //       return Event.close({ eid: event.eid });
-      //     };
-      //   },
-      //   declineAction: () => {
-      //     return e => {
-      //       return Event.reject({ eid: event.eid });
-      //     };
-      //   },
-      // })
-      //   .then(() => {
-      //     this.setEvents();
-      //   })
-      //   .catch(() => {});
-    },
-  },
+  });
 };
 </script>
 
