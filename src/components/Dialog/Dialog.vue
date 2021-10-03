@@ -104,7 +104,7 @@ k3                      </button>
                   <p class="mt-3 w-full text-base overflow-ellipsis overflow-hidden">
                     {{ content }}
                   </p>
-                  <dialog-info :content="[{ 123: 123 }, { 123: 123 }, { 123: 123 }, { 123: 123 }]"></dialog-info>
+                  <!-- <dialog-info :content=""></dialog-info> -->
                 </div>
                 <div class="w-full bg-transparent border border-t border-gray-900/10 px-6"></div>
                 <div class="grid gap-y-3 pt-3">
