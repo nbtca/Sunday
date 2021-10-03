@@ -69,13 +69,13 @@
           style="resize: none"
         ></textarea>
         <div>
-          <button class="bg-warning mx-5 btn" @click="dropEvent">放弃</button>
+          <button class="bg-warning text-warningContent mx-5 btn" @click="dropEvent">放弃</button>
           <button class="bg-primary text-primaryContent btn" @click="submitEvnet">提交</button>
         </div>
       </div>
       <div v-if="detail.status == 2 && role == 'admin'" class="flex flex-nowrap justify-center">
-        <button class="bg-warning mx-4 w-20 btn" @click="rejectEvent()">退回</button>
-        <button class="bg-primary mx-4 text-primaryContent w-20 btn" @click="closeEvent()">通过</button>
+        <button class="bg-warning text-warningContent mx-4 w-20 btn" @click="rejectEvent()">退回</button>
+        <button class="bg-primary text-primaryContent mx-4 w-20 btn" @click="closeEvent()">通过</button>
       </div>
     </div>
     <Dialog ref="Dialog"> </Dialog>
@@ -163,7 +163,7 @@ export default {
         content: "",
       })
         .then(async () => {
-          await Event.reject({  eid: this.eid });
+          await Event.reject({ eid: this.eid });
           this.setDetail();
           this.$emit("update");
         })

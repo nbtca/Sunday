@@ -13,8 +13,8 @@
   + [x] dialog 
   + [x] BottomDialog with option
 + 权限
-  + [ ] router meta
-  + [ ] 动态生成router
+  + [x] router meta
+  + [ ] 动态生成router halfway
 + [x] Menu item从router获取
 + [x] 账号设置
   + 可编辑
@@ -27,14 +27,14 @@
     + id
     + 创建时间
     + 班级/姓名
-+ [ ] notifier 组件
++ [x] notify 组件
 + [ ] element edit
   + [ ] to admin
 + [ ] 添加图标
 + [ ] 加载动画
 + [ ] 桌面端风格统一
   + [ ] dialog
-  + [ ] notifier
+  + [x] notifier
 + [ ] 导入Element
 + [ ] 后台Event Action修复 ?
 + [ ] 后台限流

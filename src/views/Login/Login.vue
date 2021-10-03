@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col items-center" style="height: 100vh">
-    <div class="flex flex-col items-center mt-20 md:mt-28">
+  <div class="flex flex-col items-center h-full bg-base-self" style="">
+    <div class="flex flex-col items-center sm:mt-28">
+      <div class="py-[5vh]" style="width: 15vw; min-width: 250px">
+        <img src="../../assets/logo.png" alt="" class="filter drop-shadow" />
+      </div>
       <form @submit.prevent="login" class="grid gap-4 place-items-center" style="width: 20vw; min-width: 300px">
-        <div class="" style="width: 15vw; min-width: 250px">
-          <img src="../../assets/logo.png" alt="" class="filter drop-shadow" />
-        </div>
         <InputBase
           placeholder="ID"
           hint="学号"
@@ -59,8 +59,9 @@ export default {
             if (resultCode === 0) {
               const token = res.data.token;
               sessionStorage.setItem("access_token", token);
-              sessionStorage.setItem("user_role", res.data.role);
               sessionStorage.setItem("alias", res.data.alias);
+              sessionStorage.setItem("user_role", res.data.role);
+              sessionStorage.setItem("user_role", res.data.role);
               sessionStorage.setItem("rid", res.data.rid);
               sessionStorage.setItem("avatar", res.data.avatar);
               if (!res.data.isActivated) {

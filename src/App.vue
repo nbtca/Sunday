@@ -2,7 +2,8 @@
   <router-view />
 </template>
 
-<script></script>
+<script>
+</script>
 
 <style>
 #app {
@@ -10,8 +11,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  --tw-bg-opacity: 1;
   color: #111827;
-  background-color: rgba(249, 250, 251, var(--tw-bg-opacity));
+  height: 100vh;
+  background-color: rgba(249, 250, 251);
 }
 </style>
