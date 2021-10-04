@@ -34,24 +34,20 @@ onMounted(() => {
 });
 
 const getFormInput = ref({});
-const isFormInputValid = e => {
-  let ans = {};
-  for (let item of Object.keys(e)) {
-    if (e[item].isValid == false) {
-      ans = false;
-      break;
-    } else {
-      ans[item] = e[item].value;
+const isFormValid = form => {
+  for (let item in form) {
+    if (form[item] === false) {
+      return false;
     }
   }
-  return ans;
+  return form;
 };
 
 const message = ref("");
 const isConfirmInputValid = ref(false);
 const performAction = action => {
-  let formInput = isFormInputValid(getFormInput.value);
-  if ((isConfirmInputValid.value.isValid == true || !props.confirmMessage) && (formInput != false || props.formList == null)) {
+  let formInput = isFormValid(getFormInput.value);
+  if ((isConfirmInputValid.value !== false || !props.confirmMessage) && (formInput != false || props.formList == null)) {
     message.value = "processing";
     action(formInput).then(res => {
       if (res.resultCode == 0) {

@@ -2,7 +2,7 @@
   <div class="select-none flex flex-col items-center">
     <div class="w-full flex justify-between items-center mb-0.5">
       <div v-if="subject" class="mx-1 font-medium text-sm sm:(text-lg font-semibold mb-1 )">
-        {{ isSubjectRequired }}
+        {{ subject + (required ? "*" : "") }}
       </div>
     </div>
     <div class="relative w-full mb-3 sm:mb-0">
@@ -12,7 +12,7 @@
           v-if="disabled == false && confirmBeforeInput"
           @click="
             disabled = true;
-            input = val;
+            input = passValue;
           "
           class="mx-1 font-medium text-xs"
         >
@@ -83,107 +83,100 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "InputBase",
+<script setup>
+import { onMounted, computed, ref, toRefs, watch } from "vue";
+const props = defineProps({
+  type: {
+    type: String,
+    default: "text",
+  },
+  subject: String,
+  required: {
+    type: Boolean,
+    default: false,
+  },
+  center: {
+    type: Boolean,
+    default: false,
+  },
+  hint: {
+    type: String,
+    default: "",
+  },
+  confirmBeforeInput: {
+    type: Boolean,
+    default: false,
+  },
+  rules: {
+    type: Array,
+    default: [],
+  },
+  passWarning: {
+    type: String,
+    default: "",
+  },
+  passValue: {
+    type: String,
+    default: "",
+  },
+  content: String | Boolean,
+  placeholder: String,
+});
+const { passValue, passWarning, rules } = toRefs(props);
 
-  props: {
-    type: {
-      type: String,
-      default: "text",
-    },
-    subject: String,
-    rules: {
-      type: Array,
-      default: [],
-    },
-    required: {
-      type: Boolean,
-      default: false,
-    },
-    center: {
-      type: Boolean,
-      default: false,
-    },
-    hint: {
-      type: String,
-      default: "",
-    },
-    warn: {
-      type: String,
-      default: "",
-    },
-    confirmBeforeInput: {
-      type: Boolean,
-      default: false,
-    },
-    val: {
-      type: String,
-      default: "",
-    },
-    content: Object,
-    placeholder: String,
-  },
-  setup(props) {},
-  data() {
-    return {
-      input: "",
-      warning: "",
-      disabled: false,
-    };
-  },
-  computed: {
-    isSubjectRequired() {
-      return this.required ? this.subject + "*" : this.subject;
-    },
-    isValid() {
-      return !this.warning && this.warn == "" && (this.input != "" || !this.required) ? true : false;
-    },
-  },
-  mounted() {
-    this.warning = this.warn;
-    this.input = this.val;
-    this.confirmBeforeInput ? (this.disabled = true) : "";
-    this.$emit("update:content", {
-      value: this.isValid ? this.input : null,
-      isValid: this.isValid,
-    });
-  },
-  watch: {
-    warn() {
-      this.warning = this.warn;
-      this.$emit("update:content", {
-        value: this.input,
-        isValid: this.isValid,
-      });
-      console.log(this.warning);
-    },
-    input() {
-      let tmp = "";
-      if (this.warn != "") {
-        this.waning = this.warn;
-      } else {
-        for (let item of this.rules) {
-          if (!item.rule.test(this.input)) {
-            tmp = item.warning;
-          }
-        }
-        if (!this.required && this.input == "") {
-          this.warning = "";
-        } else {
-          this.warning = tmp;
-        }
-      }
-      this.$emit("update:content", {
-        value: this.input,
-        isValid: this.isValid,
-      });
-    },
-    val() {
-      this.input = this.val;
-    },
-  },
+const input = ref("");
+const emit = defineEmits(["update:content"]);
+const emitInput = () => {
+  emit("update:content", isValid.value ? input.value : false);
+  // {
+  //   value: input.value,
+  //   isValid: isValid.value,
+  // });
 };
+watch(passValue, () => {
+  input.value = passValue.value;
+});
+watch(input, () => {
+  if (passWarning.value != "") {
+    warning.value = passWarning.value;
+  } else if (!props.required && input.value == "") {
+    warning.value = "";
+  } else {
+    warning.value = "";
+    for (let item of rules.value) {
+      if (!item.rule.test(input.value)) {
+        console.log(item);
+        warning.value = item.warning;
+        break;
+      }
+    }
+  }
+  emitInput();
+});
+// valid condition:
+// not required: empty match rule
+// required: match rule
+// passing warning is empty
+const isValid = computed(() => {
+  return warning.value == "" && (input.value != "" || !props.required) ? true : false;
+});
+
+const warning = ref("");
+watch(passWarning, () => {
+  warning.value = passWarning.value;
+  emitInput();
+});
+
+const disabled = ref(false);
+onMounted(() => {
+  warning.value = passWarning.value;
+  input.value = passValue.value;
+  disabled.value = props.confirmBeforeInput;
+  emitInput();
+  // emit("update:content", {
+  //   value: isValid.value ? input.value : null,
+  // });
+});
 </script>
 
 <style></style>

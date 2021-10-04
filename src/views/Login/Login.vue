@@ -23,18 +23,28 @@
 <script setup>
 import { Account } from "@/api/api";
 import InputBase from "@/components/Input/InputBase.vue";
-import isValid from "@/Utils/isValid";
+// import isValid from "@/Utils/isValid";
 import { ref } from "@vue/reactivity";
 import router from "@/router";
 // import crypto from "crypto";
 
-const accountInput = ref({ id: {}, password: {} });
+const accountInput = ref({});
 const isIDValid = ref("");
 const isPasswordValid = ref("");
 
+const isFormValid = form => {
+  for (let item in form) {
+    if (form[item] === false) {
+      return false;
+    }
+  }
+  return form;
+};
+
 const login = async () => {
   isPasswordValid.value = "";
-  let account = isValid(accountInput.value);
+  // let account = isValid(accountInput.value);
+  let account = isFormValid(accountInput.value);
   if (account != false) {
     // var hashedPassword = null;
     // if (account.password !== "") {

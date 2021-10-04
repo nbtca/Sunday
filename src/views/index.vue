@@ -16,25 +16,16 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Menu from "@/components/Menu/Menu.vue";
-export default {
-  name: "Index",
-  data() {
-    return {
-      isSafari: false,
-    };
-  },
-  components: {
-    Menu,
-  },
-  created() {
-    var userAgent = navigator.userAgent;
-    this.isSafari = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1;
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("---vh", `${vh}px`);
-  },
-};
+import { ref } from "@vue/reactivity";
+const isSafari = ref(false);
+
+var userAgent = navigator.userAgent;
+isSafari.value = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1;
+
+let vh = window.innerHeight * 0.01;
+document.documentElement.style.setProperty("---vh", `${vh}px`);
 </script>
 
 <style></style>

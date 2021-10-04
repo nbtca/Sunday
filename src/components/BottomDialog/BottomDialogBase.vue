@@ -96,7 +96,7 @@ export default {
       message: "", // 操作feedback
       content: [], // info列表内容
       confirmMessage: "", // 输入来确认
-      confirmInput: {},
+      confirmInput: "",
       warning: "",
     };
   },
@@ -156,7 +156,7 @@ export default {
       this.showDecline = false;
     },
     emitValue(e) {
-      if (e != "accept" || this.confirmInput.value == this.confirmMessage || !this.confirmMessage) {
+      if (e != "accept" || this.confirmInput == this.confirmMessage || !this.confirmMessage) {
         this.closeAction = true;
         this.value = e;
         this.warning = "";

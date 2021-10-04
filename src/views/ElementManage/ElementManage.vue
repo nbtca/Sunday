@@ -1,3 +1,80 @@
+<script setup>
+import { ref, inject } from "vue";
+import { Element } from "@/api/api";
+// import Dialog from "@/components/Dialog/Dialog.vue";
+// import InputBase from "@/components/Input/InputBase.vue";
+import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
+// import isValid from "@/Utils/isValid.js";
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import { UserIcon, UploadIcon, PlusIcon, UserAddIcon } from "@heroicons/vue/outline";
+
+const elementList = ref([]);
+const setElement = () => {
+  Element.get().then(res => {
+    elementList.value = res.data;
+  });
+};
+setElement();
+
+const BottomDialog= inject("BottomDialog");
+const addElementConfig = {
+  subject: "添加成员",
+  formList: [
+    {
+      subject: "ID",
+      id: "rid",
+      required: true,
+      type: "text",
+      rules: [{ rule: /^\d{10}$/, warning: "格式错误" }],
+      value: "",
+    },
+    {
+      subject: "姓名",
+      id: "name",
+      required: true,
+      type: "text",
+      rules: [{ rule: /^[\u4e00-\u9fa5]{2,4}$/, warning: "格式错误" }],
+      value: "",
+    },
+    {
+      subject: "班级",
+      id: "class",
+      required: true,
+      type: "text",
+      hint: "示例: 计算机196",
+      rules: [
+        {
+          rule: /^([\u4e00-\u9fa5]{2,10})(\d{3})$/,
+          warning: "格式错误",
+        },
+      ],
+      value: "",
+    },
+  ],
+  acceptAction: e => {
+    return Element.create(e);
+  },
+};
+const addElementByBottomDialog = () => {
+  BottomDialog(addElementConfig).then(() => setElement);
+};
+
+// const submit = () => {
+//   let tmp = isValid(this.newElement);
+//   console.log(tmp);
+//   if (tmp) {
+//     Element.create(tmp).then(res => {
+//       this.$refs.Dialog.closeModal();
+//       this.setElement();
+//     });
+//   }
+// };
+// const addElement = () => {
+//   this.$refs.Dialog.openModal({ heading: "添加成员" })
+//     .then(async () => {})
+//     .catch(() => {});
+// };
+</script>
 <template>
   <div class="h-full">
     <div class="hidden sm:block">
@@ -176,39 +253,7 @@
         </button>
       </div>
     </div>
-    <!-- <bottom-dialog ref="BottomDialogAdd" :passData="newElement">
-      <template #body>
-        <form action="" class="mx-3">
-          <InputBase
-            placeholder=""
-            hint="学号"
-            required
-            subject="ID"
-            v-model:content="newElement.rid"
-            :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]"
-          />
-          <InputBase
-            placeholder=""
-            subject="姓名"
-            v-model:content="newElement.name"
-            :rules="[{ rule: /^[\u4e00-\u9fa5]{2,4}$/, warning: '格式错误' }]"
-          />
-          <InputBase
-            placeholder=""
-            subject="班级"
-            hint="示例: 计算机196"
-            v-model:content="newElement.class"
-            :rules="[
-              {
-                rule: /^([\u4e00-\u9fa5]{2,10})(\d{3})$/,
-                warning: '格式错误',
-              },
-            ]"
-          />
-        </form>
-      </template>
-    </bottom-dialog> -->
-    <Dialog focus ref="Dialog" :passData="newElement">
+    <!-- <Dialog focus ref="Dialog" :passData="newElement">
       <template #body>
         <form @submit="submit" @close="$refs.Dialog.closeModal()" class="">
           <div class="grid gap-1 sm:gap-3">
@@ -247,86 +292,8 @@
           </div>
         </form>
       </template>
-    </Dialog>
+    </Dialog> -->
   </div>
 </template>
-
-<script setup>
-import { ref, inject } from "vue";
-import { Element } from "@/api/api";
-import Dialog from "@/components/Dialog/Dialog.vue";
-import InputBase from "@/components/Input/InputBase.vue";
-import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
-import isValid from "@/Utils/isValid.js";
-import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
-import { UserIcon, UploadIcon, PlusIcon, UserAddIcon } from "@heroicons/vue/outline";
-
-const elementList = ref([]);
-const setElement = () => {
-  Element.get().then(res => {
-    elementList.value = res.data;
-  });
-};
-setElement();
-
-const BottomDialog = inject("BottomDialog");
-const addElementConfig = {
-  subject: "添加成员",
-  formList: [
-    {
-      subject: "ID",
-      id: "rid",
-      required: true,
-      type: "text",
-      rules: [{ rule: /^\d{10}$/, warning: "格式错误" }],
-      value: "",
-    },
-    {
-      subject: "姓名",
-      id: "name",
-      required: true,
-      type: "text",
-      rules: [{ rule: /^[\u4e00-\u9fa5]{2,4}$/, warning: "格式错误" }],
-      value: "",
-    },
-    {
-      subject: "班级",
-      id: "class",
-      required: true,
-      type: "text",
-      hint: "示例: 计算机196",
-      rules: [
-        {
-          rule: /^([\u4e00-\u9fa5]{2,10})(\d{3})$/,
-          warning: "格式错误",
-        },
-      ],
-      value: "",
-    },
-  ],
-  acceptAction: e => {
-    return Element.create(e);
-  },
-};
-const addElementByBottomDialog = () => {
-  BottomDialog(addElementConfig).then(() => setElement);
-};
-
-const submit = () => {
-  let tmp = isValid(this.newElement);
-  console.log(tmp);
-  if (tmp) {
-    Element.create(tmp).then(res => {
-      this.$refs.Dialog.closeModal();
-      this.setElement();
-    });
-  }
-};
-const addElement = () => {
-  this.$refs.Dialog.openModal({ heading: "添加成员" })
-    .then(async () => {})
-    .catch(() => {});
-};
-</script>
 
 <style></style>
