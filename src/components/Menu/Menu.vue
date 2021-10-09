@@ -158,11 +158,11 @@
         </div>
         <form class="relative">
           <input-section subject="昵称">
-            <input-base subject="" :val="accountInfo.ralias" confirmBeforeInput></input-base>
+            <input-base subject="" :passValue="accountInfo.ralias" confirmBeforeInput></input-base>
           </input-section>
           <input-section subject="联系方式">
-            <input-base subject="手机" :val="accountInfo.rphone" confirmBeforeInput></input-base>
-            <input-base subject="QQ" :val="accountInfo.rqq" confirmBeforeInput></input-base>
+            <input-base subject="手机" :passValue="accountInfo.rphone" confirmBeforeInput></input-base>
+            <input-base subject="QQ" :passValue="accountInfo.rqq" confirmBeforeInput></input-base>
           </input-section>
         </form>
       </template>

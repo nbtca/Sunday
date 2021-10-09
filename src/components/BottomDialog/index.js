@@ -16,7 +16,12 @@ const BottomDialog = config => {
       setTimeout(() => {
         render(null, div);
       }, 200);
-      resolve();
+      if (e.detail.event == "cancel") {
+        // reject();
+        return 0;
+      } else {
+        resolve();
+      }
     });
   });
 };
