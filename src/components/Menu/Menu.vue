@@ -37,6 +37,7 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
+        <!-- //TODO add overlay -->
         <div class="">
           <div
             class="
@@ -103,7 +104,7 @@
             </div>
             <div class="mr-1">
               <button @click="accountSetting" class="btnsm btnNeutralReverse">设置</button>
-              <!-- <button @click="logout" class="bg-warning text-warningContent ml-2 btnsm">登出</button> -->
+              <!-- <button @click="logOut" class="bg-warning text-warningContent ml-2 btnsm">登出</button> -->
             </div>
           </div>
         </div>
@@ -127,10 +128,10 @@
       <!-- <div>event count</div> -->
       <div class="flex flex-col lg:(flex-row)">
         <button class="btnsm m-2 btnNeutral">账号设置</button>
-        <button class="btnsm m-2 bg-warning text-warningContent" @click="logout">登出</button>
+        <button class="btnsm m-2 bg-warning text-warningContent" @click="logOut">登出</button>
       </div>
     </div>
-    <bottom-dialog ref="BottomDialog">
+    <bottom-dialog ref="bottomDialog">
       <template #body>
         <div class="cellsm mb-2.5 h-26 materialMedium bg-opacity-30">
           <div class="flex items-center">
@@ -167,99 +168,83 @@
       </template>
       <template #actionSpace>
         <button type="submit" class="materialBtn btnPrimaryReverse">确定</button>
-        <button @click="logout" class="materialBtn btnWarning mt-3">登出</button>
+        <button @click="logOut" class="materialBtn btnWarning mt-3">登出</button>
       </template>
     </bottom-dialog>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from "vue";
+import { Element } from "@/api/api";
+import router from "@/router";
 import { MenuIcon } from "@heroicons/vue/outline";
 import { TransitionRoot } from "@headlessui/vue";
-import { Element } from "@/api/api";
 import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue";
 import InputSection from "@/components/Input/InputSection.vue";
 import InputBase from "@/components/Input/InputBase.vue";
 
-export default {
-  name: "Menu",
-  components: { MenuIcon, TransitionRoot, BottomDialog, InputBase, InputSection },
-  data() {
-    return {
-      isOpen: false,
-      alias: "",
-      avatar: "",
-      role: "",
-      rid: "",
-      accountInfo: {},
-      selected: "",
-    };
-  },
-  created() {
-    this.alias = sessionStorage.getItem("alias");
-    this.avatar = sessionStorage.getItem("avatar");
-    this.role = sessionStorage.getItem("user_role");
-    this.rid = sessionStorage.getItem("rid");
-    // this.menuList = this.$router.options.routes[0].children;
-    // console.log(this.menuList);
-  },
-  computed: {
-    menuList() {
-      return this.$router.options.routes[0].children.filter(item => {
-        for (let i of item.meta.roles) {
-          if (i == this.role) {
-            return item.meta.menuIcon != null;
-          }
-        }
-      });
-    },
-  },
-  methods: {
-    toLink(item) {
-      // this.isOpen = false;
-      if (item.name != this.selected) {
-        this.selected = item.name;
-        this.$router.push(item.path);
-      }
-    },
-    setAccountInfo() {
-      return Element.get(this.rid).then(res => {
-        this.accountInfo = res.data[0];
-      });
-    },
-    accountSetting() {
-      this.loading = true;
-      this.setAccountInfo().then(res => {
-        this.loading = false;
-        this.$refs.BottomDialog.openModal({
-          subject: "账号设置",
-          rounded: true,
-          acceptAction: () => {
-            return () => {
-              return Element.get();
-            };
-          },
-        })
-          .then()
-          .catch(() => {});
-      });
-    },
-    updateAvatar(event) {
-      var file = event.target.files[0];
-      let param = new FormData(); // 创建form对象
-      param.append("file", file); // 通过append向form对象添加数据
-      Element.updateAvatar(param).then(res => {
-        this.accountInfo.ravatar = res.data.avatar;
-        sessionStorage.setItem("avatar", res.data.avatar);
-        this.avatar = sessionStorage.getItem("avatar");
-      });
-    },
+const isOpen = ref(false);
+const alias = ref(sessionStorage.getItem("alias"));
+const avatar = ref(sessionStorage.getItem("avatar"));
+const role = ref(sessionStorage.getItem("user_role"));
+const rid = ref(sessionStorage.getItem("rid"));
 
-    logout() {
-      sessionStorage.removeItem("access_token");
-      this.$router.push("/login");
-    },
-  },
+const menuList = computed(() => {
+  return router.options.routes[0].children.filter(item => {
+    for (let i of item.meta.roles) {
+      if (i == role.value) {
+        return item.meta.menuIcon != null;
+      }
+    }
+  });
+});
+
+const selected = ref("");
+const toLink = item => {
+  if (item.name != selected.value) {
+    selected.value = item.name;
+    router.push(item.path);
+  }
+};
+
+const accountInfo = ref({});
+const setAccountInfo = () => {
+  return Element.get(rid.value).then(res => {
+    accountInfo.value = res.data[0];
+  });
+};
+
+const loading = ref(false);
+const bottomDialog = ref(null);
+const accountSetting = () => {
+  loading.value = true;
+  setAccountInfo().then(res => {
+    loading.value = false;
+    bottomDialog.value.openModal({
+      subject: "账号设置",
+      rounded: true,
+      acceptAction: () => {
+        return () => {
+          return Element.get();
+        };
+      },
+    });
+  });
+};
+const updateAvatar = event => {
+  let file = event.target.files[0];
+  let param = new FormData();
+  param.append("file", file);
+  Element.updateAvatar(param).then(res => {
+    accountInfo.value.ravatar = res.data.avatar;
+    sessionStorage.setItem("avatar", res.data.avatar);
+    avatar.value = sessionStorage.getItem("avatar");
+  });
+};
+const logOut = () => {
+  sessionStorage.removeItem("access_token");
+  router.push("/login");
 };
 </script>
 <style>

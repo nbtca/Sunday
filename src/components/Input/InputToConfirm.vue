@@ -13,34 +13,20 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, watch, computed } from "vue";
 import InputBase from "../Input/InputBase.vue";
-export default {
-  name: "InputToConfirm",
-  components: {
-    InputBase,
-  },
-  data() {
-    return {
-      confirmInput: {},
-    };
-  },
-  props: {
-    confirmMessage: "",
-  },
-  computed: {
-    reg() {
-      return new RegExp(this.confirmMessage);
-    },
-  },
-  watch: {
-    confirmInput() {
-      this.$emit("update:content", {
-        isValid: this.confirmInput.isValid,
-      });
-    },
-  },
-};
+const props = defineProps({
+  confirmMessage: "",
+});
+const emit = defineEmits(["update:content"]);
+const confirmInput = ref({});
+const reg = computed(() => {
+  return new RegExp(props.confirmMessage);
+});
+watch(confirmInput, () => {
+  emit("update:content", confirmInput.value);
+});
 </script>
 
 <style></style>
