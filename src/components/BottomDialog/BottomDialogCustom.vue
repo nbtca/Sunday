@@ -56,7 +56,7 @@ const performAction = action => {
         message.value = res.resultMsg;
       }
       setTimeout(() => {
-        destroySelf();
+        destroySelf("done");
       }, 1000);
     });
   } else {
@@ -101,7 +101,7 @@ const destroySelf = e => {
           <button
             :class="[message == '' ? 'text-gray-500/80' : '']"
             class="text-positive focus:outline-none h-6 font-medium rounded-lg"
-            @click="destroySelf()"
+            @click="destroySelf('cancel')"
           >
             取消
           </button>
