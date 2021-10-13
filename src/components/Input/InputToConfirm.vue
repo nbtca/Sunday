@@ -22,7 +22,7 @@ const props = defineProps({
 const emit = defineEmits(["update:content"]);
 const confirmInput = ref({});
 const reg = computed(() => {
-  return new RegExp(props.confirmMessage);
+  return new RegExp("^"+props.confirmMessage+"$");
 });
 watch(confirmInput, () => {
   emit("update:content", confirmInput.value);

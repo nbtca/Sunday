@@ -9,12 +9,12 @@
           placeholder="ID"
           hint="学号"
           required
-          :warn="isIDValid"
+          :passWarning="isIDValid"
           class="w-full"
           v-model:content="accountInput.id"
           :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]"
         />
-        <InputBase placeholder="密码" :warn="isPasswordValid" type="password" class="w-full" v-model:content="accountInput.password" />
+        <InputBase placeholder="密码" :passWarning="isPasswordValid" type="password" class="w-full" v-model:content="accountInput.password" />
         <button class="w-full btn bg-primary text-primaryContent shadow-md" type="submit">登入</button>
       </form>
     </div>
@@ -23,7 +23,6 @@
 <script setup>
 import { Account } from "@/api/api";
 import InputBase from "@/components/Input/InputBase.vue";
-// import isValid from "@/Utils/isValid";
 import { ref } from "@vue/reactivity";
 import router from "@/router";
 // import crypto from "crypto";
@@ -43,8 +42,8 @@ const isFormValid = form => {
 
 const login = async () => {
   isPasswordValid.value = "";
-  // let account = isValid(accountInput.value);
   let account = isFormValid(accountInput.value);
+  let avatarHolder = "https://sunday-res.oss-cn-hangzhou.aliyuncs.com/img/logo.png";
   if (account != false) {
     // var hashedPassword = null;
     // if (account.password !== "") {
@@ -60,11 +59,10 @@ const login = async () => {
           const token = res.data.token;
           sessionStorage.setItem("access_token", token);
           sessionStorage.setItem("alias", res.data.alias);
-          sessionStorage.setItem("user_role", res.data.role);
+          sessionStorage.setItem("avatar", res.data.avatar || avatarHolder);
           sessionStorage.setItem("user_role", res.data.role);
           sessionStorage.setItem("rid", res.data.rid);
-          sessionStorage.setItem("avatar", res.data.avatar);
-          if (!res.data.isActivated) {
+          if (res.data.role == "notActivated") {
             router.push("/activate");
           } else {
             router.push("/Events");

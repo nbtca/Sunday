@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative flex flex-col-reverse sm:(flex flex-row) overflow-hidden"
+    class="relative flex flex-col-reverse sm:(flex-row) overflow-hidden"
     :style="[isSafari ? 'height: 100vh' : 'height: calc(var(---vh, 1vh) * 100)']"
   >
     <div class="sm:(w-[17vw] mix-w-[17vw] bg-current)">

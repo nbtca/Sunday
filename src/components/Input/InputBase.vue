@@ -83,45 +83,73 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, computed, ref, toRefs, watch } from "vue";
-const props = defineProps({
-  type: {
-    type: String,
-    default: "text",
-  },
-  subject: String,
-  required: {
-    type: Boolean,
-    default: false,
-  },
-  center: {
-    type: Boolean,
-    default: false,
-  },
-  hint: {
-    type: String,
-    default: "",
-  },
-  confirmBeforeInput: {
-    type: Boolean,
-    default: false,
-  },
-  rules: {
-    type: Array,
-    default: [],
-  },
-  passWarning: {
-    type: String,
-    default: "",
-  },
-  passValue: {
-    type: String,
-    default: "",
-  },
-  content: String | Boolean,
-  placeholder: String,
+// interface rules {
+//   rule: RegExp;
+//   warning: string;
+// }
+interface Props {
+  type?: string;
+  subject?: string;
+  required?: boolean;
+  center?: boolean;
+  hint?: string;
+  confirmBeforeInput?: boolean;
+  rules?: any[];
+  passWarning?: string;
+  passValue?: string;
+  content?: string | boolean;
+  placeholder?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  type: "text",
+  required: false,
+  center: false,
+  hint: "",
+  confirmBeforeInput: false,
+  // rules: [],
+  passWarning: "",
+  passValue: "",
 });
+// const props = defineProps({
+//   type: {
+//     type: String,
+//     default: "text",
+//   },
+//   subject: String,
+//   required: {
+//     type: Boolean,
+//     default: false,
+//   },
+//   center: {
+//     type: Boolean,
+//     default: false,
+//   },
+//   hint: {
+//     type: String,
+//     default: "",
+//   },
+//   confirmBeforeInput: {
+//     type: Boolean,
+//     default: false,
+//   },
+//   rules: {
+//     type: Array,
+//     default: [],
+//   },
+//   passWarning: {
+//     type: String,
+//     default: "",
+//   },
+//   passValue: {
+//     type: String,
+//     default: "",
+//   },
+//   content: String | Boolean,
+//   placeholder: String,
+// });
 const { passValue, passWarning, rules } = toRefs(props);
 
 const input = ref("");

@@ -2,9 +2,7 @@
 import { ref, inject } from "vue";
 import { Element } from "@/api/api";
 // import Dialog from "@/components/Dialog/Dialog.vue";
-// import InputBase from "@/components/Input/InputBase.vue";
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
-// import isValid from "@/Utils/isValid.js";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import { UserIcon, UploadIcon, PlusIcon, UserAddIcon } from "@heroicons/vue/outline";
 

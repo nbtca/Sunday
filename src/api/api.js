@@ -39,9 +39,6 @@ const Element = {
     return await axiosApi("/elements/activate", element, "post");
   },
   async updateAvatar(e) {
-    // var file = e.target.files[0];
-    // let param = new FormData(); // 创建form对象
-    // param.append("file", file); // 通过append向form对象添加数据
     return await axiosApi("/elements/updateAvatar", e, "post");
   },
 };
