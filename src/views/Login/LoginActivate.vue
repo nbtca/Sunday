@@ -84,24 +84,22 @@ const updateAvatar = event => {
   });
 };
 
-const activate = () => {
+const activate = async () => {
   let formInput = isFormValid(account.value);
   console.log(formInput);
-  Element.activate(formInput)
-    .then(res =>
-      Account.login({
-        rid: sessionStorage.getItem("rid", res.data.rid),
-        password: account.value.password,
-      })
-    )
-    .then(res => {
-      console.log(res);
-      sessionStorage.setItem("access_token", token);
-      sessionStorage.setItem("alias", res.data.alias);
-      // sessionStorage.setItem("avatar", res.data.avatar || avatarHolder);
-      sessionStorage.setItem("user_role", res.data.role);
-      sessionStorage.setItem("rid", res.data.rid);
-      router.push("/");
-    });
+  await Element.activate(formInput);
+  Account.login({
+    id: sessionStorage.getItem("rid"),
+    password: account.value.password,
+  })
+  .then(res => {
+    console.log(res);
+    sessionStorage.setItem("access_token", token);
+    sessionStorage.setItem("alias", res.data.alias);
+    // sessionStorage.setItem("avatar", res.data.avatar || avatarHolder);
+    sessionStorage.setItem("user_role", res.data.role);
+    sessionStorage.setItem("rid", res.data.rid);
+    router.push("/Events");
+  });
 };
 </script>

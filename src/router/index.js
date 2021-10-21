@@ -27,6 +27,8 @@ router.beforeEach((to, from, next) => {
             } else {
               next({ path: "/activate" });
             }
+          } else {
+            next();
           }
         } else {
           next("/NotAuthorized");
