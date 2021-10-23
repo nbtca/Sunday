@@ -5,7 +5,7 @@
         {{ subject + (required ? "*" : "") }}
       </div>
     </div>
-    <div class="relative w-full mb-3 sm:mb-0">
+    <div class="relative w-full">
       <div class="absolute -top-6 right-0">
         <button v-if="disabled" @click="disabled = false" class="mx-1 textLink font-medium text-xs">编辑</button>
         <button
@@ -84,35 +84,11 @@
 </template>
 
 <script setup>
-import { onMounted, computed, ref, toRefs, watch } from "vue";
-// interface rules {
-//   rule: RegExp;
-//   warning: string;
-// }
-// interface Props {
-//   type?: string;
-//   subject?: string;
-//   required?: boolean;
-//   center?: boolean;
-//   hint?: string;
-//   confirmBeforeInput?: boolean;
-//   rules?: any[];
-//   passWarning?: string;
-//   passValue?: string;
-//   content?: string | boolean;
-//   placeholder?: string;
-// }
+// TODO add length limit
+// TODO add icon "show" when type is password
 
-// const props = withDefaults(defineProps<Props>(), {
-//   type: "text",
-//   required: false,
-//   center: false,
-//   hint: "",
-//   confirmBeforeInput: false,
-//   // rules: [],
-//   passWarning: "",
-//   passValue: "",
-// });
+import { onMounted, computed, ref, toRefs, watch } from "vue";
+
 const props = defineProps({
   type: {
     type: String,
@@ -156,37 +132,9 @@ const input = ref("");
 const emit = defineEmits(["update:content"]);
 const emitInput = () => {
   emit("update:content", isValid.value ? input.value : false);
-  // {
-  //   value: input.value,
-  //   isValid: isValid.value,
-  // });
 };
 watch(passValue, () => {
   input.value = passValue.value;
-});
-watch(input, () => {
-  if (passWarning.value != "") {
-    warning.value = passWarning.value;
-  } else if (!props.required && input.value == "") {
-    warning.value = "";
-  } else {
-    warning.value = "";
-    for (let item of rules.value) {
-      if (!item.rule.test(input.value)) {
-        console.log(item);
-        warning.value = item.warning;
-        break;
-      }
-    }
-  }
-  emitInput();
-});
-// valid condition:
-// not required: empty match rule
-// required: match rule
-// passing warning is empty
-const isValid = computed(() => {
-  return warning.value == "" && (input.value != "" || !props.required) ? true : false;
 });
 
 const warning = ref("");
@@ -195,15 +143,35 @@ watch(passWarning, () => {
   emitInput();
 });
 
+watch(input, () => {
+  if (!props.required && input.value == "") {
+    warning.value = "";
+  } else {
+    warning.value = "";
+    for (let item of rules.value) {
+      if (!item.rule.test(input.value)) {
+        warning.value = item.warning;
+        break;
+      }
+    }
+  }
+  emitInput();
+});
+
+// valid condition:
+// not required: empty match rule
+// required: match rule
+// passing warning is empty
+const isValid = computed(() => {
+  return warning.value == "" && (input.value != "" || !props.required) ? true : false;
+});
+
 const disabled = ref(false);
 onMounted(() => {
   warning.value = passWarning.value;
   input.value = passValue.value;
   disabled.value = props.confirmBeforeInput;
   emitInput();
-  // emit("update:content", {
-  //   value: isValid.value ? input.value : null,
-  // });
 });
 </script>
 

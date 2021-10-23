@@ -99,16 +99,18 @@ const destroySelf = e => {
           </button>
         </div>
         <form action="">
-          <div class="flex flex-col">
+          <div class="flex flex-col items-center">
             <bottom-dialog-info v-if="content != []" :content="content"></bottom-dialog-info>
             <input-to-confirm
               v-if="confirmMessage"
               v-model:content="isConfirmInputValid"
               :confirmMessage="confirmMessage"
+              class="mt-2"
             ></input-to-confirm>
-            <div v-if="formList" class="mx-4 pt-4">
+            <div v-if="formList" class="px-2 py-2 w-full">
               <div v-for="item in formList" key="item.id">
                 <input-base
+                  class="mt-2"
                   :subject="item.subject"
                   :required="item.required"
                   :type="item.type"
@@ -130,7 +132,11 @@ const destroySelf = e => {
               <button
                 @click="performAction(acceptAction)"
                 class=""
-                :class="[declineAction ? 'materialBtn btnPrimaryReverse mx-2' : 'btnsm btnPositive rounded-x-full', btnClass]"
+                :class="[
+                  declineAction ? 'materialBtn btnPrimaryReverse mx-2' : 'btnsm btnPositive rounded-x-full',
+                  confirmMessage ? 'rounded-x-lg btnWarning' : '',
+                  btnClass,
+                ]"
               >
                 {{ acceptActionName }}
               </button>

@@ -237,12 +237,12 @@ const addElementByBottomDialog = () => {
       <div class="border-t flex h-12 w-full py-2 px-1 items-center">
         <input
           type="text"
-          class="border-base-standout rounded-lg h-10 shadow-inner my-0.5 mx-0.5 text-center w-[80vw]"
+          class="border-base-standout rounded-lg h-10 shadow-inner my-0.5 mx-0.5 text-center w-[90vw]"
           placeholder="搜索"
         />
-        <button disabled class="flex h-8 mx-1 w-8 justify-center items-center">
+        <!-- <button disabled class="flex h-8 mx-1 w-8 justify-center items-center">
           <UploadIcon class="h-5 text-gray-900 w-5" />
-        </button>
+        </button> -->
         <button
           class="rounded-lg flex h-8 mx-1 w-8 justify-center items-center focus:(shadow-inner outline-none)"
           @click="addElementByBottomDialog"

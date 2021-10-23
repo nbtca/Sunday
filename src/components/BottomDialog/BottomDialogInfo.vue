@@ -1,8 +1,8 @@
 <template>
-  <div class="px-2">
-    <table class="divide-y divide-gray-400/30 w-full ">
+  <div class="px-2 w-full">
+    <table class="divide-y divide-gray-400/30 w-full">
       <tr v-for="item in contentList" :key="item.key">
-        <td class="py-[9px] w-[35vw] pr-10 whitespace-normal text-right">{{ item.name }}</td>
+        <td class="py-[9px] w-[43vw] pl-5 pr-10 whitespace-normal text-right">{{ item.name }}</td>
         <td class="py-[9px] text-sm text-left font-medium pr-5">{{ item.value }}</td>
       </tr>
     </table>
