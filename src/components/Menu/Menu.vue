@@ -11,7 +11,7 @@
         >
           sunday
         </div>
-        <div v-if="menuList.length == 1" @click="accountSetting" class="rounded-full h-11 w-11 overflow-hidden border block">
+        <div v-if="menuList.length < 2" @click="accountSetting" class="rounded-full h-11 w-11 overflow-hidden border block">
           <img class="" :src="avatar" alt="" />
         </div>
         <MenuIcon v-if="menuList.length > 1" class="bg-bg-gray-900 h-9 w-9 sm:(hidden)" @click="isOpen = !isOpen"></MenuIcon>

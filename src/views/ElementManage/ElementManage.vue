@@ -2,9 +2,7 @@
 import { ref, inject } from "vue";
 import { Element } from "@/api/api";
 // import Dialog from "@/components/Dialog/Dialog.vue";
-// import InputBase from "@/components/Input/InputBase.vue";
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
-// import isValid from "@/Utils/isValid.js";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import { UserIcon, UploadIcon, PlusIcon, UserAddIcon } from "@heroicons/vue/outline";
 
@@ -239,12 +237,12 @@ const addElementByBottomDialog = () => {
       <div class="border-t flex h-12 w-full py-2 px-1 items-center">
         <input
           type="text"
-          class="border-base-standout rounded-lg h-10 shadow-inner my-0.5 mx-0.5 text-center w-[80vw]"
+          class="border-base-standout rounded-lg h-10 shadow-inner my-0.5 mx-0.5 text-center w-[90vw]"
           placeholder="搜索"
         />
-        <button disabled class="flex h-8 mx-1 w-8 justify-center items-center">
+        <!-- <button disabled class="flex h-8 mx-1 w-8 justify-center items-center">
           <UploadIcon class="h-5 text-gray-900 w-5" />
-        </button>
+        </button> -->
         <button
           class="rounded-lg flex h-8 mx-1 w-8 justify-center items-center focus:(shadow-inner outline-none)"
           @click="addElementByBottomDialog"

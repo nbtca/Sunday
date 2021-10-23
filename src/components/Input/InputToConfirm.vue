@@ -1,7 +1,7 @@
 <template>
-  <div class="mt-6 mb-1 flex flex-col items-center">
+  <div class="py-2 flex flex-col items-center">
     <div class="font-semibold">
-      输入 <span class="font-bold px-1">{{ confirmMessage }}</span> 来确认
+      输入 <span class="font-extrabold text-lg text-warning px-1">{{ confirmMessage }}</span> 来确认
     </div>
     <input-base
       class="w-[80vw] pt-2"
@@ -22,7 +22,7 @@ const props = defineProps({
 const emit = defineEmits(["update:content"]);
 const confirmInput = ref({});
 const reg = computed(() => {
-  return new RegExp(props.confirmMessage);
+  return new RegExp("^" + props.confirmMessage + "$");
 });
 watch(confirmInput, () => {
   emit("update:content", confirmInput.value);

@@ -23,7 +23,7 @@
           v-model="searchQuery"
           placeholder="搜索"
         />
-        <TabGroup class="w-full">
+        <TabGroup class="w-full" :defaultIndex="defaultIndex" v-slot="{ selected }">
           <TabList class="flex space-x-1 p-1">
             <Tab v-for="item in filterOptions" as="template" :key="item" v-slot="{ selected }">
               <button
@@ -54,23 +54,34 @@
             </div>
           </button>
         </div>
+        <!-- mobile -->
         <div class="sm:hidden">
           <div class="py-20"></div>
-          <div v-for="item in fiilteredList" :key="item.eid" class="cellsm">
+          <div v-for="item in fiilteredList" :key="item.eid" class="cellsm" :class="[item.status == 1 && item.rid == rid ? 'h-26' : '']">
             <div class="flex flex-col h-full w-3/4 justify-between">
-              <p class="font-medium h-10 text-left overflow-ellipsis overflow-hidden line-clamp-2">
+              <p class="text-left font-medium h-10 overflow-ellipsis overflow-hidden line-clamp-2">
                 {{ item.user_description }}
               </p>
-              <div class="flex text-left items-center justify-start">
-                <div class="w-17 truncate">{{ item.model }}</div>
-                <span class="text-xs ml-2 textDescription">{{ item.gmt_create }}</span>
-                <button
-                  v-if="(item.status == 1 || item.status == 2) && item.rid == rid && eventsMatchingByRID"
-                  @click="dropEvent(item)"
-                  class="text-xs font-medium text-warning w-8 rounded ml-2"
-                >
-                  放弃
-                </button>
+              <div>
+                <div v-if="item.status == 1 && item.rid == rid" class="text-left py-0.5">
+                  <div>
+                    QQ:<em>{{ item.qq || "无" }}</em>
+                  </div>
+                  <div>
+                    电话:<em>{{ item.qq || "无" }}</em>
+                  </div>
+                </div>
+                <div class="flex text-left items-center justify-start">
+                  <div class="w-17 truncate">{{ item.model }}</div>
+                  <span class="text-xs ml-2 textDescription">{{ item.gmt_create }}</span>
+                  <button
+                    v-if="(item.status == 1 || item.status == 2) && item.rid == rid && eventsMatchingByRID"
+                    @click="dropEvent(item)"
+                    class="text-xs font-medium text-warning w-8 p-[1px] rounded ml-2 mb-0.5 border border-warning hover:(bg-warning text-warningContent)"
+                  >
+                    放弃
+                  </button>
+                </div>
               </div>
             </div>
             <div class="">
@@ -136,6 +147,7 @@ const events = ref([]);
 const rid = ref(sessionStorage.getItem("rid"));
 const role = ref(sessionStorage.getItem("user_role"));
 
+const defaultIndex = ref(0);
 const filterOptions = ref(role.value == "admin" ? ["全部", "我的", "审核"] : ["待接受", "我的"]);
 const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"]);
 
@@ -143,6 +155,7 @@ const checkOnly = ref(false);
 const eventsMatchingByRID = ref(false);
 const searchQuery = ref("");
 const filterHandler = e => {
+  console.log(e);
   checkOnly.value = false;
   eventsMatchingByRID.value = false;
   if (e == "全部") {
@@ -182,12 +195,15 @@ const eventBottomDialog = config => {
 };
 
 const acceptEvent = event => {
-  eventBottomDialog({
+  BottomDialog({
     subject: "接受事件",
     content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
     acceptAction: () => {
       return Event.accept({ eid: event.eid });
     },
+  }).then(res => {
+    setEvents();
+    // filterHandler("我的");
   });
 };
 const submitEvent = event => {

@@ -11,26 +11,27 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const token = sessionStorage.getItem("access_token");
   const userRole = sessionStorage.getItem("user_role");
+  const target = to.matched[to.matched.length - 1];
   if (to.matched.length !== 0) {
+    // 404
     if (token) {
+      // login
       if (to.path === "/login") {
         next({ path: "/" });
       } else {
-        if (userRole) {
-          next();
+        // role
+        if (!target.meta || !target.meta.roles || target.meta.roles.length == 0 || target.meta.roles.indexOf(userRole) !== -1) {
+          if (userRole == "notActivated") {
+            if (to.path === "/activate") {
+              next();
+            } else {
+              next({ path: "/activate" });
+            }
+          } else {
+            next();
+          }
         } else {
-          // 模拟不存在用户权限时，获取用户权限
-          // const userRole = sessionStorage.getItem("user_role");
-          // // 并根据权限设置对应的路由
-          // let constructed = constructionRouters(routes);
-          // console.log(constructed);
-          // // store.commit('SET_ROLES_AND_ROUTES', userRole)
-          // // 如果提示 addRoutes 已弃用，使用扩展运算符完成该操作
-          // // router.addRoute(...store.getters.getRoutes)
-          // router.addRoutes(getRoutes);
-          // // 如果 addRoutes 并未完成，路由守卫会再执行一次
-          // // next({ ...to, replace: true });
-          next();
+          next("/NotAuthorized");
         }
       }
     } else {

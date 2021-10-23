@@ -19,12 +19,6 @@ export default {
     InputBase,
     Success,
   },
-  // created() {
-  //   var userAgent = navigator.userAgent;
-  //   this.isSafari = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1;
-  //   let vh = window.innerHeight * 0.01;
-  //   document.documentElement.style.setProperty("---vh", `${vh}px`);
-  // },
   data() {
     return {
       content: "",
@@ -50,7 +44,5 @@ export default {
 .fill {
   height: 100vh;
 }
-
-/* Avoid Chrome to see Safari hack */
 
 </style>

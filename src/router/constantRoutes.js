@@ -14,6 +14,11 @@ const constantRoutes = [
     name: "NotFound",
     component: () => import("@/views/404/404.vue"),
   },
+  {
+    path: "/NotAuthorized",
+    name: "NotAuthorized",
+    component: () => import("@/views/NotAuthorized/NotAuthorized.vue"),
+  },
 ];
 
 export default constantRoutes;

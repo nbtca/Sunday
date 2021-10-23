@@ -26,9 +26,15 @@ axios.interceptors.request.use(
           config.headers["Content-Type"] = "application/x-www-form-urlencoded";
           config.data = qs.stringify(config.data);
           break;
+        case "FORM":
+          config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+          config.data = qs.stringify(config.data);
+          break;
         default:
           break;
       }
+    } else {
+      config.data = qs.stringify(config.data);
     }
     return config;
   },
