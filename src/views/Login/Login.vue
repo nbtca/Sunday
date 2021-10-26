@@ -38,8 +38,6 @@ const accountInput = ref({});
 const isIDValid = ref("");
 const isPasswordValid = ref("");
 
-
-
 const login = async () => {
   isPasswordValid.value = "";
   let account = isFormValid(accountInput.value);
@@ -52,6 +50,7 @@ const login = async () => {
     //   hashedPassword = hash.digest("hex");
     // }
     await Account.login(account)
+
       .then(res => {
         console.log(res);
         const resultCode = res.resultCode;

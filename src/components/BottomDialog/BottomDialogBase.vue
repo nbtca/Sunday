@@ -116,7 +116,7 @@ export default {
       //   let performAction = action => {
       //     this.message = "processing";
       //     action(this.passData).then(res => {
-      //       console.log(res);//TODO rescode 判断 success
+      //       console.log(res);//TODO resCode 判断 success
       //       this.message = "success";
       //       setTimeout(() => {
       //         resolve(this.value);

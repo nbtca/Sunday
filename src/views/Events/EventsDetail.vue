@@ -70,7 +70,7 @@
         ></textarea>
         <div>
           <button class="bg-warning text-warningContent mx-5 btn" @click="dropEvent">放弃</button>
-          <button class="bg-primary text-primaryContent btn" @click="submitEvnet">提交</button>
+          <button class="bg-primary text-primaryContent btn" @click="submitEvent">提交</button>
         </div>
       </div>
       <div v-if="detail.status == 2 && role == 'admin'" class="flex flex-nowrap justify-center">
@@ -169,7 +169,7 @@ export default {
         })
         .catch(() => {});
     },
-    submitEvnet() {
+    submitEvent() {
       this.$refs.Dialog.openModal({
         heading: "确认提交事件",
         content: "",

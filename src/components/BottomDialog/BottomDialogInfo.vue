@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: "ButtomDialogInfo",
+  name: "BottomDialogInfo",
   props: {
     content: {},
   },

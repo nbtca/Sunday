@@ -40,7 +40,7 @@
       <scroll-area>
         <div class="hidden sm:block">
           <button
-            v-for="item in fiilteredList"
+            v-for="item in filteredList"
             :key="item.eid"
             class="flex flex-row flex-nowrap cell justify-between"
             :class="[item.eid == selected ? 'bg-gray-400/40 cursor-default' : '']"
@@ -57,7 +57,7 @@
         <!-- mobile -->
         <div class="sm:hidden">
           <div class="py-20"></div>
-          <div v-for="item in fiilteredList" :key="item.eid" class="cellsm" :class="[item.status == 1 && item.rid == rid ? 'h-26' : '']">
+          <div v-for="item in filteredList" :key="item.eid" class="cellsm" :class="[item.status == 1 && item.rid == rid ? 'h-26' : '']">
             <div class="flex flex-col h-full w-3/4 justify-between">
               <p class="text-left font-medium h-10 overflow-ellipsis overflow-hidden line-clamp-2">
                 {{ item.user_description }}
@@ -166,7 +166,7 @@ const filterHandler = e => {
     checkOnly.value = true;
   }
 };
-const fiilteredList = computed(() => {
+const filteredList = computed(() => {
   return events.value.filter(events => {
     return (
       ((!checkOnly.value && eventsMatchingByRID.value && events.rid === rid.value) ||

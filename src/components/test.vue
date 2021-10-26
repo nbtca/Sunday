@@ -5,7 +5,7 @@
       <div class="bg-white h-full"></div>
 
     </div>
-    <!-- <button class="btn bg-blue-400" @click="call">alart</button> -->
+    <!-- <button class="btn bg-blue-400" @click="call">alert</button> -->
     <div>123</div>
   </div>
 </template>

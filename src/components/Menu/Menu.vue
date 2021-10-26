@@ -143,7 +143,7 @@
                 <span>修改头像</span>
                 <input id="file-upload" name="file-upload" type="file" class="sr-only" accept="image/*" @change="updateAvatar" />
               </label>
-              <!-- <button @click="updataAvatar" class="">修改头像</button> -->
+              <!-- <button @click="updateAvatar" class="">修改头像</button> -->
             </div>
           </div>
           <div class="flex flex-col items-start pr-5">
