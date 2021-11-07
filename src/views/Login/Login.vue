@@ -8,6 +8,7 @@
         <InputBase
           placeholder="ID"
           hint="学号"
+          maxLength="10"
           required
           :passWarning="isIDValid"
           class="w-full"
@@ -34,6 +35,8 @@ import { ref } from "@vue/reactivity";
 import router from "@/router";
 // import crypto from "crypto";
 
+const avatarHolder = "https://sunday-res.oss-cn-hangzhou.aliyuncs.com/img/logo.png";
+
 const accountInput = ref({});
 const isIDValid = ref("");
 const isPasswordValid = ref("");
@@ -41,7 +44,6 @@ const isPasswordValid = ref("");
 const login = async () => {
   isPasswordValid.value = "";
   let account = isFormValid(accountInput.value);
-  let avatarHolder = "https://sunday-res.oss-cn-hangzhou.aliyuncs.com/img/logo.png";
   if (account != false) {
     // var hashedPassword = null;
     // if (account.password !== "") {
@@ -55,8 +57,7 @@ const login = async () => {
         console.log(res);
         const resultCode = res.resultCode;
         if (resultCode === 0) {
-          const token = res.data.token;
-          sessionStorage.setItem("access_token", token);
+          sessionStorage.setItem("access_token", res.data.token);
           sessionStorage.setItem("alias", res.data.alias);
           sessionStorage.setItem("avatar", res.data.avatar || avatarHolder);
           sessionStorage.setItem("user_role", res.data.role);

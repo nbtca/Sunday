@@ -57,34 +57,16 @@
         <!-- mobile -->
         <div class="sm:hidden">
           <div class="py-20"></div>
-          <div v-for="item in filteredList" :key="item.eid" class="cellsm" :class="[item.status == 1 && item.rid == rid ? 'h-26' : '']">
-            <div class="flex flex-col h-full w-3/4 justify-between">
-              <p class="text-left font-medium h-10 overflow-ellipsis overflow-hidden line-clamp-2">
-                {{ item.user_description }}
-              </p>
-              <div>
-                <div v-if="item.status == 1 && item.rid == rid" class="text-left py-0.5">
-                  <div>
-                    QQ:<em>{{ item.qq || "无" }}</em>
-                  </div>
-                  <div>
-                    电话:<em>{{ item.qq || "无" }}</em>
-                  </div>
-                </div>
-                <div class="flex text-left items-center justify-start">
-                  <div class="w-17 truncate">{{ item.model }}</div>
-                  <span class="text-xs ml-2 textDescription">{{ item.gmt_create }}</span>
-                  <button
-                    v-if="(item.status == 1 || item.status == 2) && item.rid == rid && eventsMatchingByRID"
-                    @click="dropEvent(item)"
-                    class="text-xs font-medium text-warning w-8 p-[1px] rounded ml-2 mb-0.5 border border-warning hover:(bg-warning text-warningContent)"
-                  >
-                    放弃
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="">
+          <event-card
+            v-for="item in filteredList"
+            :key="item.eid"
+            class="[item.status == 1 && item.rid == rid ? 'h-26' : '']"
+            :bannerMessage="item.status == 2 && eventsMatchingByRID ? '已提交' : ''"
+          >
+            <template #body>
+              {{ item.user_description }}
+            </template>
+            <template #action>
               <button v-if="item.status == 0" @click="acceptEvent(item)" class="btnxs btnPrimary">接受</button>
               <div class="relative">
                 <div>
@@ -101,36 +83,47 @@
               <button v-if="item.status == 2 && role == 'admin' && checkOnly" @click="judgeSubmit(item)" class="btnxs btnWarningReverse">
                 审核
               </button>
-            </div>
-            <!--//TODO show status <div class="absolute top-0 right-0 mt-1 mr-2 rounded-x-full w-13 shadow-innerlg bg-primary text-primaryContent text-shadow-xl ">123</div> -->
-            <div
-              v-if="item.status == 2 && eventsMatchingByRID"
-              class="
-                absolute
-                flex
-                items-center
-                justify-center
-                h-5
-                w-20
-                transform
-                -rotate-45
-                top-2
-                -left-5
-                bg-primary
-                text-primaryContent
-                shadow-2xl
-                text-xs
-              "
-            >
-              已提交
-            </div>
-          </div>
+            </template>
+            <template #info>
+              <div v-if="item.status == 1 && item.rid == rid">
+                <div>
+                  QQ:<em>{{ item.qq || "无" }}</em>
+                </div>
+                <div>
+                  电话:<em>{{ item.qq || "无" }}</em>
+                </div>
+              </div>
+            </template>
+            <template #footer>
+              <div class="w-17 truncate">{{ item.model }}</div>
+              <span class="text-xs ml-2 textDescription">{{ item.gmt_create }}</span>
+              <button
+                v-if="(item.status == 1 || item.status == 2) && item.rid == rid && eventsMatchingByRID"
+                @click="dropEvent(item)"
+                class="
+                  text-xs
+                  font-medium
+                  text-warning
+                  w-8
+                  p-[1px]
+                  rounded
+                  ml-2
+                  mb-0.5
+                  border border-warning
+                  hover:(bg-warning
+                  text-warningContent)
+                "
+              >
+                放弃
+              </button>
+            </template>
+          </event-card>
         </div>
       </scroll-area>
     </div>
-    <div class="w-full hidden sm:block">
+    <divB class="w-full hidden sm:block">
       <router-view @update="setEvents()"></router-view>
-    </div>
+    </divB>
   </div>
 </template>
 
@@ -141,19 +134,21 @@ import { Event } from "@/api/api";
 import { TabGroup, TabList, Tab } from "@headlessui/vue";
 // import Dialog from "@/components/Dialog/Dialog.vue";
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
-
+import EventCard from "../../components/EventCard/EventCard.vue";
 const events = ref([]);
 
 const rid = ref(sessionStorage.getItem("rid"));
 const role = ref(sessionStorage.getItem("user_role"));
 
-const defaultIndex = ref(0);
-const filterOptions = ref(role.value == "admin" ? ["全部", "我的", "审核"] : ["待接受", "我的"]);
 const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"]);
 
+// filter
+const defaultIndex = ref(0);
+const filterOptions = ref(role.value == "admin" ? ["全部", "我的", "审核"] : ["待接受", "我的"]);
 const checkOnly = ref(false);
 const eventsMatchingByRID = ref(false);
 const searchQuery = ref("");
+
 const filterHandler = e => {
   console.log(e);
   checkOnly.value = false;
@@ -177,12 +172,14 @@ const filteredList = computed(() => {
   });
 });
 
+// detail handler
 const selected = ref("");
 const showDetail = e => {
   selected.value = e;
   router.push("/Events/" + e);
 };
 
+// event actions
 const setEvents = () => {
   Event.get().then(res => (events.value = res.data));
 };

@@ -45,6 +45,7 @@
         :placeholder="placeholder"
         v-model.lazy="input"
         :readonly="disabled"
+        :maxLength="maxLength"
       />
       <textarea
         v-if="type == 'textarea'"
@@ -114,6 +115,10 @@ const props = defineProps({
   rules: {
     type: Array,
     default: [],
+  },
+  maxLength: {
+    type: Number,
+    default: null,
   },
   passWarning: {
     type: String,
