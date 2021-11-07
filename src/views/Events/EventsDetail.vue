@@ -60,7 +60,7 @@
     </div>
     <div class="mb-20 w-full px-20">
       <div>
-        <button v-if="detail.status == 0" class="bg-primary text-primaryContent w-20 btn" @click="acceptEvent">接受</button>
+        <button v-if="detail.status == 0" class="bg-primary text-primaryContent w-20 btn" @click="acceptEvent(detail)">接受</button>
       </div>
       <div v-if="detail.rid == rid && detail.status == 1" class="flex flex-col">
         <textarea
@@ -69,8 +69,8 @@
           style="resize: none"
         ></textarea>
         <div>
-          <button class="bg-warning text-warningContent mx-5 btn" @click="dropEvent">放弃</button>
-          <button class="bg-primary text-primaryContent btn" @click="submitEvent">提交</button>
+          <button class="bg-warning text-warningContent mx-5 btn" @click="dropEvent(detail)">放弃</button>
+          <button class="bg-primary text-primaryContent btn" @click="submitEvent(detail)">提交</button>
         </div>
       </div>
       <div v-if="detail.status == 2 && role == 'admin'" class="flex flex-nowrap justify-center">
@@ -82,110 +82,112 @@
   </div>
 </template>
 //TODO:display repair_description
-<script>
+<script setup>
+import {  watch, ref, inject } from "vue";
 import Dialog from "@/components/Dialog/Dialog.vue";
 import { Event } from "@/api/api";
-export default {
-  name: "EventsDetail",
-  components: {
-    Dialog,
-  },
-  data() {
-    return {
-      role: "",
-      rid: "",
-      eid: "",
-      statusToText: ["取消", "待接受", "已接受", "待确认", "关闭"],
-      contactPreference: ["QQ", "微信", "电话/短信"],
-      descriptionToSubmit: "",
-      detail: {},
-    };
-  },
-  watch: {
-    $route() {
-      this.eid = this.$route.params.eid;
-      this.setDetail();
-    },
-  },
-  created() {},
-  mounted() {
-    this.role = sessionStorage.getItem("user_role");
-    this.rid = sessionStorage.getItem("rid");
-    this.eid = this.$route.params.eid;
-    this.setDetail();
-  },
-  methods: {
-    setDetail() {
-      Event.get(this.eid).then(res => {
-        console.log(res);
-        this.detail = res.data;
-      });
-    },
-    acceptEvent() {
-      this.$refs.Dialog.openModal({
-        heading: "确认接受事件",
-        content: "",
-      })
-        .then(async () => {
-          await Event.accept({ eid: this.eid });
-          this.setDetail();
-          this.$emit("update");
-        })
-        .catch(() => {});
-    },
-    dropEvent() {
-      this.$refs.Dialog.openModal({
-        heading: "确认放弃事件",
-        content: "",
-      })
-        .then(async () => {
-          await Event.drop({ eid: this.eid });
-          this.setDetail();
-          this.$emit("update");
-        })
-        .catch(() => {});
-    },
-    closeEvent() {
-      this.$refs.Dialog.openModal({
-        heading: "确认关闭事件",
-        content: "",
-      })
-        .then(async () => {
-          await Event.close({ eid: this.eid });
-          this.setDetail();
-          this.$emit("update");
-        })
-        .catch(() => {});
-    },
-    rejectEvent() {
-      this.$refs.Dialog.openModal({
-        heading: "确认退回事件",
-        content: "",
-      })
-        .then(async () => {
-          await Event.reject({ eid: this.eid });
-          this.setDetail();
-          this.$emit("update");
-        })
-        .catch(() => {});
-    },
-    submitEvent() {
-      this.$refs.Dialog.openModal({
-        heading: "确认提交事件",
-        content: "",
-      })
-        .then(async () => {
-          await Event.submit({
-            eid: this.eid,
-            description: this.descriptionToSubmit,
-          });
-          this.setDetail();
-          this.$emit("update");
-        })
-        .catch(() => {});
-    },
-  },
+import { acceptEvent, submitEvent, alterSubmit, dropEvent, judgeSubmit } from "./EventActions";
+import router from "@/router";
+import { useRoute } from "vue-router";
+const route = useRoute();
+
+const role = ref(sessionStorage.getItem("user_role"));
+const rid = ref(sessionStorage.getItem("rid"));
+const eid = ref(route.params.eid);
+const statusToText = ref(["取消", "待接受", "已接受", "待确认", "关闭"]);
+const contactPreference = ref(["QQ", "微信", "电话"]);
+const descriptionToSubmit = ref("");
+const detail = ref({});
+
+const BottomDialog = inject("BottomDialog");
+
+const setDetail = () => {
+  eid.value = route.params.eid;
+  Event.get(eid.value).then(res => {
+    console.log(res);
+    detail.value = res.data;
+  });
 };
+setDetail();
+watch(route, setDetail);
+
+
+// const acceptEvent = event => {
+//   console.log(123);
+//   BottomDialog({
+//     subject: "接受事件",
+//     content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+//     acceptAction: () => {
+//       return Event.accept({ eid: event.eid });
+//     },
+//   }).then(res => {
+//     setEvents();
+//     // filterHandler("我的");
+//   });
+// };
+// const acceptEvent = () => {
+//   this.$refs.Dialog.openModal({
+//     heading: "确认接受事件",
+//     content: "",
+//   })
+//     .then(async () => {
+//       await Event.accept({ eid: this.eid });
+//       this.setDetail();
+//       this.$emit("update");
+//     })
+//     .catch(() => {});
+// };
+// const dropEvent = () => {
+//   this.$refs.Dialog.openModal({
+//     heading: "确认放弃事件",
+//     content: "",
+//   })
+//     .then(async () => {
+//       await Event.drop({ eid: this.eid });
+//       this.setDetail();
+//       this.$emit("update");
+//     })
+//     .catch(() => {});
+// };
+// const closeEvent = () => {
+//   this.$refs.Dialog.openModal({
+//     heading: "确认关闭事件",
+//     content: "",
+//   })
+//     .then(async () => {
+//       await Event.close({ eid: this.eid });
+//       this.setDetail();
+//       this.$emit("update");
+//     })
+//     .catch(() => {});
+// };
+// const rejectEvent = () => {
+//   this.$refs.Dialog.openModal({
+//     heading: "确认退回事件",
+//     content: "",
+//   })
+//     .then(async () => {
+//       await Event.reject({ eid: this.eid });
+//       this.setDetail();
+//       this.$emit("update");
+//     })
+//     .catch(() => {});
+// };
+// const submitEvent = () => {
+//   this.$refs.Dialog.openModal({
+//     heading: "确认提交事件",
+//     content: "",
+//   })
+//     .then(async () => {
+//       await Event.submit({
+//         eid: this.eid,
+//         description: this.descriptionToSubmit,
+//       });
+//       this.setDetail();
+//       this.$emit("update");
+//     })
+//     .catch(() => {});
+// };
 </script>
 
 <style></style>

@@ -66,16 +66,16 @@ const destroySelf = e => {
   <TransitionRoot :show="open">
     <div class="absolute inset-x-0 bottom-0 left-0 z-50 fixed">
       <TransitionChild
-        class="absolute relative"
+        class="absolute relative bg-gray-900/20 sm:(bg-gray-300/10 backdrop-filter backdrop-blur-lg )"
         style="height: 100vh"
-        enter="duration-200 ease-out "
-        enter-from="opacity-0"
+        enter="duration-200 ease-out"
+        enter-from="opacity-0 "
         enter-to="opacity-100 "
         leave="duration-100 ease-in "
         leave-from="opacity-50"
         leave-to="opacity-0"
       >
-        <div class="fixed absolute inset-0 top-0 bg-gray-900/20" style="height: 100vh"></div>
+        <div class="fixed absolute inset-0 top-0" style="height: 100vh"></div>
       </TransitionChild>
 
       <TransitionChild
@@ -115,6 +115,7 @@ const destroySelf = e => {
                   :required="item.required"
                   :type="item.type"
                   :placeholder="item.placeholder"
+                  :maxLength="item.maxLength"
                   :hint="item.hint"
                   :rules="item.rules"
                   :val="item.val"
@@ -146,29 +147,58 @@ const destroySelf = e => {
       </TransitionChild>
 
       <TransitionChild
-        class="hidden sm:block"
-        enter="transition-opacity  duration-500 ease-out"
+        class="absolute inset-0 hidden sm:block"
+        enter="transition-opacity  duration-200 ease-out"
         enter-from="opacity-0"
-        enter-to="materialCard"
+        enter-to="opacity-100 "
         leave="transition-opacity duration-200 ease-in"
-        leave-from="opacity-100 "
+        leave-from="opacity-50 "
         leave-to="opacity-0"
       >
         <div class="flex items-center justify-center h-full select-none">
-          <div class="flex flex-col justify-between materialCard w-72 p-3 shadow-3xl">
-            <div class="py-3 font-medium text-lg">
-              <div class="text-center">{{ subject }}</div>
-              <p class="mt-3 w-full text-base overflow-ellipsis overflow-hidden">
+          <div class="flex flex-col justify-between materialCard w-72 p-3 shadow-3xl text-lg">
+            <div class="text-center font-medium text-xl mt-3">{{ subject }}</div>
+            <form action="mt-3">
+              <p class="w-full text-base overflow-ellipsis overflow-hidden">
                 {{ description }}
               </p>
-              <bottom-dialog-info :content="content"></bottom-dialog-info>
-            </div>
-            <div class="w-full bg-transparent border border-t border-gray-900/10 px-6"></div>
-            <div class="grid gap-y-3 pt-3">
-              <button @click="performAction(acceptAction)" class="materialBtn btnPositiveReverse">{{ acceptActionName }}</button>
-              <!-- <button class="materialBtn btnPositiveReverse">123</button> -->
-            </div>
-            <button @click="destroySelf()" class="materialBtn btnWarningReverse mt-5">取消</button>
+              <div class="flex flex-col items-center">
+                <bottom-dialog-info v-if="content != []" :content="content"></bottom-dialog-info>
+                <input-to-confirm
+                  v-if="confirmMessage"
+                  v-model:content="isConfirmInputValid"
+                  :confirmMessage="confirmMessage"
+                  class="mt-2"
+                ></input-to-confirm>
+                <div v-if="formList" class="w-full mb-3">
+                  <div v-for="item in formList" key="item.id">
+                    <input-base
+                      class=""
+                      :subject="item.subject"
+                      :required="item.required"
+                      :type="item.type"
+                      :placeholder="item.placeholder"
+                      :maxLength="item.maxLength"
+                      :hint="item.hint"
+                      :rules="item.rules"
+                      :val="item.val"
+                      v-model:content="getFormInput[item.id]"
+                    ></input-base>
+                  </div>
+                </div>
+              </div>
+              <div class="w-full bg-transparent border border-t border-gray-900/10 px-6"></div>
+              <div class="grid gap-y-3 pt-3">
+                <button @click="performAction(acceptAction)" class="materialBtn btnPositiveReverse">{{ acceptActionName }}</button>
+                <!-- <button class="materialBtn btnPositiveReverse">123</button> -->
+              </div>
+              <div
+                @click="destroySelf('cancel')"
+                class="materialBtn materialBtn flex items-center justify-center text-lg cursor-pointer btnWarningReverse mt-5"
+              >
+                取消
+              </div>
+            </form>
           </div>
         </div>
       </TransitionChild>

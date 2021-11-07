@@ -4,6 +4,7 @@ import BottomDialogCustom from "./BottomDialogCustom.vue";
 const divVNode = h("div", { class: "fixed inset-x-0 bottom-0 z-50" });
 
 const BottomDialog = config => {
+  console.log(config)
   render(divVNode, document.body);
   const div = divVNode.el;
 

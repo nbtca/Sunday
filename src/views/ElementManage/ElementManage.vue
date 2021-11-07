@@ -14,7 +14,7 @@ const setElement = () => {
 };
 setElement();
 
-const BottomDialog= inject("BottomDialog");
+const BottomDialog = inject("BottomDialog");
 const addElementConfig = {
   subject: "添加成员",
   formList: [
@@ -56,22 +56,6 @@ const addElementConfig = {
 const addElementByBottomDialog = () => {
   BottomDialog(addElementConfig).then(() => setElement);
 };
-
-// const submit = () => {
-//   let tmp = isValid(this.newElement);
-//   console.log(tmp);
-//   if (tmp) {
-//     Element.create(tmp).then(res => {
-//       this.$refs.Dialog.closeModal();
-//       this.setElement();
-//     });
-//   }
-// };
-// const addElement = () => {
-//   this.$refs.Dialog.openModal({ heading: "添加成员" })
-//     .then(async () => {})
-//     .catch(() => {});
-// };
 </script>
 <template>
   <div class="h-full">
@@ -113,7 +97,7 @@ const addElementByBottomDialog = () => {
               <div class="py-1 px-1">
                 <MenuItem v-slot="{ active }">
                   <button
-                    @click="addElement"
+                    @click="addElementByBottomDialog"
                     :class="[
                       active ? 'text-primaryContent bg-primary' : '',
                       'group flex rounded-md items-center w-full h-full p-2 text-sm',
@@ -251,46 +235,6 @@ const addElementByBottomDialog = () => {
         </button>
       </div>
     </div>
-    <!-- <Dialog focus ref="Dialog" :passData="newElement">
-      <template #body>
-        <form @submit="submit" @close="$refs.Dialog.closeModal()" class="">
-          <div class="grid gap-1 sm:gap-3">
-            <InputBase
-              placeholder=""
-              hint="学号"
-              required
-              subject="ID"
-              v-model:content="newElement.rid"
-              :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]"
-            />
-            <InputBase
-              placeholder=""
-              subject="姓名"
-              required
-              v-model:content="newElement.name"
-              :rules="[{ rule: /^[\u4e00-\u9fa5]{2,4}$/, warning: '格式错误' }]"
-            />
-            <InputBase
-              placeholder=""
-              subject="班级"
-              required
-              hint="示例: 计算机196"
-              v-model:content="newElement.class"
-              :rules="[
-                {
-                  rule: /^([\u4e00-\u9fa5]{2,10})(\d{3})$/,
-                  warning: '格式错误',
-                },
-              ]"
-            />
-          </div>
-          <div class="flex mt-4 justify-center">
-            <button class="bg-warning mx-5 text-warningContent text-sm btn" type="close" @click="$refs.Dialog.closeModal()">取消</button>
-            <button class="bg-primary mx-5 text-primaryContent text-sm btn" type="submit">确认</button>
-          </div>
-        </form>
-      </template>
-    </Dialog> -->
   </div>
 </template>
 
