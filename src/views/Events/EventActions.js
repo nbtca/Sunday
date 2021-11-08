@@ -1,7 +1,12 @@
 import { computed, ref, inject } from "vue";
 
-// const BottomDialog = inject("BottomDialog");
 import BottomDialog from "@/components/BottomDialog/index.js";
+import { Event } from "@/api/api";
+const events = ref([]);
+const setEvents = () => {
+  Event.get().then(res => (events.value = res.data));
+};
+
 const eventBottomDialog = config => {
   // TODO condition
   BottomDialog(config).then(() => setEvents());
@@ -70,12 +75,16 @@ const dropEvent = event => {
     },
   });
 };
-const judgeSubmit = async event => {
-  var previousRepairDescription;
-  await Event.get(event.eid).then(res => {
-    var repairDescription = res.data.repair_description;
+const getPerviousDescription = async eid => {
+  let previousRepairDescription = "";
+  Event.get(eid).then(res => {
+    let repairDescription = res.data.repair_description;
     previousRepairDescription = repairDescription[repairDescription.length - 1];
   });
+  return previousRepairDescription;
+};
+const judgeSubmit = async event => {
+  let previousRepairDescription = await getPerviousDescription(event.eid);
   eventBottomDialog({
     subject: "审核提交",
     acceptActionName: "通过",
@@ -97,4 +106,5 @@ const judgeSubmit = async event => {
     },
   });
 };
-export { acceptEvent, submitEvent, alterSubmit, dropEvent, judgeSubmit };
+
+export { setEvents, events, getPerviousDescription, acceptEvent, submitEvent, alterSubmit, dropEvent, judgeSubmit };

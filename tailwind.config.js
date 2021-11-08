@@ -70,8 +70,8 @@ module.exports = {
       "rounded-full whitespace-nowrap shadow-sm select-none focus:(outline-none) transition duration-300 ease-in-out min-w-13 text-xs font-bold p-1 h-7 ",
     cellsm:
       "relative overflow-hidden bg-white/90 border border-base-standout/70 rounded-xl flex justify-between w-full h-21 mb-2 py-1 px-2 text-sm items-center shadow-sm",
-    cell: "flex items-center justify-center w-full p-3 my-1 transition-all duration-300 ease-in-out rounded-md cursor-pointer select-none hover:( materialThick bg-gray-400/40) focus:(outline-none)",
-    infoCell: "px-1 py-4 sm:grid md:grid-cols-3 sm:gap-4 sm:px-3",
+    cell: "flex items-center justify-center w-full p-3 my-1 transition-all duration-300 ease-in-out rounded-md cursor-pointer select-none hover:( materialThick bg-gray-400/40 shadow-sm) focus:(outline-none)",
+    infoCell: "px-1 py-4  rounded-lg sm:grid md:grid-cols-3 sm:gap-4 sm:px-3",
     infoHead: "text-sm font-medium  flex flex-col justify-center",
     infoContent: "mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2",
     textHeading: "text-4xl font-medium",

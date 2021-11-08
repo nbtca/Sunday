@@ -21,12 +21,14 @@
           v-for="item in menuList"
           :key="item.name"
           class="text-xl cell whitespace-nowrap"
-          :class="[item.name == selected ? 'bg-gray-400/40 cursor-default' : '']"
+          :class="[item == selectedItem ? 'bg-gray-400/30 cursor-default shadow' : '']"
           @click="toLink(item)"
         >
           {{ item.meta.title }}
         </button>
       </div>
+      <!-- overlay -->
+      <div v-if="isOpen" class="absolute z-20 h-screen w-full overflow-hidden sm:hidden" @click="isOpen = false"></div>
       <TransitionRoot
         :show="isOpen"
         class="border rounded-t-xl px-1.5 pt-2 pb-12 inset-x-0 z-30 absolute materialThin sm:(hidden)"
@@ -37,7 +39,6 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <!-- //TODO add overlay -->
         <div class="">
           <div
             class="
@@ -66,6 +67,7 @@
                   bg-gray-400/50
                   backdrop-filter backdrop-blur)
                 "
+                :class="[item == selectedItem ? 'bg-gray-400/40 cursor-default' : '']"
                 @click="toLink(item)"
               >
                 <div class="w-24">
@@ -112,8 +114,8 @@
     </div>
     <div class="flex flex-col mb-4 hidden items-center sm:(flex)">
       <div class="flex flex-col items-center xl:(flex-row mb-4)">
-        <div class="rounded-full hidden overflow-hidden border shadow-innerlg sm:(h-20 w-20 block) md:(h-28 w-28)">
-          <img class="opacity-90" :src="avatar" alt="" />
+        <div class="rounded-full overflow-hidden hidden border sm:(h-20 w-20 block) md:(h-28 w-28)">
+          <img class="" :src="avatar" alt="" />
         </div>
         <div class="relative xl:(self-end ml-2)">
           <div class="flex justify-center items-center xl:(flex-col items-start)">
@@ -127,7 +129,7 @@
       </div>
       <!-- <div>event count</div> -->
       <div class="flex flex-col lg:(flex-row)">
-        <button class="btnsm m-2 btnNeutral">账号设置</button>
+        <button class="btnsm m-2 btnNeutral" @click="accountSetting">账号设置</button>
         <button class="btnsm m-2 bg-warning text-warningContent" @click="logOut">登出</button>
       </div>
     </div>
@@ -200,10 +202,22 @@ const menuList = computed(() => {
   });
 });
 
-const selected = ref("");
+import { useRoute } from "vue-router";
+const route = useRoute();
+
+const selectedItem = computed(() => {
+  let fullPath = route.path;
+  let tailIndex = fullPath.indexOf("/", 1);
+  let pagePath = tailIndex == -1 ? fullPath : fullPath.substring(0, tailIndex);
+  for (let item of menuList.value) {
+    if (item.path == pagePath) {
+      return item;
+    }
+  }
+});
+
 const toLink = item => {
-  if (item.name != selected.value) {
-    selected.value = item.name;
+  if (item != selectedItem) {
     router.push(item.path);
   }
 };
@@ -249,6 +263,6 @@ const logOut = () => {
 </script>
 <style>
 .logo {
-  @apply font-bold font-mono text-center tracking-wide text-3xl italic text-shadow-sm uppercase sm:(text-2xl w-full self-center) md:(text-3xl) lg:text-4xl;
+  @apply select-none cursor-default font-bold font-mono text-center tracking-wide text-3xl italic text-shadow-sm uppercase sm:(text-2xl w-full self-center) md:(text-3xl) lg:text-4xl;
 }
 </style>

@@ -43,7 +43,7 @@
             v-for="item in filteredList"
             :key="item.eid"
             class="flex flex-row flex-nowrap cell justify-between"
-            :class="[item.eid == selected ? 'bg-gray-400/40 cursor-default' : '']"
+            :class="[item.eid == selectedItem ? 'bg-gray-400/30 cursor-default shadow' : '']"
             @click="showDetail(item.eid)"
           >
             <div class="text-left w-2/3 truncate">
@@ -60,7 +60,6 @@
           <event-card
             v-for="item in filteredList"
             :key="item.eid"
-            
             :class="[item.status == 1 && item.rid == rid ? 'h-26' : '']"
             :bannerMessage="item.status == 2 && eventsMatchingByRID ? '已提交' : ''"
           >
@@ -122,9 +121,9 @@
         </div>
       </scroll-area>
     </div>
-    <divB class="w-full hidden sm:block">
+    <div class="w-full hidden sm:block">
       <router-view @update="setEvents()"></router-view>
-    </divB>
+    </div>
   </div>
 </template>
 
@@ -132,12 +131,11 @@
 import { computed, ref, inject } from "vue";
 import router from "@/router";
 import { Event } from "@/api/api";
-import { acceptEvent, submitEvent, alterSubmit, dropEvent, judgeSubmit } from "./EventActions";
+import { setEvents, events, acceptEvent, submitEvent, alterSubmit, dropEvent, judgeSubmit } from "./EventActions";
 import { TabGroup, TabList, Tab } from "@headlessui/vue";
-// import Dialog from "@/components/Dialog/Dialog.vue";
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
 import EventCard from "../../components/EventCard/EventCard.vue";
-const events = ref([]);
+// const events = ref([]);
 
 const rid = ref(sessionStorage.getItem("rid"));
 const role = ref(sessionStorage.getItem("user_role"));
@@ -174,17 +172,25 @@ const filteredList = computed(() => {
   });
 });
 
+import { useRoute } from "vue-router";
+const route = useRoute();
+
+const selectedItem = computed(() => {
+  let fullPath = route.path;
+  let tailIndex = fullPath.lastIndexOf("/");
+  let pagePath = fullPath.substring(tailIndex + 1);
+  return pagePath;
+});
+
 // detail handler
-const selected = ref("");
 const showDetail = e => {
-  selected.value = e;
   router.push("/Events/" + e);
 };
 
 // event actions
-const setEvents = () => {
-  Event.get().then(res => (events.value = res.data));
-};
+// const setEvents = () => {
+//   Event.get().then(res => (events.value = res.data));
+// };
 setEvents();
 </script>
 

@@ -23,6 +23,9 @@ const addElementConfig = {
       id: "rid",
       required: true,
       type: "text",
+      placeholder: "学号",
+      hint: "(应该是)",
+      maxLength: 10,
       rules: [{ rule: /^\d{10}$/, warning: "格式错误" }],
       value: "",
     },
@@ -31,6 +34,8 @@ const addElementConfig = {
       id: "name",
       required: true,
       type: "text",
+      hint: "真名!",
+      maxLength: 4,
       rules: [{ rule: /^[\u4e00-\u9fa5]{2,4}$/, warning: "格式错误" }],
       value: "",
     },
@@ -39,7 +44,9 @@ const addElementConfig = {
       id: "class",
       required: true,
       type: "text",
-      hint: "示例: 计算机196",
+      placeholder: "专业+班级",
+      maxLength: 12,
+      hint: "示例: 星舰建设181",
       rules: [
         {
           rule: /^([\u4e00-\u9fa5]{2,10})(\d{3})$/,
@@ -54,7 +61,7 @@ const addElementConfig = {
   },
 };
 const addElementByBottomDialog = () => {
-  BottomDialog(addElementConfig).then(() => setElement);
+  BottomDialog(addElementConfig).then(()=>setElement());
 };
 </script>
 <template>
