@@ -91,8 +91,7 @@ const activate = async () => {
   Account.login({
     id: sessionStorage.getItem("rid"),
     password: account.value.password,
-  })
-  .then(res => {
+  }).then(res => {
     console.log(res);
     sessionStorage.setItem("access_token", token);
     sessionStorage.setItem("alias", res.data.alias);
