@@ -27,7 +27,6 @@ export default {
             });
           }
         }
-      console.log(ans);
       return ans;
     },
   },

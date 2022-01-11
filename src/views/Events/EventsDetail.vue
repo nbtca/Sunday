@@ -105,7 +105,6 @@ const detail = ref({});
 const setDetail = () => {
   eid.value = route.params.eid;
   Event.get(eid.value).then(res => {
-    console.log(res);
     detail.value = res.data;
   });
 };

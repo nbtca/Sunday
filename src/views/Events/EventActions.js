@@ -76,11 +76,9 @@ const dropEvent = event => {
   });
 };
 const getPerviousDescription = async eid => {
-  let previousRepairDescription = "";
-  Event.get(eid).then(res => {
-    let repairDescription = res.data.repair_description;
-    previousRepairDescription = repairDescription[repairDescription.length - 1];
-  });
+  let res = await Event.get(eid)
+  let repairDescription = res.data.repair_description;
+  let previousRepairDescription = repairDescription[repairDescription.length - 1];
   return previousRepairDescription;
 };
 const judgeSubmit = async event => {

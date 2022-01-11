@@ -86,7 +86,7 @@ const updateAvatar = event => {
 
 const activate = async () => {
   let formInput = isFormValid(account.value);
-  console.log(formInput);
+  // console.log(formInput);
   await Element.activate(formInput);
   Account.login({
     id: localStorage.getItem("rid"),

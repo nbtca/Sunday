@@ -52,7 +52,6 @@ const login = async () => {
     //   hashedPassword = hash.digest("hex");
     // }
     await Account.login(account)
-
       .then(res => {
         console.log(res);
         const resultCode = res.resultCode;

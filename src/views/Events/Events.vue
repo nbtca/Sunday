@@ -126,7 +126,6 @@ const eventsMatchingByRID = ref(false);
 const searchQuery = ref("");
 
 const filterHandler = e => {
-  console.log(e);
   checkOnly.value = false;
   eventsMatchingByRID.value = false;
   if (e == "全部") {
