@@ -78,6 +78,7 @@ const destroySelf = e => {
         <div class="fixed absolute inset-0 top-0" style="height: 100vh"></div>
       </TransitionChild>
 
+      <!-- mobile -->
       <TransitionChild
         class="absolute inset-x-0 bottom-0 flex flex-col h-auto w-full min-h-36 px-2 shadow-lg justify-between materialThick sm:hidden"
         :class="[rounded ? 'rounded-t-2xl' : '']"
@@ -107,10 +108,10 @@ const destroySelf = e => {
               :confirmMessage="confirmMessage"
               class="mt-2"
             ></input-to-confirm>
-            <div v-if="formList" class="px-2 py-2 w-full">
+            <div v-if="formList" class="px-2 py-2 w-full ">
               <div v-for="item in formList" key="item.id">
                 <input-base
-                  class="mt-2"
+                  class="mt-2  text-center"
                   :subject="item.subject"
                   :required="item.required"
                   :type="item.type"
@@ -146,6 +147,7 @@ const destroySelf = e => {
         </form>
       </TransitionChild>
 
+      <!-- desktop  -->
       <TransitionChild
         class="absolute inset-0 hidden sm:block"
         enter="transition-opacity  duration-200 ease-out"
@@ -170,21 +172,19 @@ const destroySelf = e => {
                   :confirmMessage="confirmMessage"
                   class="mt-2"
                 ></input-to-confirm>
-                <div v-if="formList" class="w-full mb-3">
-                  <div v-for="item in formList" key="item.id">
-                    <input-base
-                      class=""
-                      :subject="item.subject"
-                      :required="item.required"
-                      :type="item.type"
-                      :placeholder="item.placeholder"
-                      :maxLength="item.maxLength"
-                      :hint="item.hint"
-                      :rules="item.rules"
-                      :val="item.val"
-                      v-model:content="getFormInput[item.id]"
-                    ></input-base>
-                  </div>
+                <div v-if="formList" v-for="item in formList" key="item.id" class="w-full mb-3">
+                  <input-base
+                    class=""
+                    :subject="item.subject"
+                    :required="item.required"
+                    :type="item.type"
+                    :placeholder="item.placeholder"
+                    :maxLength="item.maxLength"
+                    :hint="item.hint"
+                    :rules="item.rules"
+                    :val="item.val"
+                    v-model:content="getFormInput[item.id]"
+                  ></input-base>
                 </div>
               </div>
               <div class="w-full bg-transparent border border-t border-gray-900/10 px-6"></div>

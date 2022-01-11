@@ -94,8 +94,8 @@ const route = useRoute();
 import { Event } from "@/api/api";
 import { acceptEvent, submitEvent, alterSubmit, dropEvent, getPerviousDescription } from "./EventActions";
 
-const role = ref(sessionStorage.getItem("user_role"));
-const rid = ref(sessionStorage.getItem("rid"));
+const role = ref(localStorage.getItem("user_role"));
+const rid = ref(localStorage.getItem("rid"));
 const eid = ref(route.params.eid);
 const statusToText = ref(["取消", "待接受", "已接受", "待确认", "关闭"]);
 const contactPreference = ref(["QQ", "微信", "电话"]);

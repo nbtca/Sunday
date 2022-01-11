@@ -57,11 +57,11 @@ const login = async () => {
         console.log(res);
         const resultCode = res.resultCode;
         if (resultCode === 0) {
-          sessionStorage.setItem("access_token", res.data.token);
-          sessionStorage.setItem("alias", res.data.alias);
-          sessionStorage.setItem("avatar", res.data.avatar || avatarHolder);
-          sessionStorage.setItem("user_role", res.data.role);
-          sessionStorage.setItem("rid", res.data.rid);
+          localStorage.setItem("access_token", res.data.token);
+          localStorage.setItem("alias", res.data.alias);
+          localStorage.setItem("avatar", res.data.avatar || avatarHolder);
+          localStorage.setItem("user_role", res.data.role);
+          localStorage.setItem("rid", res.data.rid);
           if (res.data.role == "notActivated") {
             router.push("/activate");
           } else {

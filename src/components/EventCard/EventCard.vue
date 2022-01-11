@@ -1,14 +1,14 @@
 <template>
-  <div class="cellsm" :class="class">
+  <div class="cellsm"  :class="class">
     <div class="flex flex-col h-full w-3/4 justify-between">
       <p class="text-left font-medium h-10 overflow-ellipsis overflow-hidden line-clamp-2">
         <slot name="body">body</slot>
       </p>
       <div>
-        <div class="text-left py-0.5">
+        <div class="text-left py-0.5 select-none">
           <slot name="info"></slot>
         </div>
-        <div class="flex text-left items-center justify-start">
+        <div class="flex text-left items-center justify-start select-none">
           <slot name="footer">footer</slot>
         </div>
       </div>

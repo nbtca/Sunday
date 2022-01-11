@@ -2,19 +2,7 @@
   <div class="flex">
     <div class="flex flex-col h-full w-full items-center sm:(w-[24vw] min-w-[250px] border-r border-gray-400/30)">
       <div
-        class="
-          bg-base
-          border-t border-base-standout/70
-          flex flex-col
-          order-last
-          w-full
-          px-0.5
-          self-end
-          items-center
-          sm:(order-first
-          border-b
-          px-0)
-        "
+        class="bg-base border-t border-base-standout/70 flex flex-col order-last w-full px-0.5 self-end items-center sm:(order-first border-b px-0)"
       >
         <input
           type="text"
@@ -60,7 +48,7 @@
           <event-card
             v-for="item in filteredList"
             :key="item.eid"
-            :class="[item.status == 1 && item.rid == rid ? 'h-26' : '']"
+            :class="[item.rid == rid ? 'h-30' : '']"
             :bannerMessage="item.status == 2 && eventsMatchingByRID ? '已提交' : ''"
           >
             <template #body>
@@ -85,34 +73,22 @@
               </button>
             </template>
             <template #info>
-              <div v-if="item.status == 1 && item.rid == rid">
+              <div v-if="item.rid == rid">
                 <div>
-                  QQ:<em>{{ item.qq || "无" }}</em>
+                  QQ:<em>{{ item.eqq || "无" }}</em>
                 </div>
                 <div>
-                  电话:<em>{{ item.qq || "无" }}</em>
+                  电话:<em>{{ item.ephone || "无" }}</em>
                 </div>
               </div>
             </template>
             <template #footer>
-              <div class="w-17 truncate">{{ item.model }}</div>
+              <div class="w-17 truncate">{{ item.model || "无型号" }}</div>
               <span class="text-xs ml-2 textDescription">{{ item.gmt_create }}</span>
               <button
                 v-if="(item.status == 1 || item.status == 2) && item.rid == rid && eventsMatchingByRID"
                 @click="dropEvent(item)"
-                class="
-                  text-xs
-                  font-medium
-                  text-warning
-                  w-8
-                  p-[1px]
-                  rounded
-                  ml-2
-                  mb-0.5
-                  border border-warning
-                  hover:(bg-warning
-                  text-warningContent)
-                "
+                class="text-xs font-medium text-warning w-8 p-[1px] rounded ml-2 mb-0.5 border border-warning hover:(bg-warning text-warningContent)"
               >
                 放弃
               </button>
@@ -137,8 +113,8 @@ import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
 import EventCard from "../../components/EventCard/EventCard.vue";
 // const events = ref([]);
 
-const rid = ref(sessionStorage.getItem("rid"));
-const role = ref(sessionStorage.getItem("user_role"));
+const rid = ref(localStorage.getItem("rid"));
+const role = ref(localStorage.getItem("user_role"));
 
 const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"]);
 

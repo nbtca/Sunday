@@ -49,7 +49,7 @@
       />
       <textarea
         v-if="type == 'textarea'"
-        class="rounded-xl materialInput h-36 mt-1 p-3 placeholder-gray-600 w-auto mx-5 mt-4 resize-none transition duration-100"
+        class="w-full rounded-xl materialInput h-36 mt-1 p-3 placeholder-gray-600 w-auto mx-5 mt-4 resize-none transition duration-100"
         :class="[
           warning ? 'ring-[2px] ring-warning' : '',
           isValid && input ? '' : '',

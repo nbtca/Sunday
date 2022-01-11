@@ -77,7 +77,7 @@ export default {
     //     .catch(() => {});
     // },
     changeRole(role) {
-      sessionStorage.setItem("user_role", role);
+      localStorage.setItem("user_role", role);
       this.role = role;
     },
     callNotify() {
