@@ -45,7 +45,6 @@ const isPasswordValid = ref("");
 const login = async () => {
   isPasswordValid.value = "";
   let account = isFormValid(accountInput.value);
-  let avatarHolder = "https://sunday-res.oss-cn-hangzhou.aliyuncs.com/img/logo.png";
   if (account != false) {
     // var hashedPassword = null;
     // if (account.password !== "") {
