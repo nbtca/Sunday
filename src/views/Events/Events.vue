@@ -111,10 +111,9 @@ import { setEvents, events, acceptEvent, submitEvent, alterSubmit, dropEvent, ju
 import { TabGroup, TabList, Tab } from "@headlessui/vue";
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
 import EventCard from "../../components/EventCard/EventCard.vue";
-// const events = ref([]);
 
-const rid = ref(sessionStorage.getItem("rid"));
-const role = ref(sessionStorage.getItem("user_role"));
+const rid = ref(localStorage.getItem("rid"));
+const role = ref(localStorage.getItem("user_role"));
 
 const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"]);
 
