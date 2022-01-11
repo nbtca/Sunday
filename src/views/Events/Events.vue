@@ -113,8 +113,8 @@ import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
 import EventCard from "../../components/EventCard/EventCard.vue";
 // const events = ref([]);
 
-const rid = ref(localStorage.getItem("rid"));
-const role = ref(localStorage.getItem("user_role"));
+const rid = ref(sessionStorage.getItem("rid"));
+const role = ref(sessionStorage.getItem("user_role"));
 
 const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"]);
 
@@ -126,6 +126,7 @@ const eventsMatchingByRID = ref(false);
 const searchQuery = ref("");
 
 const filterHandler = e => {
+  console.log(e);
   checkOnly.value = false;
   eventsMatchingByRID.value = false;
   if (e == "全部") {

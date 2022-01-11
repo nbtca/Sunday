@@ -81,6 +81,7 @@ const updateAvatar = event => {
   Element.updateAvatar(param).then(res => {
     accountInfo.value.ravatar = res.data.avatar;
     localStorage.setItem("avatar", res.data.avatar);
+
   });
 };
 
