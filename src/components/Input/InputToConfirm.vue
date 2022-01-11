@@ -1,10 +1,10 @@
 <template>
-  <div class="py-2 flex flex-col items-center">
+  <div class="py-2 sm:(py-0 px-3 w-full) flex flex-col items-center">
     <div class="font-semibold">
       输入 <span class="font-extrabold text-lg text-warning px-1">{{ confirmMessage }}</span> 来确认
     </div>
     <input-base
-      class="w-[80vw] pt-2"
+      class="w-[80vw] sm:w-full pt-2"
       v-model:content="confirmInput"
       required
       center

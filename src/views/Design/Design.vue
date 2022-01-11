@@ -27,7 +27,7 @@
           <button class="btnxs btnNeutralReverse">确认</button>
         </div>
       </div>
-      <div class="card bg materialMedium felx flex-col">
+      <div class="card bg materialMedium flex flex-col">
         <div>control</div>
         <div class="">
           <button class="btn bg-blue-200/70 mx-3" @click="changeRole('element')">element</button>
@@ -77,7 +77,7 @@ export default {
     //     .catch(() => {});
     // },
     changeRole(role) {
-      sessionStorage.setItem("user_role", role);
+      localStorage.setItem("user_role", role);
       this.role = role;
     },
     callNotify() {

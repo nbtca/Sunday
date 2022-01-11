@@ -1,9 +1,23 @@
 <template>
   <div class="flex w-full justify-between sm:(overflow-hidden bg-base-self flex-col h-full border-r border-gray-400/30 p-2)">
     <div class="flex flex-col-reverse sm:(items-center) w-full relative sm:block">
-      <div class="flex h-15 p-2 z-40 justify-between items-center sm:(p-0) md:(w-full h-24) lg:(p-2)">
+      <div class="flex h-15 mb-2 p-2 z-40 justify-between items-center sm:(p-0 m-0) md:(w-full h-24) lg:(p-2)">
+        <div class="flex items-center sm:hidden" @click="accountSetting">
+          <div class="rounded-full h-11 w-11 overflow-hidden border block">
+            <img class="" :src="avatar" alt="" />
+          </div>
+          <div class="ml-2">
+            <div class="flex items-center">
+              <div class="textSubHeading">{{ alias }}</div>
+              <span v-if="role == 'admin'" class="bg-green-100 h-5 text-green-800 badge"> 管理员 </span>
+            </div>
+            <div class="text-left leading-tight textDescription">
+              {{ rid }}
+            </div>
+          </div>
+        </div>
         <div
-          class="logo"
+          class="logo hidden sm:block"
           @click="
             $router.push('/Events');
             isOpen = false;
@@ -11,9 +25,9 @@
         >
           sunday
         </div>
-        <div v-if="menuList.length < 2" @click="accountSetting" class="rounded-full h-11 w-11 overflow-hidden border block">
+        <!-- <div v-if="menuList.length < 2" @click="accountSetting" class="rounded-full h-11 w-11 overflow-hidden border block">
           <img class="" :src="avatar" alt="" />
-        </div>
+        </div> -->
         <MenuIcon v-if="menuList.length > 1" class="bg-bg-gray-900 h-9 w-9 sm:(hidden)" @click="isOpen = !isOpen"></MenuIcon>
       </div>
       <div class="hidden sm:(block)">
@@ -21,15 +35,17 @@
           v-for="item in menuList"
           :key="item.name"
           class="text-xl cell whitespace-nowrap"
-          :class="[item.name == selected ? 'bg-gray-400/40 cursor-default' : '']"
+          :class="[item == selectedItem ? 'bg-gray-400/30 cursor-default shadow' : '']"
           @click="toLink(item)"
         >
           {{ item.meta.title }}
         </button>
       </div>
+      <!-- overlay -->
+      <div v-if="isOpen" class="absolute z-20 h-screen w-full overflow-hidden sm:hidden" @click="isOpen = false"></div>
       <TransitionRoot
         :show="isOpen"
-        class="border rounded-t-xl px-1.5 pt-2 pb-12 inset-x-0 z-30 absolute materialThin sm:(hidden)"
+        class="border rounded-t-xl px-1.5 pt-2 pb-17 inset-x-0 z-30 absolute materialThin sm:(hidden)"
         enter="transition-opacity ease-out duration-150"
         enter-from="opacity-0"
         enter-to="opacity-100"
@@ -37,35 +53,14 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <!-- //TODO add overlay -->
         <div class="">
           <div
-            class="
-              divide-y divide-gray-400/50
-              px-1
-              rounded-xl
-              backdrop-filter backdrop-blur-md
-              shadow
-              overflow-hidden
-              border border-gray-400/50
-            "
+            class="divide-y divide-gray-400/50 px-1 rounded-xl backdrop-filter backdrop-blur-md shadow overflow-hidden border border-gray-400/50"
           >
             <div class="py-1" v-for="item in menuList" :key="item.name">
               <button
-                class="
-                  flex
-                  items-center
-                  justify-center
-                  h-10
-                  m-0
-                  cell
-                  rounded-lg
-                  font-medium
-                  whitespace-nowrap
-                  hover:(shadow-none
-                  bg-gray-400/50
-                  backdrop-filter backdrop-blur)
-                "
+                class="flex items-center justify-center h-10 m-0 cell rounded-lg font-medium whitespace-nowrap hover:(shadow-none bg-gray-400/50 backdrop-filter backdrop-blur)"
+                :class="[item == selectedItem ? 'bg-gray-400/40 cursor-default' : '']"
                 @click="toLink(item)"
               >
                 <div class="w-24">
@@ -74,19 +69,8 @@
               </button>
             </div>
           </div>
-          <div
-            class="
-              rounded-xl
-              flex
-              backdrop-filter backdrop-blur
-              h-13
-              shadow
-              my-1.5
-              p-1
-              items-center
-              justify-between
-              border border-gray-400/50
-            "
+          <!-- <div
+            class="rounded-xl flex backdrop-filter backdrop-blur h-13 shadow my-1.5 p-1 items-center justify-between border border-gray-400/50"
           >
             <div class="flex items-center">
               <div class="rounded-lg h-11 w-11 overflow-hidden border block">
@@ -104,16 +88,15 @@
             </div>
             <div class="mr-1">
               <button @click="accountSetting" class="btnsm btnNeutralReverse">设置</button>
-              <!-- <button @click="logOut" class="bg-warning text-warningContent ml-2 btnsm">登出</button> -->
             </div>
-          </div>
+          </div> -->
         </div>
       </TransitionRoot>
     </div>
     <div class="flex flex-col mb-4 hidden items-center sm:(flex)">
       <div class="flex flex-col items-center xl:(flex-row mb-4)">
-        <div class="rounded-full hidden overflow-hidden border shadow-innerlg sm:(h-20 w-20 block) md:(h-28 w-28)">
-          <img class="opacity-90" :src="avatar" alt="" />
+        <div class="rounded-full overflow-hidden hidden border sm:(h-20 w-20 block) md:(h-28 w-28)">
+          <img class="" :src="avatar" alt="" />
         </div>
         <div class="relative xl:(self-end ml-2)">
           <div class="flex justify-center items-center xl:(flex-col items-start)">
@@ -127,7 +110,7 @@
       </div>
       <!-- <div>event count</div> -->
       <div class="flex flex-col lg:(flex-row)">
-        <button class="btnsm m-2 btnNeutral">账号设置</button>
+        <button class="btnsm m-2 btnNeutral" @click="accountSetting">账号设置</button>
         <button class="btnsm m-2 bg-warning text-warningContent" @click="logOut">登出</button>
       </div>
     </div>
@@ -143,7 +126,7 @@
                 <span>修改头像</span>
                 <input id="file-upload" name="file-upload" type="file" class="sr-only" accept="image/*" @change="updateAvatar" />
               </label>
-              <!-- <button @click="updataAvatar" class="">修改头像</button> -->
+              <!-- <button @click="updateAvatar" class="">修改头像</button> -->
             </div>
           </div>
           <div class="flex flex-col items-start pr-5">
@@ -168,7 +151,7 @@
       </template>
       <template #actionSpace>
         <button type="submit" class="materialBtn btnPrimaryReverse">确定</button>
-        <button @click="logOut" class="materialBtn btnWarning mt-3">登出</button>
+        <button @click="logOut" class="materialBtn btnWarning m-3">登出</button>
       </template>
     </bottom-dialog>
   </div>
@@ -185,10 +168,10 @@ import InputSection from "@/components/Input/InputSection.vue";
 import InputBase from "@/components/Input/InputBase.vue";
 
 const isOpen = ref(false);
-const alias = ref(sessionStorage.getItem("alias"));
-const avatar = ref(sessionStorage.getItem("avatar"));
-const role = ref(sessionStorage.getItem("user_role"));
-const rid = ref(sessionStorage.getItem("rid"));
+const alias = ref(localStorage.getItem("alias"));
+const avatar = ref(localStorage.getItem("avatar"));
+const role = ref(localStorage.getItem("user_role"));
+const rid = ref(localStorage.getItem("rid"));
 
 const menuList = computed(() => {
   return router.options.routes[0].children.filter(item => {
@@ -200,10 +183,22 @@ const menuList = computed(() => {
   });
 });
 
-const selected = ref("");
+import { useRoute } from "vue-router";
+const route = useRoute();
+
+const selectedItem = computed(() => {
+  let fullPath = route.path;
+  let tailIndex = fullPath.indexOf("/", 1);
+  let pagePath = tailIndex == -1 ? fullPath : fullPath.substring(0, tailIndex);
+  for (let item of menuList.value) {
+    if (item.path == pagePath) {
+      return item;
+    }
+  }
+});
+
 const toLink = item => {
-  if (item.name != selected.value) {
-    selected.value = item.name;
+  if (item != selectedItem) {
     router.push(item.path);
   }
 };
@@ -238,17 +233,17 @@ const updateAvatar = event => {
   param.append("file", file);
   Element.updateAvatar(param).then(res => {
     accountInfo.value.ravatar = res.data.avatar;
-    sessionStorage.setItem("avatar", res.data.avatar);
-    avatar.value = sessionStorage.getItem("avatar");
+    localStorage.setItem("avatar", res.data.avatar);
+    avatar.value = localStorage.getItem("avatar");
   });
 };
 const logOut = () => {
-  sessionStorage.removeItem("access_token");
+  localStorage.removeItem("access_token");
   router.push("/login");
 };
 </script>
 <style>
 .logo {
-  @apply font-bold font-mono text-center tracking-wide text-3xl italic text-shadow-sm uppercase sm:(text-2xl w-full self-center) md:(text-3xl) lg:text-4xl;
+  @apply select-none cursor-default font-bold font-mono text-center tracking-wide text-3xl italic text-shadow-sm uppercase sm:(text-2xl w-full self-center) md:(text-3xl) lg:text-4xl;
 }
 </style>

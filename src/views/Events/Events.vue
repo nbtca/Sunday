@@ -2,19 +2,7 @@
   <div class="flex">
     <div class="flex flex-col h-full w-full items-center sm:(w-[24vw] min-w-[250px] border-r border-gray-400/30)">
       <div
-        class="
-          bg-base
-          border-t border-base-standout/70
-          flex flex-col
-          order-last
-          w-full
-          px-0.5
-          self-end
-          items-center
-          sm:(order-first
-          border-b
-          px-0)
-        "
+        class="bg-base border-t border-base-standout/70 flex flex-col order-last w-full px-0.5 self-end items-center sm:(order-first border-b px-0)"
       >
         <input
           type="text"
@@ -40,10 +28,10 @@
       <scroll-area>
         <div class="hidden sm:block">
           <button
-            v-for="item in fiilteredList"
+            v-for="item in filteredList"
             :key="item.eid"
             class="flex flex-row flex-nowrap cell justify-between"
-            :class="[item.eid == selected ? 'bg-gray-400/40 cursor-default' : '']"
+            :class="[item.eid == selectedItem ? 'bg-gray-400/30 cursor-default shadow' : '']"
             @click="showDetail(item.eid)"
           >
             <div class="text-left w-2/3 truncate">
@@ -57,34 +45,16 @@
         <!-- mobile -->
         <div class="sm:hidden">
           <div class="py-20"></div>
-          <div v-for="item in fiilteredList" :key="item.eid" class="cellsm" :class="[item.status == 1 && item.rid == rid ? 'h-26' : '']">
-            <div class="flex flex-col h-full w-3/4 justify-between">
-              <p class="text-left font-medium h-10 overflow-ellipsis overflow-hidden line-clamp-2">
-                {{ item.user_description }}
-              </p>
-              <div>
-                <div v-if="item.status == 1 && item.rid == rid" class="text-left py-0.5">
-                  <div>
-                    QQ:<em>{{ item.qq || "无" }}</em>
-                  </div>
-                  <div>
-                    电话:<em>{{ item.qq || "无" }}</em>
-                  </div>
-                </div>
-                <div class="flex text-left items-center justify-start">
-                  <div class="w-17 truncate">{{ item.model }}</div>
-                  <span class="text-xs ml-2 textDescription">{{ item.gmt_create }}</span>
-                  <button
-                    v-if="(item.status == 1 || item.status == 2) && item.rid == rid && eventsMatchingByRID"
-                    @click="dropEvent(item)"
-                    class="text-xs font-medium text-warning w-8 p-[1px] rounded ml-2 mb-0.5 border border-warning hover:(bg-warning text-warningContent)"
-                  >
-                    放弃
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="">
+          <event-card
+            v-for="item in filteredList"
+            :key="item.eid"
+            :class="[item.rid == rid ? 'h-30' : '']"
+            :bannerMessage="item.status == 2 && eventsMatchingByRID ? '已提交' : ''"
+          >
+            <template #body>
+              {{ item.user_description }}
+            </template>
+            <template #action>
               <button v-if="item.status == 0" @click="acceptEvent(item)" class="btnxs btnPrimary">接受</button>
               <div class="relative">
                 <div>
@@ -101,30 +71,29 @@
               <button v-if="item.status == 2 && role == 'admin' && checkOnly" @click="judgeSubmit(item)" class="btnxs btnWarningReverse">
                 审核
               </button>
-            </div>
-            <!--//TODO show status <div class="absolute top-0 right-0 mt-1 mr-2 rounded-x-full w-13 shadow-innerlg bg-primary text-primaryContent text-shadow-xl ">123</div> -->
-            <div
-              v-if="item.status == 2 && eventsMatchingByRID"
-              class="
-                absolute
-                flex
-                items-center
-                justify-center
-                h-5
-                w-20
-                transform
-                -rotate-45
-                top-2
-                -left-5
-                bg-primary
-                text-primaryContent
-                shadow-2xl
-                text-xs
-              "
-            >
-              已提交
-            </div>
-          </div>
+            </template>
+            <template #info>
+              <div v-if="item.rid == rid">
+                <div>
+                  QQ:<em>{{ item.eqq || "无" }}</em>
+                </div>
+                <div>
+                  电话:<em>{{ item.ephone || "无" }}</em>
+                </div>
+              </div>
+            </template>
+            <template #footer>
+              <div class="w-17 truncate">{{ item.model || "无型号" }}</div>
+              <span class="text-xs ml-2 textDescription">{{ item.gmt_create }}</span>
+              <button
+                v-if="(item.status == 1 || item.status == 2) && item.rid == rid && eventsMatchingByRID"
+                @click="dropEvent(item)"
+                class="text-xs font-medium text-warning w-8 p-[1px] rounded ml-2 mb-0.5 border border-warning hover:(bg-warning text-warningContent)"
+              >
+                放弃
+              </button>
+            </template>
+          </event-card>
         </div>
       </scroll-area>
     </div>
@@ -138,22 +107,24 @@
 import { computed, ref, inject } from "vue";
 import router from "@/router";
 import { Event } from "@/api/api";
+import { setEvents, events, acceptEvent, submitEvent, alterSubmit, dropEvent, judgeSubmit } from "./EventActions";
 import { TabGroup, TabList, Tab } from "@headlessui/vue";
-// import Dialog from "@/components/Dialog/Dialog.vue";
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
-
-const events = ref([]);
+import EventCard from "../../components/EventCard/EventCard.vue";
+// const events = ref([]);
 
 const rid = ref(sessionStorage.getItem("rid"));
 const role = ref(sessionStorage.getItem("user_role"));
 
-const defaultIndex = ref(0);
-const filterOptions = ref(role.value == "admin" ? ["全部", "我的", "审核"] : ["待接受", "我的"]);
 const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"]);
 
+// filter
+const defaultIndex = ref(0);
+const filterOptions = ref(role.value == "admin" ? ["全部", "我的", "审核"] : ["待接受", "我的"]);
 const checkOnly = ref(false);
 const eventsMatchingByRID = ref(false);
 const searchQuery = ref("");
+
 const filterHandler = e => {
   console.log(e);
   checkOnly.value = false;
@@ -166,7 +137,7 @@ const filterHandler = e => {
     checkOnly.value = true;
   }
 };
-const fiilteredList = computed(() => {
+const filteredList = computed(() => {
   return events.value.filter(events => {
     return (
       ((!checkOnly.value && eventsMatchingByRID.value && events.rid === rid.value) ||
@@ -177,114 +148,26 @@ const fiilteredList = computed(() => {
   });
 });
 
-const selected = ref("");
+import { useRoute } from "vue-router";
+const route = useRoute();
+
+const selectedItem = computed(() => {
+  let fullPath = route.path;
+  let tailIndex = fullPath.lastIndexOf("/");
+  let pagePath = fullPath.substring(tailIndex + 1);
+  return pagePath;
+});
+
+// detail handler
 const showDetail = e => {
-  selected.value = e;
   router.push("/Events/" + e);
 };
 
-const setEvents = () => {
-  Event.get().then(res => (events.value = res.data));
-};
+// event actions
+// const setEvents = () => {
+//   Event.get().then(res => (events.value = res.data));
+// };
 setEvents();
-
-const BottomDialog = inject("BottomDialog");
-const eventBottomDialog = config => {
-  // TODO condition
-  BottomDialog(config).then(() => setEvents());
-};
-
-const acceptEvent = event => {
-  BottomDialog({
-    subject: "接受事件",
-    content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
-    acceptAction: () => {
-      return Event.accept({ eid: event.eid });
-    },
-  }).then(res => {
-    setEvents();
-    // filterHandler("我的");
-  });
-};
-const submitEvent = event => {
-  eventBottomDialog({
-    subject: "提交维修",
-    formList: [
-      {
-        subject: "维修描述",
-        id: "description",
-        required: true,
-        type: "textarea",
-      },
-    ],
-    rounded: true,
-    content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
-    acceptActionName: "提交",
-    acceptAction: e => {
-      return Event.submit({ eid: event.eid, description: e.description });
-    },
-  });
-};
-const alterSubmit = event => {
-  Event.get(event.eid).then(res => {
-    let eventDetail = res.data.repair_description;
-    eventBottomDialog({
-      subject: "修改提交",
-      formList: [
-        {
-          subject: "维修描述",
-          id: "description",
-          required: true,
-          type: "textarea",
-          val: eventDetail[eventDetail.length - 1].description,
-        },
-      ],
-      rounded: true,
-      content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
-      acceptActionName: "提交",
-      acceptAction: e => {
-        return Event.alterSubmit({ eid: event.eid, description: e.description });
-      },
-    });
-  });
-};
-const dropEvent = event => {
-  eventBottomDialog({
-    subject: "放弃事件",
-    confirmMessage: "放弃",
-    content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
-    acceptAction: () => {
-      return Event.drop({ eid: event.eid });
-    },
-  });
-};
-const judgeSubmit = async event => {
-  var previousRepairDescription;
-  await Event.get(event.eid).then(res => {
-    var repairDescription = res.data.repair_description;
-    previousRepairDescription = repairDescription[repairDescription.length - 1];
-  });
-  eventBottomDialog({
-    subject: "审核提交",
-    acceptActionName: "通过",
-    declineActionName: "退回",
-    rounded: true,
-    content: [
-      { 型号: event.model },
-      { 问题描述: event.user_description },
-      { 创建时间: event.gmt_create },
-      { 维修描述: previousRepairDescription.description },
-      { 提交时间: previousRepairDescription.time },
-    ],
-    // TODO test
-    acceptAction: () => {
-      return Event.close({ eid: event.eid });
-    },
-    declineAction: () => {
-      return Event.reject({ eid: event.eid });
-    },
-  });
-};
 </script>
 
 <style></style>

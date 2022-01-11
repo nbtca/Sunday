@@ -80,25 +80,25 @@ const updateAvatar = event => {
   param.append("file", file);
   Element.updateAvatar(param).then(res => {
     accountInfo.value.ravatar = res.data.avatar;
-    sessionStorage.setItem("avatar", res.data.avatar);
+    localStorage.setItem("avatar", res.data.avatar);
+
   });
 };
 
 const activate = async () => {
   let formInput = isFormValid(account.value);
-  console.log(formInput);
+  // console.log(formInput);
   await Element.activate(formInput);
   Account.login({
-    id: sessionStorage.getItem("rid"),
+    id: localStorage.getItem("rid"),
     password: account.value.password,
-  })
-  .then(res => {
+  }).then(res => {
     console.log(res);
-    sessionStorage.setItem("access_token", token);
-    sessionStorage.setItem("alias", res.data.alias);
-    // sessionStorage.setItem("avatar", res.data.avatar || avatarHolder);
-    sessionStorage.setItem("user_role", res.data.role);
-    sessionStorage.setItem("rid", res.data.rid);
+    localStorage.setItem("access_token", token);
+    localStorage.setItem("alias", res.data.alias);
+    // localStorage.setItem("avatar", res.data.avatar || avatarHolder);
+    localStorage.setItem("user_role", res.data.role);
+    localStorage.setItem("rid", res.data.rid);
     router.push("/Events");
   });
 };

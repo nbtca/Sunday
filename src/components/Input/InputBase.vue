@@ -1,7 +1,7 @@
 <template>
   <div class="select-none flex flex-col items-center">
     <div class="w-full flex justify-between items-center mb-0.5">
-      <div v-if="subject" class="mx-1 font-medium text-sm sm:(text-lg font-semibold mb-1 )">
+      <div v-if="subject" class="mx-1 font-medium text-sm sm:(text-lg font-semibold)">
         {{ subject + (required ? "*" : "") }}
       </div>
     </div>
@@ -45,10 +45,11 @@
         :placeholder="placeholder"
         v-model.lazy="input"
         :readonly="disabled"
+        :maxLength="maxLength"
       />
       <textarea
         v-if="type == 'textarea'"
-        class="rounded-xl materialInput h-36 mt-1 p-3 placeholder-gray-600 w-full resize-none transition duration-100"
+        class="w-full rounded-xl materialInput h-36 mt-1 p-3 placeholder-gray-600 w-auto mx-5 mt-4 resize-none transition duration-100"
         :class="[
           warning ? 'ring-[2px] ring-warning' : '',
           isValid && input ? '' : '',
@@ -114,6 +115,10 @@ const props = defineProps({
   rules: {
     type: Array,
     default: [],
+  },
+  maxLength: {
+    type: Number,
+    default: null,
   },
   passWarning: {
     type: String,

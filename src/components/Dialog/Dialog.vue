@@ -1,6 +1,6 @@
 <template>
   <TransitionRoot appear :show="open" as="template">
-    <Dialog as="div" @close="closeModal('outter')">
+    <Dialog as="div" @close="closeModal('outer')">
       <div class="inset-0 z-10 fixed overflow-y-auto">
         <div class="min-h-screen text-center px-4 flex items-center justify-center">
           <TransitionChild
@@ -209,7 +209,7 @@ export default {
       });
     },
     closeModal(location) {
-      if (!this.focus || location != "outter") {
+      if (!this.focus || location != "outer") {
         this.open = false;
       }
     },

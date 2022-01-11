@@ -6,4 +6,5 @@ const isFormValid = form => {
   }
   return form;
 };
+
 export { isFormValid };
