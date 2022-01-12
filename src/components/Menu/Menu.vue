@@ -216,7 +216,6 @@ const toLink = item => {
 const accountInfo = ref({});
 const setAccountInfo = () => {
   return Element.get(rid.value).then(res => {
-    console.log(res);
     accountInfo.value = res.data;
     localStorage.setItem("avatar", res.data.ravatar);
     localStorage.setItem("alias", res.data.ralias);
