@@ -116,7 +116,9 @@
     </div>
     <bottom-dialog ref="bottomDialog">
       <template #body>
-        <div class="cellsm mb-2.5 h-26 materialMedium bg-opacity-30">
+        <div
+          class="flex items-center justify-between rounded-xl px-3 mb-2.5 h-26 bg-white/50 border border-gray-400/40 materialMedium shadow-lg"
+        >
           <div class="flex items-center">
             <div class="relative flex">
               <div class="rounded-full border border-gray-400/30 h-20 w-20 overflow-hidden">
@@ -129,7 +131,7 @@
               <!-- <button @click="updateAvatar" class="">修改头像</button> -->
             </div>
           </div>
-          <div class="flex flex-col items-start pr-5">
+          <div class="flex flex-col items-start">
             <div class="flex text-base font-medium">
               <div class="mr-2">{{ accountInfo.name }}</div>
               <div>{{ accountInfo.class }}</div>
@@ -139,26 +141,33 @@
             <!-- //TODO change the time format -->
           </div>
         </div>
-        <form class="relative">
+        <form @submit="updateAccount" class="relative">
           <input-section subject="昵称">
-            <input-base subject="" :passValue="accountInfo.ralias" confirmBeforeInput></input-base>
+            <input-base subject="" :passValue="accountInfo.ralias" confirmBeforeInput v-model:content="newAccountInfo.alias"></input-base>
           </input-section>
           <input-section subject="联系方式">
-            <input-base subject="手机" :passValue="accountInfo.rphone" confirmBeforeInput></input-base>
-            <input-base subject="QQ" :passValue="accountInfo.rqq" confirmBeforeInput></input-base>
+            <input-base
+              subject="手机"
+              :passValue="accountInfo.rphone"
+              confirmBeforeInput
+              v-model:content="newAccountInfo.phone"
+            ></input-base>
+            <input-base subject="QQ" :passValue="accountInfo.rqq" confirmBeforeInput v-model:content="newAccountInfo.qq"></input-base>
+          </input-section>
+          <input-section subject="" class="mt-4">
+            <button type="submit" class="materialBtn btnPrimaryReverse">确定</button>
           </input-section>
         </form>
       </template>
       <template #actionSpace>
-        <button type="submit" class="materialBtn btnPrimaryReverse">确定</button>
-        <button @click="logOut" class="materialBtn btnWarning m-3">登出</button>
+        <button @click="logOut" class="materialBtn btnWarning mt-1">登出</button>
       </template>
     </bottom-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { Element } from "@/api/api";
 import router from "@/router";
 import { MenuIcon } from "@heroicons/vue/outline";
@@ -172,6 +181,8 @@ const alias = ref(localStorage.getItem("alias"));
 const avatar = ref(localStorage.getItem("avatar"));
 const role = ref(localStorage.getItem("user_role"));
 const rid = ref(localStorage.getItem("rid"));
+
+const newAccountInfo = ref({});
 
 const menuList = computed(() => {
   return router.options.routes[0].children.filter(item => {
@@ -196,7 +207,6 @@ const selectedItem = computed(() => {
     }
   }
 });
-
 const toLink = item => {
   if (item != selectedItem) {
     router.push(item.path);
@@ -206,9 +216,17 @@ const toLink = item => {
 const accountInfo = ref({});
 const setAccountInfo = () => {
   return Element.get(rid.value).then(res => {
-    accountInfo.value = res.data[0];
+    accountInfo.value = res.data;
+    localStorage.setItem("avatar", res.data.ravatar);
+    localStorage.setItem("alias", res.data.ralias);
+    localStorage.setItem("user_role", res.data.role);
+    avatar.value=res.data.ravatar;
+    alias.value=res.data.ralias;
+    role.value=res.data.role;
   });
 };
+
+watch(route, setAccountInfo);
 
 const loading = ref(false);
 const bottomDialog = ref(null);
@@ -232,13 +250,26 @@ const updateAvatar = event => {
   let param = new FormData();
   param.append("file", file);
   Element.updateAvatar(param).then(res => {
-    accountInfo.value.ravatar = res.data.avatar;
-    localStorage.setItem("avatar", res.data.avatar);
-    avatar.value = localStorage.getItem("avatar");
+    setAccountInfo();
+  });
+};
+const updateAccount = () => {
+  // console.log(newAccountInfo.value);
+  if (
+    newAccountInfo.value.alias == accountInfo.value.ralias &&
+    newAccountInfo.value.qq == accountInfo.value.rqq &&
+    newAccountInfo.value.phone == accountInfo.value.rphone
+  ) {
+    bottomDialog.value.cancel();
+    return;
+  }
+  Element.update(newAccountInfo.value).then(res => {
+    setAccountInfo();
+    bottomDialog.value.cancel();
   });
 };
 const logOut = () => {
-  localStorage.removeItem("access_token");
+  localStorage.clear();
   router.push("/login");
 };
 </script>

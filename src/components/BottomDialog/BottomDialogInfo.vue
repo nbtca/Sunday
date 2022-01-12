@@ -15,7 +15,6 @@ import { computed, toRefs } from "@vue/reactivity";
 const props = defineProps({
   content: {
     type: Array,
-    required: true,
   },
 });
 const { content } = toRefs(props);

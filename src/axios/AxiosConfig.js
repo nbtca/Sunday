@@ -10,32 +10,27 @@ axios.defaults.timeout = 10000;
 
 axios.interceptors.request.use(
   config => {
-    console.log(config);
     const token = localStorage.getItem("access_token");
     config.headers.authorization = "bearer " + token;
-    if (config.type) {
-      switch (config.type) {
-        case "FORM-DATA":
-          config.transformRequest = [
-            data => {
-              return "args=" + JSON.stringify(data);
-            },
-          ];
-          break;
-        case "FORM":
-          config.headers["Content-Type"] = "application/x-www-form-urlencoded";
-          config.data = qs.stringify(config.data);
-          break;
-        case "FORM":
-          config.headers["Content-Type"] = "application/x-www-form-urlencoded";
-          config.data = qs.stringify(config.data);
-          break;
-        default:
-          break;
-      }
-    } else {
-      config.data = qs.stringify(config.data);
-    }
+    // if (config.type) {
+    //   switch (config.type) {
+    //     case "FORM-DATA":
+    //       config.transformRequest = [
+    //         data => {
+    //           return "args=" + JSON.stringify(data);
+    //         },
+    //       ];
+    //       break;
+    //     case "FORM":
+    //       config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+    //       config.data = qs.stringify(config.data);
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    // } else {
+    //   config.data = qs.stringify(config.data);
+    // }
     return config;
   },
   error => {
