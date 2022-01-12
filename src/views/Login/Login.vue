@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-center h-full bg-base-self" style="">
     <div class="flex flex-col items-center sm:mt-28">
-      <div class="py-[5vh]" style="width: 15vw; min-width: 250px">
+      <div class="py-[5vh] h-80" style="width: 15vw; min-width: 250px">
         <img src="../../assets/logo.png" alt="" class="filter drop-shadow" />
       </div>
       <form @submit.prevent="login" class="grid gap-6 place-items-center" style="width: 20vw; min-width: 300px">
@@ -31,15 +31,17 @@
 import { Account } from "@/api/api";
 import { isFormValid } from "@/Utils/isFormValid";
 import InputBase from "@/components/Input/InputBase.vue";
-import { ref } from "@vue/reactivity";
+import { ref } from "vue";
 import router from "@/router";
 import md5 from "blueimp-md5";
+import { onBeforeRouteUpdate } from "vue-router";
 
 const avatarHolder = "https://sunday-res.oss-cn-hangzhou.aliyuncs.com/img/logo.png";
 
 const accountInput = ref({});
 const isIDValid = ref("");
 const isPasswordValid = ref("");
+
 
 const login = async () => {
   isPasswordValid.value = "";
@@ -66,8 +68,8 @@ const login = async () => {
             router.push("/activate");
             router.push("/activate");
           } else {
-            window.history.back(-1);
-            // router.push("/Events");
+            // window.history.back(-1);
+            router.push("/Events");
           }
         } else if (resultCode === 1010) {
           isIDValid.value = "账号不存在";
