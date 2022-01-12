@@ -150,9 +150,9 @@
               subject="手机"
               :passValue="accountInfo.rphone"
               confirmBeforeInput
-              v-model:content="newAccountInfo.phone"
+              v-model:content="newAccountInfo.rphone"
             ></input-base>
-            <input-base subject="QQ" :passValue="accountInfo.rqq" confirmBeforeInput v-model:content="newAccountInfo.qq"></input-base>
+            <input-base subject="QQ" :passValue="accountInfo.rqq" confirmBeforeInput v-model:content="newAccountInfo.rqq"></input-base>
           </input-section>
           <input-section subject="" class="mt-4">
             <button type="submit" class="materialBtn btnPrimaryReverse">确定</button>
@@ -216,6 +216,7 @@ const toLink = item => {
 const accountInfo = ref({});
 const setAccountInfo = () => {
   return Element.get(rid.value).then(res => {
+    console.log(res);
     accountInfo.value = res.data;
     localStorage.setItem("avatar", res.data.ravatar);
     localStorage.setItem("alias", res.data.ralias);
@@ -257,8 +258,8 @@ const updateAccount = () => {
   // console.log(newAccountInfo.value);
   if (
     newAccountInfo.value.alias == accountInfo.value.ralias &&
-    newAccountInfo.value.qq == accountInfo.value.rqq &&
-    newAccountInfo.value.phone == accountInfo.value.rphone
+    newAccountInfo.value.rqq == accountInfo.value.rqq &&
+    newAccountInfo.value.rphone == accountInfo.value.rphone
   ) {
     bottomDialog.value.cancel();
     return;

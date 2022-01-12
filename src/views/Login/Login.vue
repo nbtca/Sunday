@@ -45,7 +45,7 @@ const login = async () => {
   isPasswordValid.value = "";
   let account = isFormValid(accountInput.value);
   if (account != false) {
-    var hashedPassword = null;
+    var hashedPassword = "";
     if (account.password !== "") {
       hashedPassword = md5(account.password);
     }
@@ -63,6 +63,7 @@ const login = async () => {
           localStorage.setItem("user_role", res.data.role);
           localStorage.setItem("rid", res.data.rid);
           if (res.data.role == "notActivated") {
+            router.push("/activate");
             router.push("/activate");
           } else {
             window.history.back(-1);
