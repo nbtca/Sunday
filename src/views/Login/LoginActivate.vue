@@ -2,7 +2,10 @@
   <div class="flex flex-col justify-start" style="height: 100vh">
     <div class="flex flex-col items-center">
       <form class="grid gap-y-1 place-items-center" style="width: 17vw; min-width: 300px">
-        <div class="text-3xl font-bold my-12 md:mt-18">完善个人信息</div>
+        <div class="text-3xl font-bold mt-12 mb-8 md:mt-18">
+          <div>完善个人信息</div>
+          <div class="text-lg textDescription mt-2">{{ rid }}</div>
+        </div>
         <InputBase subject="密码" required type="password" class="w-full" v-model:content="account.password" />
         <InputBase
           subject="确认密码"
@@ -59,6 +62,7 @@
         <!-- <button class="w-3/5 btn materialThick" @click="updateAvatar">上传头像</button> -->
         <button class="w-full btn bg-primary text-primaryContent mt-5" @click="activate">提交</button>
       </form>
+      <button class="w-full btn bg-warning text-primaryContent mt-5" style="width: 17vw; min-width: 300px" @click="logOut">取消</button>
     </div>
   </div>
 </template>
@@ -70,6 +74,7 @@ import InputBase from "@/components/Input/InputBase.vue";
 import { isFormValid } from "@/Utils/isFormValid.js";
 import { Element, Account } from "@/api/api";
 import md5 from "blueimp-md5";
+const rid = ref(localStorage.getItem("rid"));
 const account = ref({});
 const reg = computed(() => {
   return new RegExp("^" + account.value.password + "$");
@@ -81,7 +86,6 @@ const updateAvatar = event => {
   Element.updateAvatar(param).then(res => {
     accountInfo.value.ravatar = res.data.avatar;
     localStorage.setItem("avatar", res.data.avatar);
-
   });
 };
 
@@ -101,5 +105,9 @@ const activate = async () => {
     router.push("/Events");
     // localStorage.setItem("avatar", res.data.avatar || avatarHolder);
   });
+};
+const logOut = () => {
+  localStorage.clear();
+  router.push("/login");
 };
 </script>
