@@ -160,7 +160,7 @@ const destroySelf = e => {
         <div class="flex items-center justify-center h-full select-none">
           <div class="flex flex-col justify-between materialCard w-80 p-3 shadow-3xl text-lg">
             <div class="text-center font-medium text-xl mt-3">{{ subject }}</div>
-            <form action="mt-3">
+            <form class="mt-3">
               <p class="w-full text-base overflow-ellipsis overflow-hidden">
                 {{ description }}
               </p>

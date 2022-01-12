@@ -6,7 +6,7 @@
 + [x] getElement返回身份
 + [x] 个人信息完善页
 + [x] not activated 登入跳转LoginActivate
-  + [ ] active 风格统一
+  + [x] active 风格统一
 + 移动端适配
   + [x] Event Card 不同状态
   + [x] element card
@@ -32,18 +32,15 @@
   + [ ] to admin
 + [ ] 添加图标
 + [ ] 加载动画
-+ [ ] 桌面端风格统一
-  + [ ] dialog
++ [x] 桌面端风格统一
+  + [x] dialog
   + [x] notifier
 + [ ] 导入Element
-+ [ ] 后台Event Action修复 ?
++ [x] 后台Event Action修复 ?
 + [ ] 后台限流
-+ [ ] 图片上传
++ [x] 图片上传
 + [ ] 表格filter
 + [ ] 数据展示
-
-
-+ 成员信息核对
-+ 维修日管理
-+ 后端部署
-  + 云函数接口替换
++ [ ] dark mode
++ [ ] 设计稿（figma）
+  + [ ] 统一样式
