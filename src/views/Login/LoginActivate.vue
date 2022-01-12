@@ -69,7 +69,7 @@ import InputBase from "@/components/Input/InputBase.vue";
 // import InputSection from "@/components/Input/InputSection.vue";
 import { isFormValid } from "@/Utils/isFormValid.js";
 import { Element, Account } from "@/api/api";
-
+import md5 from "blueimp-md5";
 const account = ref({});
 const reg = computed(() => {
   return new RegExp("^" + account.value.password + "$");
@@ -87,19 +87,19 @@ const updateAvatar = event => {
 
 const activate = async () => {
   let formInput = isFormValid(account.value);
-  // console.log(formInput);
+  formInput.password = md5(formInput.password);
   await Element.activate(formInput);
   Account.login({
     id: localStorage.getItem("rid"),
     password: account.value.password,
   }).then(res => {
     console.log(res);
-    localStorage.setItem("access_token", token);
+    localStorage.setItem("access_token", res.data.token);
     localStorage.setItem("alias", res.data.alias);
-    // localStorage.setItem("avatar", res.data.avatar || avatarHolder);
     localStorage.setItem("user_role", res.data.role);
     localStorage.setItem("rid", res.data.rid);
     router.push("/Events");
+    // localStorage.setItem("avatar", res.data.avatar || avatarHolder);
   });
 };
 </script>

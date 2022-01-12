@@ -40,10 +40,10 @@ const isConfirmInputValid = ref(false);
 const performAction = action => {
   let formInput = isFormValid(getFormInput.value);
   if ((isConfirmInputValid.value !== false || !props.confirmMessage) && (formInput != false || props.formList == null)) {
-    message.value = "processing";
+    message.value = "处理中...";
     action(formInput).then(res => {
       if (res.resultCode == 0) {
-        message.value = "success";
+        message.value = "成功!";
       } else {
         message.value = res.resultMsg;
       }

@@ -33,7 +33,7 @@ import { isFormValid } from "@/Utils/isFormValid";
 import InputBase from "@/components/Input/InputBase.vue";
 import { ref } from "@vue/reactivity";
 import router from "@/router";
-// import crypto from "crypto";
+import md5 from "blueimp-md5";
 
 const avatarHolder = "https://sunday-res.oss-cn-hangzhou.aliyuncs.com/img/logo.png";
 
@@ -41,18 +41,18 @@ const accountInput = ref({});
 const isIDValid = ref("");
 const isPasswordValid = ref("");
 
-
 const login = async () => {
   isPasswordValid.value = "";
   let account = isFormValid(accountInput.value);
   if (account != false) {
-    // var hashedPassword = null;
-    // if (account.password !== "") {
-    //   const hash = crypto.createHash("md5");
-    //   hash.update(account.password);
-    //   hashedPassword = hash.digest("hex");
-    // }
-    await Account.login(account)
+    var hashedPassword = null;
+    if (account.password !== "") {
+      hashedPassword = md5(account.password);
+    }
+    await Account.login({
+      id: account.id,
+      password: hashedPassword,
+    })
       .then(res => {
         console.log(res);
         const resultCode = res.resultCode;
@@ -65,7 +65,8 @@ const login = async () => {
           if (res.data.role == "notActivated") {
             router.push("/activate");
           } else {
-            router.push("/Events");
+            window.history.back(-1);
+            // router.push("/Events");
           }
         } else if (resultCode === 1010) {
           isIDValid.value = "账号不存在";

@@ -71,6 +71,9 @@
               <button v-if="item.status == 2 && role == 'admin' && checkOnly" @click="judgeSubmit(item)" class="btnxs btnWarningReverse">
                 审核
               </button>
+              <div v-if="item.status == -1 || item.status == 3">
+                {{ statusToText[item.status + 1] }}
+              </div>
             </template>
             <template #info>
               <div v-if="item.rid == rid">
@@ -115,7 +118,7 @@ import EventCard from "../../components/EventCard/EventCard.vue";
 const rid = ref(localStorage.getItem("rid"));
 const role = ref(localStorage.getItem("user_role"));
 
-const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"]);
+const statusToText = ref(["已取消", "待接受", "已接受", "待审核", "已关闭"]);
 
 // filter
 const defaultIndex = ref(0);
@@ -137,12 +140,13 @@ const filterHandler = e => {
   }
 };
 const filteredList = computed(() => {
-  return events.value.filter(events => {
+  return events.value.filter(event => {
     return (
-      ((!checkOnly.value && eventsMatchingByRID.value && events.rid === rid.value) ||
-        (!checkOnly.value && !eventsMatchingByRID.value && events.status == 0) ||
-        (checkOnly.value && events.status == 2)) &&
-      events.user_description.indexOf(searchQuery.value) >= 0
+      ((!checkOnly.value && eventsMatchingByRID.value && event.rid === rid.value) ||
+        (!checkOnly.value && !eventsMatchingByRID.value && event.status == 0) ||
+        (checkOnly.value && event.status == 2)) &&
+      event.user_description.indexOf(searchQuery.value) >= 0 &&
+      event.status != 3
     );
   });
 });

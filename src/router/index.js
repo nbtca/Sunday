@@ -28,7 +28,7 @@ router.beforeEach((to, from, next) => {
               next({ path: "/activate" });
             }
           } else {
-            if(to.path==="/"){
+            if (to.path === "/") {
               next({ path: "/Events" });
             }
             next();
@@ -47,6 +47,7 @@ router.beforeEach((to, from, next) => {
   } else {
     next({ path: "/NotFound" });
   }
+
 });
 function constructionRouters(router, t) {
   t = router.filter(item => {

@@ -213,7 +213,7 @@ const addElementByBottomDialog = () => {
                   {{ element.rid }}
                 </div>
                 <div class="text-xs textDescription">
-                  {{ element.gmt_modified }}
+                  最后登入&nbsp;{{ element.gmt_modified }}
                 </div>
               </div>
             </div>
