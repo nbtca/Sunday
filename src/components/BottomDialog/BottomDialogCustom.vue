@@ -127,7 +127,7 @@ const destroySelf = e => {
           </div>
           <div class="flex flex-col min-h-28 py-4 px-2 items-center">
             {{ message }}
-            <div v-if="message == ''" class="" :class="[declineAction ? 'flex justify-around w-[80vw]' : '']">
+            <div v-if="message == ''" class="" :class="[declineAction ? 'flex justify-around w-[90vw]' : '']">
               <button v-if="declineAction" @click="performAction(declineAction)" class="materialBtn mx-2 btnWarningReverse">
                 {{ declineActionName }}
               </button>

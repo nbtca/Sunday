@@ -12,12 +12,12 @@ const constantRoutes = [
   {
     path: "/NotFound",
     name: "NotFound",
-    component: () => import("@/views/404/404.vue"),
+    component: () => import("@/views/ErrorPage/NotFound.vue"),
   },
   {
     path: "/NotAuthorized",
     name: "NotAuthorized",
-    component: () => import("@/views/NotAuthorized/NotAuthorized.vue"),
+    component: () => import("@/views/ErrorPage/NotAuthorized.vue"),
   },
 ];
 

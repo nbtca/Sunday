@@ -22,13 +22,13 @@
           class="w-full"
           v-model:content="accountInput.password"
         />
-        <button class="w-full btn bg-primary text-primaryContent shadow-md" type="submit">登入</button>
+        <button class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md" type="submit">登入</button>
       </form>
     </div>
   </div>
 </template>
 <script setup>
-import { Account } from "@/api/api";
+import { Element } from "@/api/api";
 import { isFormValid } from "@/Utils/isFormValid";
 import InputBase from "@/components/Input/InputBase.vue";
 import { ref } from "vue";
@@ -51,7 +51,7 @@ const login = async () => {
     if (account.password !== "") {
       hashedPassword = md5(account.password);
     }
-    await Account.login({
+    await Element.login({
       id: account.id,
       password: hashedPassword,
     })

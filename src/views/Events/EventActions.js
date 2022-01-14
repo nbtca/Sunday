@@ -91,11 +91,9 @@ const judgeSubmit = async event => {
     content: [
       { 型号: event.model },
       { 问题描述: event.user_description },
-      { 创建时间: event.gmt_create },
       { 维修描述: previousRepairDescription.description },
       { 提交时间: previousRepairDescription.time },
     ],
-    // TODO test
     acceptAction: () => {
       return Event.close({ eid: event.eid });
     },

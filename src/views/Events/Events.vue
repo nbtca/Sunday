@@ -45,6 +45,11 @@
         <!-- mobile -->
         <div class="sm:hidden">
           <div class="py-20"></div>
+          <div v-if="filteredList.length == 0">
+            <div class="mb-2 text-center text-gray-400">
+              现在是空的
+            </div>
+          </div>
           <event-card
             v-for="item in filteredList"
             :key="item.eid"

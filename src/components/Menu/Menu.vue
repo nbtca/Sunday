@@ -117,7 +117,7 @@
     <bottom-dialog ref="bottomDialog">
       <template #body>
         <div
-          class="flex items-center justify-between rounded-xl px-3 mb-2.5 h-26 bg-white/50 border border-gray-400/40 materialMedium shadow-lg"
+          class="flex items-center justify-between rounded-xl px-5 mb-2.5 h-26 bg-white/50 border border-gray-400/40 materialMedium shadow-lg"
         >
           <div class="flex items-center">
             <div class="relative flex">
@@ -137,8 +137,6 @@
               <div>{{ accountInfo.class }}</div>
             </div>
             <div class="leading-tight textDescription">{{ accountInfo.rid }}</div>
-            <div>{{ accountInfo.gmt_create }}</div>
-            <!-- //TODO change the time format -->
           </div>
         </div>
         <form @submit="updateAccount" class="relative">
@@ -155,12 +153,12 @@
             <input-base subject="QQ" :passValue="accountInfo.rqq" confirmBeforeInput v-model:content="newAccountInfo.rqq"></input-base>
           </input-section>
           <input-section subject="" class="mt-4">
-            <button type="submit" class="materialBtn btnPrimaryReverse">确定</button>
+            <button type="submit" class="materialBtn btnPrimaryReverse shadow">确定</button>
           </input-section>
         </form>
       </template>
       <template #actionSpace>
-        <button @click="logOut" class="materialBtn btnWarning mt-1">登出</button>
+        <button @click="logOut" class="materialBtn btnWarning mt-1 shadow">登出</button>
       </template>
     </bottom-dialog>
   </div>
