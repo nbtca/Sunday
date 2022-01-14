@@ -72,7 +72,7 @@ import router from "@/router";
 import InputBase from "@/components/Input/InputBase.vue";
 // import InputSection from "@/components/Input/InputSection.vue";
 import { isFormValid } from "@/Utils/isFormValid.js";
-import { Element, Account } from "@/api/api";
+import { Element } from "@/api/api";
 import md5 from "blueimp-md5";
 const rid = ref(localStorage.getItem("rid"));
 const account = ref({});
@@ -93,7 +93,7 @@ const activate = async () => {
   let formInput = isFormValid(account.value);
   formInput.password = md5(formInput.password);
   await Element.activate(formInput);
-  Account.login({
+  Element.login({
     id: localStorage.getItem("rid"),
     password: account.value.password,
   }).then(res => {
