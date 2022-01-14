@@ -5,7 +5,7 @@
         {{ subject + (required ? "*" : "") }}
       </div>
     </div>
-    <div class="relative w-full">
+    <div class="relative w-full flex items-center">
       <div class="absolute -top-6 right-0">
         <button v-if="disabled" @click="disabled = false" class="mx-1 textLink font-medium text-xs">编辑</button>
         <button

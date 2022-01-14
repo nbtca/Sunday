@@ -25,6 +25,9 @@ const Event = {
   },
 };
 const Element = {
+  async login(account){
+    return await axiosApi("/elements/login", account, "post");
+  },
   async get(rid) {
     if (rid) return await axiosApi("/elements/" + rid, "get");
     else return await axiosApi("/elements", "get");
@@ -42,25 +45,19 @@ const Element = {
     return await axiosApi("/elements/updateAvatar", e, "post");
   },
 };
-// export async function getEvents(eid) {
-//   if (eid) return await axiosApi("/events/" + eid, "get");
-//   else return await axiosApi("/events", "get");
-// }
-// export async function acceptEvents(eid) {
-//   return await axiosApi("/events/accept", eid, "post");
-// }
-const Account = {
-  async login(account) {
-    return await axiosApi("/login", account, "post");
-  },
-  async update(account) {
-    return await axiosApi("/account", account, "put");
-  },
-};
+
+// const Account = {
+//   async login(account) {
+//     return await axiosApi("/login", account, "post");
+//   },
+//   async update(account) {
+//     return await axiosApi("/account", account, "put");
+//   },
+// };
 // ((this.eventsMatchingByID && events.rid === this.rid) ||
 // !this.eventsMatchingByID) &&
 // (!this.checkOnly ||
 // (this.checkOnly &&
 //   events.status == 2 &&
 //   events.rid !== this.rid)) &&
-export { Event, Element, Account };
+export { Event, Element };

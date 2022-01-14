@@ -52,7 +52,7 @@ module.exports = {
       "bg-gray-400/30  border border-gray-500/30 rounded-2xl ring ring-inset ring-1 ring-light-600/70 backdrop-filter backdrop-blur-[26px]",
     textInput: "p-2 focus:(outline-none ring-indigo-500 border-indigo-500)  border-grey-300 shadow-sm rounded-md",
     materialInput: "bg-gray-400/30",
-    materialBtn: "w-full h-10 rounded-lg text-lg font-semibold transition duration-300 ease-in-out focus:(outline-none)",
+    materialBtn: "w-full h-10 rounded-lg text-lg font-semibold transition duration-300 ease-in-out focus:(outline-none) select-none",
     btnPrimary: " bg-primary/95 hover:(bg-primary) text-primaryContent",
     btnPrimaryReverse: " text-primary  bg-gray-400/20 hover:(bg-gray-400/40)",
     btnActive: " bg-active/95 hover:(bg-active) text-activeContent",
