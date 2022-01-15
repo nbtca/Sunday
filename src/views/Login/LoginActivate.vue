@@ -68,26 +68,27 @@
 </template>
 <script setup>
 import { ref, computed } from "vue";
+import md5 from "blueimp-md5";
 import router from "@/router";
 import InputBase from "@/components/Input/InputBase.vue";
-// import InputSection from "@/components/Input/InputSection.vue";
-import { isFormValid } from "@/Utils/isFormValid.js";
+import { isFormValid } from "@/utils/isFormValid.js";
 import { Element } from "@/api/api";
-import md5 from "blueimp-md5";
+import logOut from "@/composables/LogOut.js";
+
 const rid = ref(localStorage.getItem("rid"));
 const account = ref({});
 const reg = computed(() => {
   return new RegExp("^" + account.value.password + "$");
 });
-const updateAvatar = event => {
-  let file = event.target.files[0];
-  let param = new FormData();
-  param.append("file", file);
-  Element.updateAvatar(param).then(res => {
-    accountInfo.value.ravatar = res.data.avatar;
-    localStorage.setItem("avatar", res.data.avatar);
-  });
-};
+// const updateAvatar = event => {
+//   let file = event.target.files[0];
+//   let param = new FormData();
+//   param.append("file", file);
+//   Element.updateAvatar(param).then(res => {
+//     accountInfo.value.ravatar = res.data.avatar;
+//     localStorage.setItem("avatar", res.data.avatar);
+//   });
+// };
 
 const activate = async () => {
   let formInput = isFormValid(account.value);
@@ -105,9 +106,5 @@ const activate = async () => {
     router.push("/Events");
     // localStorage.setItem("avatar", res.data.avatar || avatarHolder);
   });
-};
-const logOut = () => {
-  localStorage.clear();
-  router.push("/login");
 };
 </script>

@@ -173,6 +173,7 @@ import { TransitionRoot } from "@headlessui/vue";
 import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue";
 import InputSection from "@/components/Input/InputSection.vue";
 import InputBase from "@/components/Input/InputBase.vue";
+import logOut from "@/composables/LogOut.js";
 
 const isOpen = ref(false);
 const alias = ref(localStorage.getItem("alias"));
@@ -266,10 +267,7 @@ const updateAccount = () => {
     bottomDialog.value.cancel();
   });
 };
-const logOut = () => {
-  localStorage.clear();
-  router.push("/login");
-};
+
 </script>
 <style>
 .logo {

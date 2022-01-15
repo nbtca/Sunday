@@ -11,6 +11,7 @@ const eventBottomDialog = config => {
   // TODO condition
   BottomDialog(config).then(() => setEvents());
 };
+
 const acceptEvent = event => {
   BottomDialog({
     subject: "接受事件",

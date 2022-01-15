@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { TransitionRoot, TransitionChild } from "@headlessui/vue";
-import { isFormValid } from "@/Utils/isFormValid.js";
+import { isFormValid } from "@/utils/isFormValid.js";
 import BottomDialogInfo from "@/components/BottomDialog/BottomDialogInfo.vue";
 import InputBase from "../Input/InputBase.vue";
 import InputToConfirm from "../Input/InputToConfirm.vue";

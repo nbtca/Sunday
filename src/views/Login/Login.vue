@@ -29,12 +29,11 @@
 </template>
 <script setup>
 import { Element } from "@/api/api";
-import { isFormValid } from "@/Utils/isFormValid";
+import { isFormValid } from "@/utils/isFormValid";
 import InputBase from "@/components/Input/InputBase.vue";
 import { ref } from "vue";
 import router from "@/router";
 import md5 from "blueimp-md5";
-import { onBeforeRouteUpdate } from "vue-router";
 
 const avatarHolder = "https://sunday-res.oss-cn-hangzhou.aliyuncs.com/img/logo.png";
 
