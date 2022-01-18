@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center h-full bg-base-self" style="">
+  <div class="flex flex-col items-center h-full bg-base-self dark:bg-[#171718]" style="">
     <div class="flex flex-col items-center sm:mt-28">
       <div class="py-[5vh] h-80 sm:h-auto" style="width: 15vw; min-width: 250px">
         <img src="../../assets/logo.png" alt="" class="filter drop-shadow" />
@@ -40,7 +40,6 @@ const avatarHolder = "https://sunday-res.oss-cn-hangzhou.aliyuncs.com/img/logo.p
 const accountInput = ref({});
 const isIDValid = ref("");
 const isPasswordValid = ref("");
-
 
 const login = async () => {
   isPasswordValid.value = "";

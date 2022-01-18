@@ -1,5 +1,4 @@
 import axiosApi from "../axios/AxiosConfig";
-import axios from "axios";
 const Event = {
   async get(eid) {
     if (eid) return await axiosApi("/events/" + eid, "get");
@@ -46,18 +45,4 @@ const Element = {
   },
 };
 
-// const Account = {
-//   async login(account) {
-//     return await axiosApi("/login", account, "post");
-//   },
-//   async update(account) {
-//     return await axiosApi("/account", account, "put");
-//   },
-// };
-// ((this.eventsMatchingByID && events.rid === this.rid) ||
-// !this.eventsMatchingByID) &&
-// (!this.checkOnly ||
-// (this.checkOnly &&
-//   events.status == 2 &&
-//   events.rid !== this.rid)) &&
 export { Event, Element };

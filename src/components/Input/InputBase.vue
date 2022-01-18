@@ -40,6 +40,7 @@
           border border-gray-500
           textInput
           )
+          dark:text-white
         "
         :required="required"
         :placeholder="placeholder"
@@ -68,7 +69,7 @@
         <div v-if="warning == ''" class="textDescription">
           {{ hint }}
         </div>
-        <div class="text-left textDescription text-warning">
+        <div class="text-left textDescription text-warning dark:text-blue-300">
           {{ warning }}
         </div>
       </div>

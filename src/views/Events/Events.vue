@@ -6,7 +6,7 @@
       >
         <input
           type="text"
-          class="border-base-standout rounded-lg order-last h-10 shadow-inner my-0.5 mx-0.5 text-center sm:(rounded text-left)"
+          class="border-base-standout rounded-lg order-last h-10 shadow-inner my-0.5 mx-0.5 text-center dark:(bg-darkBase border-gray-600) sm:(rounded text-left)"
           style="width: 98%"
           v-model="searchQuery"
           placeholder="搜索"
