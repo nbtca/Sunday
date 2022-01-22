@@ -67,19 +67,19 @@
   </div>
 </template>
 <script setup>
-import { ref, computed } from "vue";
-import md5 from "blueimp-md5";
-import router from "@/router";
-import InputBase from "@/components/Input/InputBase.vue";
-import { isFormValid } from "@/utils/isFormValid.js";
-import { Element } from "@/api/api";
-import logOut from "@/composables/LogOut.js";
+import { ref, computed } from "vue"
+import md5 from "blueimp-md5"
+import router from "@/router"
+import InputBase from "@/components/Input/InputBase.vue"
+import { isFormValid } from "@/utils/isFormValid.js"
+import { Element } from "@/api/api"
+import logOut from "@/composables/LogOut.js"
 
-const rid = ref(localStorage.getItem("rid"));
-const account = ref({});
+const rid = ref(localStorage.getItem("rid"))
+const account = ref({})
 const reg = computed(() => {
-  return new RegExp("^" + account.value.password + "$");
-});
+  return new RegExp("^" + account.value.password + "$")
+})
 // const updateAvatar = event => {
 //   let file = event.target.files[0];
 //   let param = new FormData();
@@ -91,20 +91,20 @@ const reg = computed(() => {
 // };
 
 const activate = async () => {
-  let formInput = isFormValid(account.value);
-  formInput.password = md5(formInput.password);
-  await Element.activate(formInput);
+  let formInput = isFormValid(account.value)
+  formInput.password = md5(formInput.password)
+  await Element.activate(formInput)
   Element.login({
     id: localStorage.getItem("rid"),
     password: account.value.password,
   }).then(res => {
-    console.log(res);
-    localStorage.setItem("access_token", res.data.token);
-    localStorage.setItem("alias", res.data.alias);
-    localStorage.setItem("user_role", res.data.role);
-    localStorage.setItem("rid", res.data.rid);
-    router.push("/Events");
+    console.log(res)
+    localStorage.setItem("access_token", res.data.token)
+    localStorage.setItem("alias", res.data.alias)
+    localStorage.setItem("user_role", res.data.role)
+    localStorage.setItem("rid", res.data.rid)
+    router.push("/Events")
     // localStorage.setItem("avatar", res.data.avatar || avatarHolder);
-  });
-};
+  })
+}
 </script>

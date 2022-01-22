@@ -17,15 +17,15 @@
 </template>
 
 <script setup>
-import Menu from "@/components/Menu/Menu.vue";
-import { ref } from "@vue/reactivity";
-const isSafari = ref(false);
+import Menu from "@/components/Menu/Menu.vue"
+import { ref } from "@vue/reactivity"
+const isSafari = ref(false)
 
-var userAgent = navigator.userAgent;
-isSafari.value = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1;
+var userAgent = navigator.userAgent
+isSafari.value = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1
 
-let vh = window.innerHeight * 0.01;
-document.documentElement.style.setProperty("---vh", `${vh}px`);
+let vh = window.innerHeight * 0.01
+document.documentElement.style.setProperty("---vh", `${vh}px`)
 </script>
 
 <style></style>

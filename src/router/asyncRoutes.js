@@ -52,5 +52,5 @@ const asyncRoutes = [
     name: "LoginActivate",
     component: () => import("@/views/Login/LoginActivate.vue"),
   },
-];
-export default asyncRoutes;
+]
+export default asyncRoutes

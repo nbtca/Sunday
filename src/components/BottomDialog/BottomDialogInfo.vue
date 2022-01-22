@@ -10,29 +10,29 @@
 </template>
 
 <script setup>
-import { computed, toRefs } from "@vue/reactivity";
+import { computed, toRefs } from "@vue/reactivity"
 
 const props = defineProps({
   content: {
     type: Array,
   },
-});
-const { content } = toRefs(props);
+})
+const { content } = toRefs(props)
 
 const contentList = computed(() => {
-  let ans = [];
+  let ans = []
   if (content.value != null)
     for (let item of content.value) {
       for (let key in item) {
         ans.push({
           name: key,
           value: item[key],
-        });
+        })
       }
     }
   // console.log(ans);
-  return ans;
-});
+  return ans
+})
 </script>
 
 <style></style>

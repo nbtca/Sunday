@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { Event } from "@/api/api";
+import { Event } from "@/api/api"
 export default {
   name: "Design",
   inject: ["BottomDialog", "Notify"],
@@ -24,12 +24,12 @@ export default {
     return {
       isOpen: true,
       role: "",
-    };
+    }
   },
   methods: {
     cancel() {
-      this.isOpen = false;
-      console.log(this.isOpen);
+      this.isOpen = false
+      console.log(this.isOpen)
     },
     // open() {
     //   this.$refs.BottomDialog.openModal({ subject: "subject" })
@@ -37,11 +37,11 @@ export default {
     //     .catch(() => {});
     // },
     changeRole(role) {
-      localStorage.setItem("user_role", role);
-      this.role = role;
+      localStorage.setItem("user_role", role)
+      this.role = role
     },
     callNotify() {
-      this.Notify("warning", "123123");
+      this.Notify("warning", "123123")
     },
     async callBottomDialog() {
       let config = {
@@ -49,15 +49,15 @@ export default {
         content: [{ 123: 123 }, { 123: 123 }, { 123: 123 }, { 123: 123 }],
         confirmMessage: "132",
         acceptAction: () => {
-          return Event.get();
+          return Event.get()
         },
-      };
+      }
       this.BottomDialog(config).then(() => {
-        console.log(4);
-      });
+        console.log(4)
+      })
     },
   },
-};
+}
 </script>
 
 <style>

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 module.exports = {
   darkMode: 'media', // or 'media' or 'class'
   theme: {
@@ -84,4 +85,4 @@ module.exports = {
     tableHead: "px-2 py-1 md:py-3 md:px-6 textDescription whitespace-nowrap",
   },
   plugins: [require("windicss/plugin/forms"), require("windicss/plugin/line-clamp")],
-};
+}

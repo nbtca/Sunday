@@ -11,8 +11,10 @@
         <button
           v-if="disabled == false && confirmBeforeInput"
           @click="
-            disabled = true;
-            input = passValue;
+            () => {
+              disabled = true
+              input = passValue
+            }
           "
           class="mx-1 font-medium text-xs"
         >
@@ -28,20 +30,7 @@
           center ? 'text-center' : '',
           disabled ? ' bg-opacity-0 border-gray-400/60 shadow-none cursor-default pointer-events-none' : 'border-gray-400/10',
         ]"
-        class="
-          transition
-          duration-100
-          p-2
-          w-full
-          rounded-lg
-          shadow-innersm
-          materialInput
-          sm:(bg-transparent
-          border border-gray-500
-          textInput
-          )
-          dark:text-white
-        "
+        class="transition duration-100 p-2 w-full rounded-lg shadow-innersm materialInput sm:(bg-transparent border border-gray-500 textInput ) dark:text-white"
         :required="required"
         :placeholder="placeholder"
         v-model.lazy="input"
@@ -89,7 +78,7 @@
 // TODO add length limit
 // TODO add icon "show" when type is password
 
-import { onMounted, computed, ref, toRefs, watch } from "vue";
+import { onMounted, computed, ref, toRefs, watch } from "vue"
 
 const props = defineProps({
   type: {
@@ -115,7 +104,7 @@ const props = defineProps({
   },
   rules: {
     type: Array,
-    default: [],
+    default: () => [],
   },
   maxLength: {
     type: Number,
@@ -131,54 +120,54 @@ const props = defineProps({
   },
   content: String | Boolean,
   placeholder: String,
-});
-const { passValue, passWarning, rules } = toRefs(props);
+})
+const { passValue, passWarning, rules } = toRefs(props)
 
-const input = ref("");
-const emit = defineEmits(["update:content"]);
+const input = ref("")
+const emit = defineEmits(["update:content"])
 const emitInput = () => {
-  emit("update:content", isValid.value ? input.value : false);
-};
+  emit("update:content", isValid.value ? input.value : false)
+}
 watch(passValue, () => {
-  input.value = passValue.value;
-});
+  input.value = passValue.value
+})
 
-const warning = ref("");
+const warning = ref("")
 watch(passWarning, () => {
-  warning.value = passWarning.value;
-  emitInput();
-});
+  warning.value = passWarning.value
+  emitInput()
+})
 
 watch(input, () => {
   if (!props.required && input.value == "") {
-    warning.value = "";
+    warning.value = ""
   } else {
-    warning.value = "";
+    warning.value = ""
     for (let item of rules.value) {
       if (!item.rule.test(input.value)) {
-        warning.value = item.warning;
-        break;
+        warning.value = item.warning
+        break
       }
     }
   }
-  emitInput();
-});
+  emitInput()
+})
 
 // valid condition:
 // not required: empty match rule
 // required: match rule
 // passing warning is empty
 const isValid = computed(() => {
-  return warning.value == "" && (input.value != "" || !props.required) ? true : false;
-});
+  return warning.value == "" && (input.value != "" || !props.required) ? true : false
+})
 
-const disabled = ref(false);
+const disabled = ref(false)
 onMounted(() => {
-  warning.value = passWarning.value;
-  input.value = passValue.value;
-  disabled.value = props.confirmBeforeInput;
-  emitInput();
-});
+  warning.value = passWarning.value
+  input.value = passValue.value
+  disabled.value = props.confirmBeforeInput
+  emitInput()
+})
 </script>
 
 <style></style>

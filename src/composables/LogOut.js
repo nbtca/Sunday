@@ -1,8 +1,8 @@
-import router from "@/router";
+import router from "@/router"
 
 const logOut = () => {
-  localStorage.clear();
-  router.push("/login");
-};
+  localStorage.clear()
+  router.push("/login")
+}
 
-export default logOut;
+export default logOut

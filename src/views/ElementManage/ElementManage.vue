@@ -1,20 +1,20 @@
 <script setup>
-import { ref, inject } from "vue";
-import { Element } from "@/api/api";
+import { ref, inject } from "vue"
+import { Element } from "@/api/api"
 // import Dialog from "@/components/Dialog/Dialog.vue";
-import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
-import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
-import { UserIcon, UploadIcon, PlusIcon, UserAddIcon } from "@heroicons/vue/outline";
+import ScrollArea from "@/components/ScrollArea/ScrollArea.vue"
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue"
+import { UserIcon, UploadIcon, PlusIcon, UserAddIcon } from "@heroicons/vue/outline"
 
-const elementList = ref([]);
+const elementList = ref([])
 const setElement = () => {
   Element.get().then(res => {
-    elementList.value = res.data;
-  });
-};
-setElement();
+    elementList.value = res.data
+  })
+}
+setElement()
 
-const BottomDialog = inject("BottomDialog");
+const BottomDialog = inject("BottomDialog")
 const addElementConfig = {
   subject: "添加成员",
   formList: [
@@ -57,12 +57,12 @@ const addElementConfig = {
     },
   ],
   acceptAction: e => {
-    return Element.create(e);
+    return Element.create(e)
   },
-};
+}
 const addElementByBottomDialog = () => {
-  BottomDialog(addElementConfig).then(()=>setElement());
-};
+  BottomDialog(addElementConfig).then(() => setElement())
+}
 </script>
 <template>
   <div class="h-full">
@@ -85,21 +85,7 @@ const addElementByBottomDialog = () => {
             leave-to-class="transform scale-95 opacity-0"
           >
             <MenuItems
-              class="
-                divide-y
-                bg-white
-                rounded-md
-                divide-gray-100
-                shadow-lg
-                ring-black
-                mt-2
-                origin-top-right
-                right-4
-                ring-1 ring-opacity-5
-                w-40
-                absolute
-                focus:outline-none
-              "
+              class="divide-y bg-white rounded-md divide-gray-100 shadow-lg ring-black mt-2 origin-top-right right-4 ring-1 ring-opacity-5 w-40 absolute focus:outline-none"
             >
               <div class="py-1 px-1">
                 <MenuItem v-slot="{ active }">
@@ -212,9 +198,7 @@ const addElementByBottomDialog = () => {
                 <div class="text-xs textDescription">
                   {{ element.rid }}
                 </div>
-                <div class="text-xs textDescription">
-                  最后登入&nbsp;{{ element.gmt_modified }}
-                </div>
+                <div class="text-xs textDescription">最后登入&nbsp;{{ element.gmt_modified }}</div>
               </div>
             </div>
           </div>

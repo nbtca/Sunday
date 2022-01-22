@@ -11,7 +11,7 @@
           v-model="searchQuery"
           placeholder="搜索"
         />
-        <TabGroup class="w-full" :defaultIndex="defaultIndex" v-slot="{ selected }">
+        <TabGroup class="w-full" :defaultIndex="defaultIndex" >
           <TabList class="flex space-x-1 p-1">
             <Tab v-for="item in filterOptions" as="template" :key="item" v-slot="{ selected }">
               <button
@@ -46,9 +46,7 @@
         <div class="sm:hidden">
           <div class="py-20"></div>
           <div v-if="filteredList.length == 0">
-            <div class="mb-2 text-center text-gray-400">
-              现在是空的
-            </div>
+            <div class="mb-2 text-center text-gray-400">现在是空的</div>
           </div>
           <event-card
             v-for="item in filteredList"
@@ -112,38 +110,36 @@
 </template>
 
 <script setup>
-import { computed, ref, inject } from "vue";
-import router from "@/router";
-import { Event } from "@/api/api";
-import { setEvents, events, acceptEvent, submitEvent, alterSubmit, dropEvent, judgeSubmit } from "./EventActions";
-import { TabGroup, TabList, Tab } from "@headlessui/vue";
-import ScrollArea from "@/components/ScrollArea/ScrollArea.vue";
-import EventCard from "../../components/EventCard/EventCard.vue";
+import { computed, ref } from "vue"
+import router from "@/router"
+import { setEvents, events, acceptEvent, submitEvent, alterSubmit, dropEvent, judgeSubmit } from "./EventActions"
+import { TabGroup, TabList, Tab } from "@headlessui/vue"
+import ScrollArea from "@/components/ScrollArea/ScrollArea.vue"
+import EventCard from "../../components/EventCard/EventCard.vue"
 
-const rid = ref(localStorage.getItem("rid"));
-const role = ref(localStorage.getItem("user_role"));
+const rid = ref(localStorage.getItem("rid"))
+const role = ref(localStorage.getItem("user_role"))
 
-const statusToText = ref(["已取消", "待接受", "已接受", "待审核", "已关闭"]);
+const statusToText = ref(["已取消", "待接受", "已接受", "待审核", "已关闭"])
 
 // filter
-const defaultIndex = ref(0);
-const filterOptions = ref(role.value == "admin" ? ["全部", "我的", "审核"] : ["待接受", "我的"]);
-const checkOnly = ref(false);
-const eventsMatchingByRID = ref(false);
-const searchQuery = ref("");
+const defaultIndex = ref(0)
+const filterOptions = ref(role.value == "admin" ? ["全部", "我的", "审核"] : ["待接受", "我的"])
+const checkOnly = ref(false)
+const eventsMatchingByRID = ref(false)
+const searchQuery = ref("")
 
 const filterHandler = e => {
-  console.log(e);
-  checkOnly.value = false;
-  eventsMatchingByRID.value = false;
+  checkOnly.value = false
+  eventsMatchingByRID.value = false
   if (e == "全部") {
-    eventsMatchingByRID.value = false;
+    eventsMatchingByRID.value = false
   } else if (e == "我的") {
-    eventsMatchingByRID.value = true;
+    eventsMatchingByRID.value = true
   } else if (e == "审核") {
-    checkOnly.value = true;
+    checkOnly.value = true
   }
-};
+}
 const filteredList = computed(() => {
   return events.value.filter(event => {
     return (
@@ -152,30 +148,30 @@ const filteredList = computed(() => {
         (checkOnly.value && event.status == 2)) &&
       event.user_description.indexOf(searchQuery.value) >= 0 &&
       event.status != 3
-    );
-  });
-});
+    )
+  })
+})
 
-import { useRoute } from "vue-router";
-const route = useRoute();
+import { useRoute } from "vue-router"
+const route = useRoute()
 
 const selectedItem = computed(() => {
-  let fullPath = route.path;
-  let tailIndex = fullPath.lastIndexOf("/");
-  let pagePath = fullPath.substring(tailIndex + 1);
-  return pagePath;
-});
+  let fullPath = route.path
+  let tailIndex = fullPath.lastIndexOf("/")
+  let pagePath = fullPath.substring(tailIndex + 1)
+  return pagePath
+})
 
 // detail handler
 const showDetail = e => {
-  router.push("/Events/" + e);
-};
+  router.push("/Events/" + e)
+}
 
 // event actions
 // const setEvents = () => {
 //   Event.get().then(res => (events.value = res.data));
 // };
-setEvents();
+setEvents()
 </script>
 
 <style></style>

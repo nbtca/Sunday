@@ -21,21 +21,25 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-import { TransitionRoot } from "@headlessui/vue";
-import { ExclamationIcon } from "@heroicons/vue/outline";
+import { onMounted, ref } from "vue"
+import { TransitionRoot } from "@headlessui/vue"
+import { ExclamationIcon } from "@heroicons/vue/outline"
 
+// eslint-disable-next-line no-unused-vars
 const props = defineProps({
-  content: "",
-});
+  content: {
+    type: String,
+    default: "",
+  }
+})
 
-const isShow = ref(false);
+const isShow = ref(false)
 onMounted(() => {
-  isShow.value = true;
+  isShow.value = true
   setTimeout(() => {
-    isShow.value = false;
-  }, 3000);
-});
+    isShow.value = false
+  }, 3000)
+})
 </script>
 
 <style></style>

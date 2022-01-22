@@ -1,10 +1,10 @@
 <script setup>
-import { onMounted, ref } from "vue";
-import { TransitionRoot, TransitionChild } from "@headlessui/vue";
-import { isFormValid } from "@/utils/isFormValid.js";
-import BottomDialogInfo from "@/components/BottomDialog/BottomDialogInfo.vue";
-import InputBase from "../Input/InputBase.vue";
-import InputToConfirm from "../Input/InputToConfirm.vue";
+import { onMounted, ref } from "vue"
+import { TransitionRoot, TransitionChild } from "@headlessui/vue"
+import { isFormValid } from "@/utils/isFormValid.js"
+import BottomDialogInfo from "@/components/BottomDialog/BottomDialogInfo.vue"
+import InputBase from "../Input/InputBase.vue"
+import InputToConfirm from "../Input/InputToConfirm.vue"
 const props = defineProps({
   parentNode: Object,
   subject: {
@@ -13,8 +13,11 @@ const props = defineProps({
   },
   description: String,
   content: Array, // info列表内容
-  formList: { type: Array, default: [] },
-  confirmMessage: "", // 输入来确认
+  formList: { type: Array, default: () => [] },
+  confirmMessage: {
+    type: String,
+    default: "",
+  }, // 输入来确认
   acceptActionName: {
     type: String,
     default: "确认",
@@ -25,42 +28,48 @@ const props = defineProps({
     default: "取消",
   },
   declineAction: Function,
-  btnClass: "",
-  rounded: false, // 上部圆角
-});
+  btnClass: {
+    type: String,
+    default: "",
+  },
+  rounded: {
+    type: Boolean,
+    default: false,
+  }, // 上部圆角
+})
 
-const open = ref(false);
+const open = ref(false)
 onMounted(() => {
-  open.value = true;
-});
+  open.value = true
+})
 
-const getFormInput = ref({});
-const message = ref("");
-const isConfirmInputValid = ref(false);
+const getFormInput = ref({})
+const message = ref("")
+const isConfirmInputValid = ref(false)
 const performAction = action => {
-  let formInput = isFormValid(getFormInput.value);
+  let formInput = isFormValid(getFormInput.value)
   if ((isConfirmInputValid.value !== false || !props.confirmMessage) && (formInput != false || props.formList == null)) {
-    message.value = "处理中...";
+    message.value = "处理中..."
     action(formInput).then(res => {
       if (res.resultCode == 0) {
-        message.value = "成功!";
+        message.value = "成功!"
       } else {
-        message.value = res.resultMsg;
+        message.value = res.resultMsg
       }
       setTimeout(() => {
-        destroySelf("done");
-      }, 1000);
-    });
+        destroySelf("done")
+      }, 1000)
+    })
   } else {
     //TODO focus on input
   }
-};
+}
 
 const destroySelf = e => {
-  open.value = false;
-  let closeEvent = new CustomEvent("close", { detail: { event: e } });
-  props.parentNode.dispatchEvent(closeEvent);
-};
+  open.value = false
+  let closeEvent = new CustomEvent("close", { detail: { event: e } })
+  props.parentNode.dispatchEvent(closeEvent)
+}
 </script>
 <template>
   <TransitionRoot :show="open">
@@ -108,10 +117,10 @@ const destroySelf = e => {
               :confirmMessage="confirmMessage"
               class="mt-2"
             ></input-to-confirm>
-            <div v-if="formList" class="px-2 py-2 w-full ">
-              <div v-for="item in formList" key="item.id">
+            <div v-if="formList" class="px-2 py-2 w-full">
+              <div v-for="item in formList" :key="item.id">
                 <input-base
-                  class="mt-2  text-center"
+                  class="mt-2 text-center"
                   :subject="item.subject"
                   :required="item.required"
                   :type="item.type"
@@ -172,19 +181,21 @@ const destroySelf = e => {
                   :confirmMessage="confirmMessage"
                   class="mt-2"
                 ></input-to-confirm>
-                <div v-if="formList" v-for="item in formList" key="item.id" class="w-full mb-3">
-                  <input-base
-                    class=""
-                    :subject="item.subject"
-                    :required="item.required"
-                    :type="item.type"
-                    :placeholder="item.placeholder"
-                    :maxLength="item.maxLength"
-                    :hint="item.hint"
-                    :rules="item.rules"
-                    :val="item.val"
-                    v-model:content="getFormInput[item.id]"
-                  ></input-base>
+                <div v-if="formList">
+                  <div v-for="item in formList" :key="item.id" class="w-full mb-3">
+                    <input-base
+                      class=""
+                      :subject="item.subject"
+                      :required="item.required"
+                      :type="item.type"
+                      :placeholder="item.placeholder"
+                      :maxLength="item.maxLength"
+                      :hint="item.hint"
+                      :rules="item.rules"
+                      :val="item.val"
+                      v-model:content="getFormInput[item.id]"
+                    ></input-base>
+                  </div>
                 </div>
               </div>
               <div class="w-full bg-transparent border border-t border-gray-900/10 px-6"></div>
