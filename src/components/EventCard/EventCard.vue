@@ -1,5 +1,5 @@
 <template>
-  <div class="cellsm"  :class="class">
+  <div class="cellsm dark:(bg-[#1b1d1e] border-gray-600/50)" :class="class">
     <div class="flex flex-col h-full w-3/4 justify-between">
       <p class="text-left font-medium h-10 overflow-ellipsis overflow-hidden line-clamp-2">
         <slot name="body">body</slot>
@@ -29,7 +29,7 @@ const props = defineProps({
     type: String,
     default: "",
   },
-});
+})
 </script>
 <style>
 .cellBanner {

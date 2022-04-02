@@ -13,6 +13,5 @@
   text-align: center;
   color: #111827;
   height: 100vh;
-  background-color: rgba(249, 250, 251);
 }
 </style>

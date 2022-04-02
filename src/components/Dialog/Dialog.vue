@@ -122,8 +122,7 @@ k3                      </button>
 </template>
 
 <script>
-import { TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle } from "@headlessui/vue";
-import DialogInfo from "./DialogInfo.vue";
+import { TransitionRoot, TransitionChild, Dialog, DialogOverlay } from "@headlessui/vue"
 export default {
   name: "dialog",
   components: {
@@ -131,8 +130,6 @@ export default {
     TransitionChild,
     Dialog,
     DialogOverlay,
-    DialogTitle,
-    DialogInfo,
   },
   props: {
     // heading: {
@@ -174,7 +171,7 @@ export default {
       value: "",
       heading: "",
       content: "",
-    };
+    }
   },
   computed: {
     // constructColor() {
@@ -189,37 +186,37 @@ export default {
   },
   created() {
     if (this.noDecline) {
-      delete this.btnList.decline;
+      delete this.btnList.decline
     }
   },
   methods: {
     async openModal(e) {
-      this.open = true;
-      this.heading = e.heading;
-      this.content = e.content;
-      this.value = "";
+      this.open = true
+      this.heading = e.heading
+      this.content = e.content
+      this.value = ""
       return await new Promise((resolve, reject) => {
         this.$watch("open", () => {
           if (this.value === "accept") {
-            resolve(this.value);
+            resolve(this.value)
           } else {
-            reject();
+            reject()
           }
-        });
-      });
+        })
+      })
     },
     closeModal(location) {
       if (!this.focus || location != "outer") {
-        this.open = false;
+        this.open = false
       }
     },
     emitValue(e) {
-      this.closeModal();
-      this.value = e;
+      this.closeModal()
+      this.value = e
       // this.$emit(e);
     },
   },
-};
+}
 </script>
 <style>
 .materialButton {

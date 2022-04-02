@@ -8,9 +8,9 @@
 
 <script setup>
 const back = () => {
-  window.history.back(-1);
-  window.history.back(-1);
-};
+  window.history.back(-1)
+  window.history.back(-1)
+}
 </script>
 
 <style></style>

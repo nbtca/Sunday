@@ -14,15 +14,15 @@ export default {
   data() {
     return {
       isSafari: false,
-    };
+    }
   },
   async created() {
-    var userAgent = navigator.userAgent;
-    this.isSafari = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1;
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("---vh", `${vh}px`);
+    var userAgent = navigator.userAgent
+    this.isSafari = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1
+    let vh = window.innerHeight * 0.01
+    document.documentElement.style.setProperty("---vh", `${vh}px`)
   },
-};
+}
 </script>
 
 <style></style>

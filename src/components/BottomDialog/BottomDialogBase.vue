@@ -67,16 +67,18 @@
 </template>
 
 <script>
-import { TransitionRoot, TransitionChild, Dialog, DialogOverlay } from "@headlessui/vue";
-import BottomDialogInfo from "@/components/BottomDialog/BottomDialogInfo.vue";
-import InputBase from "../Input/InputBase.vue";
+import { TransitionRoot, TransitionChild } from "@headlessui/vue"
+import BottomDialogInfo from "@/components/BottomDialog/BottomDialogInfo.vue"
+import InputBase from "../Input/InputBase.vue"
 export default {
   name: "BottomDialog",
-  components: { TransitionRoot, TransitionChild, Dialog, DialogOverlay, BottomDialogInfo, InputBase },
+  components: { TransitionRoot, TransitionChild, BottomDialogInfo, InputBase },
   props: {
     passData: {
       type: Object,
-      default: {},
+      default: () => {
+        return {}
+      },
     },
     btnClass: {
       type: String,
@@ -98,20 +100,20 @@ export default {
       confirmMessage: "", // 输入来确认
       confirmInput: "",
       warning: "",
-    };
+    }
   },
   //         emitValue(accept)->closeAction=true\\
   //   openModal-------watch"closeAction"------->e.action->res notice->wait 50000->resolve
   methods: {
     openModal(e) {
-      this.open = true;
-      this.rounded = e.rounded;
-      this.subject = e.subject;
-      this.acceptActionName = e.acceptActionName || "确认";
-      this.declineActionName = e.declineActionName || "拒绝";
-      this.showDecline = e.declineAction;
-      this.content = e.content;
-      this.confirmMessage = e.confirmMessage;
+      this.open = true
+      this.rounded = e.rounded
+      this.subject = e.subject
+      this.acceptActionName = e.acceptActionName || "确认"
+      this.declineActionName = e.declineActionName || "拒绝"
+      this.showDecline = e.declineAction
+      this.content = e.content
+      this.confirmMessage = e.confirmMessage
       // return new Promise((resolve, reject) => {
       //   let performAction = action => {
       //     this.message = "processing";
@@ -143,29 +145,29 @@ export default {
       // });
     },
     cancel() {
-      this.open = false;
-      this.cleanUp;
+      this.open = false
+      this.cleanUp
     },
     cleanUp() {
-      this.closeAction = false;
-      this.message = "";
-      this.open = false;
-      this.value = "";
-      this.subject = "";
-      this.rounded = false;
-      this.showDecline = false;
+      this.closeAction = false
+      this.message = ""
+      this.open = false
+      this.value = ""
+      this.subject = ""
+      this.rounded = false
+      this.showDecline = false
     },
     emitValue(e) {
       if (e != "accept" || this.confirmInput == this.confirmMessage || !this.confirmMessage) {
-        this.closeAction = true;
-        this.value = e;
-        this.warning = "";
+        this.closeAction = true
+        this.value = e
+        this.warning = ""
       } else {
-        this.warning = " ";
+        this.warning = " "
       }
     },
   },
-};
+}
 </script>
 
 <style>

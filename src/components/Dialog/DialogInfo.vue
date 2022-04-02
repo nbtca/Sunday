@@ -17,20 +17,20 @@ export default {
   },
   computed: {
     contentList() {
-      let ans = [];
+      let ans = []
       if (this.content != null)
         for (let item of this.content) {
           for (let key in item) {
             ans.push({
               name: key,
               value: item[key],
-            });
+            })
           }
         }
-      return ans;
+      return ans
     },
   },
-};
+}
 </script>
 
 <style></style>

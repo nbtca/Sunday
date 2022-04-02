@@ -1,5 +1,6 @@
+/* eslint-disable no-undef */
 module.exports = {
-  darkMode: false, // or 'media' or 'class'
+  darkMode: 'media', // or 'media' or 'class'
   theme: {
     boxShadow: {
       sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
@@ -41,6 +42,7 @@ module.exports = {
           standout: "#e5e7eb", //gray-200
           content: "#f3F4F6",
         },
+        darkBase: "#171718",
       },
     },
   },
@@ -83,4 +85,4 @@ module.exports = {
     tableHead: "px-2 py-1 md:py-3 md:px-6 textDescription whitespace-nowrap",
   },
   plugins: [require("windicss/plugin/forms"), require("windicss/plugin/line-clamp")],
-};
+}

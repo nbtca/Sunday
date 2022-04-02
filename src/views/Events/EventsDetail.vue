@@ -87,34 +87,34 @@
 </template>
 //TODO:display repair_description
 <script setup>
-import { watch, ref, inject } from "vue";
-import { useRoute } from "vue-router";
-const route = useRoute();
+import { watch, ref, inject } from "vue"
+import { useRoute } from "vue-router"
+const route = useRoute()
 
-import { Event } from "@/api/api";
-import { acceptEvent, submitEvent, alterSubmit, dropEvent, getPerviousDescription } from "./EventActions";
+import { Event } from "@/api/api"
+import { acceptEvent, submitEvent,  dropEvent, getPerviousDescription } from "./EventActions"
 
-const role = ref(localStorage.getItem("user_role"));
-const rid = ref(localStorage.getItem("rid"));
-const eid = ref(route.params.eid);
-const statusToText = ref(["取消", "待接受", "已接受", "待确认", "关闭"]);
-const contactPreference = ref(["QQ", "微信", "电话"]);
-const descriptionToSubmit = ref("");
+const role = ref(localStorage.getItem("user_role"))
+const rid = ref(localStorage.getItem("rid"))
+const eid = ref(route.params.eid)
+const statusToText = ref(["取消", "待接受", "已接受", "待确认", "关闭"])
+const contactPreference = ref(["QQ", "微信", "电话"])
+const descriptionToSubmit = ref("")
 
-const detail = ref({});
+const detail = ref({})
 const setDetail = () => {
-  eid.value = route.params.eid;
+  eid.value = route.params.eid
   Event.get(eid.value).then(res => {
-    detail.value = res.data;
-  });
-};
-setDetail();
-watch(route, setDetail);
+    detail.value = res.data
+  })
+}
+setDetail()
+watch(route, setDetail)
 
-const BottomDialog = inject("BottomDialog");
+const BottomDialog = inject("BottomDialog")
 // not working yet
 const rejectEvent = async event => {
-  let previousRepairDescription = await getPerviousDescription(eid.value);
+  let previousRepairDescription = await getPerviousDescription(eid.value)
   BottomDialog({
     subject: "审核提交",
     acceptActionName: "退回",
@@ -127,12 +127,12 @@ const rejectEvent = async event => {
       { 提交时间: previousRepairDescription.time },
     ],
     acceptAction: () => {
-      return Event.reject({ eid: event.eid });
+      return Event.reject({ eid: event.eid })
     },
-  });
-};
+  })
+}
 const closeEvent = async event => {
-  let previousRepairDescription = await getPerviousDescription(eid.value);
+  let previousRepairDescription = await getPerviousDescription(eid.value)
   BottomDialog({
     subject: "审核提交",
     acceptActionName: "通过",
@@ -145,10 +145,10 @@ const closeEvent = async event => {
       { 提交时间: previousRepairDescription.time },
     ],
     acceptAction: () => {
-      return Event.close({ eid: event.eid });
+      return Event.close({ eid: event.eid })
     },
-  });
-};
+  })
+}
 </script>
 
 <style></style>

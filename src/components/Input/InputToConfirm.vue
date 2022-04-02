@@ -14,19 +14,22 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
-import InputBase from "../Input/InputBase.vue";
+import { ref, watch, computed } from "vue"
+import InputBase from "../Input/InputBase.vue"
 const props = defineProps({
-  confirmMessage: "",
-});
-const emit = defineEmits(["update:content"]);
-const confirmInput = ref({});
+  confirmMessage: {
+    type: String,
+    default: "",
+  },
+})
+const emit = defineEmits(["update:content"])
+const confirmInput = ref({})
 const reg = computed(() => {
-  return new RegExp("^" + props.confirmMessage + "$");
-});
+  return new RegExp("^" + props.confirmMessage + "$")
+})
 watch(confirmInput, () => {
-  emit("update:content", confirmInput.value);
-});
+  emit("update:content", confirmInput.value)
+})
 </script>
 
 <style></style>

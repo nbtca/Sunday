@@ -114,7 +114,7 @@
         <button class="btnsm m-2 bg-warning text-warningContent" @click="logOut">登出</button>
       </div>
     </div>
-    <bottom-dialog ref="bottomDialog">
+    <BottomDialog ref="bottomDialog">
       <template #body>
         <div
           class="flex items-center justify-between rounded-xl px-5 mb-2.5 h-26 bg-white/50 border border-gray-400/40 materialMedium shadow-lg"
@@ -160,97 +160,98 @@
       <template #actionSpace>
         <button @click="logOut" class="materialBtn btnWarning mt-1 shadow">登出</button>
       </template>
-    </bottom-dialog>
+    </BottomDialog>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
-import { Element } from "@/api/api";
-import router from "@/router";
-import { MenuIcon } from "@heroicons/vue/outline";
-import { TransitionRoot } from "@headlessui/vue";
-import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue";
-import InputSection from "@/components/Input/InputSection.vue";
-import InputBase from "@/components/Input/InputBase.vue";
+import { ref, computed, watch } from "vue"
+import { Element } from "@/api/api"
+import router from "@/router"
+import { MenuIcon } from "@heroicons/vue/outline"
+import { TransitionRoot } from "@headlessui/vue"
+import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue"
+import InputSection from "@/components/Input/InputSection.vue"
+import InputBase from "@/components/Input/InputBase.vue"
+import logOut from "@/composables/LogOut.js"
 
-const isOpen = ref(false);
-const alias = ref(localStorage.getItem("alias"));
-const avatar = ref(localStorage.getItem("avatar"));
-const role = ref(localStorage.getItem("user_role"));
-const rid = ref(localStorage.getItem("rid"));
+const isOpen = ref(false)
+const alias = ref(localStorage.getItem("alias"))
+const avatar = ref(localStorage.getItem("avatar"))
+const role = ref(localStorage.getItem("user_role"))
+const rid = ref(localStorage.getItem("rid"))
 
-const newAccountInfo = ref({});
+const newAccountInfo = ref({})
 
 const menuList = computed(() => {
   return router.options.routes[0].children.filter(item => {
     for (let i of item.meta.roles) {
       if (i == role.value) {
-        return item.meta.menuIcon != null;
+        return item.meta.menuIcon != null
       }
     }
-  });
-});
+  })
+})
 
-import { useRoute } from "vue-router";
-const route = useRoute();
+import { useRoute } from "vue-router"
+const route = useRoute()
 
 const selectedItem = computed(() => {
-  let fullPath = route.path;
-  let tailIndex = fullPath.indexOf("/", 1);
-  let pagePath = tailIndex == -1 ? fullPath : fullPath.substring(0, tailIndex);
+  let fullPath = route.path
+  let tailIndex = fullPath.indexOf("/", 1)
+  let pagePath = tailIndex == -1 ? fullPath : fullPath.substring(0, tailIndex)
   for (let item of menuList.value) {
     if (item.path == pagePath) {
-      return item;
+      return item
     }
   }
-});
+})
 const toLink = item => {
-  if (item != selectedItem) {
-    router.push(item.path);
+  if (item != selectedItem.value) {
+    router.push(item.path)
   }
-};
+}
 
-const accountInfo = ref({});
+const accountInfo = ref({})
 const setAccountInfo = () => {
   return Element.get(rid.value).then(res => {
-    accountInfo.value = res.data;
-    localStorage.setItem("avatar", res.data.ravatar);
-    localStorage.setItem("alias", res.data.ralias);
-    localStorage.setItem("user_role", res.data.role);
-    avatar.value=res.data.ravatar;
-    alias.value=res.data.ralias;
-    role.value=res.data.role;
-  });
-};
+    accountInfo.value = res.data
+    localStorage.setItem("avatar", res.data.ravatar)
+    localStorage.setItem("alias", res.data.ralias)
+    localStorage.setItem("user_role", res.data.role)
+    avatar.value=res.data.ravatar
+    alias.value=res.data.ralias
+    role.value=res.data.role
+  })
+}
 
-watch(route, setAccountInfo);
+watch(route, setAccountInfo)
 
-const loading = ref(false);
-const bottomDialog = ref(null);
+const loading = ref(false)
+const bottomDialog = ref(null)
 const accountSetting = () => {
-  loading.value = true;
-  setAccountInfo().then(res => {
-    loading.value = false;
+  loading.value = true
+  setAccountInfo().then(() => {
+    loading.value = false
     bottomDialog.value.openModal({
       subject: "账号设置",
       rounded: true,
       acceptAction: () => {
         return () => {
-          return Element.get();
-        };
+          return Element.get()
+        }
       },
-    });
-  });
-};
+    })
+  })
+}
 const updateAvatar = event => {
-  let file = event.target.files[0];
-  let param = new FormData();
-  param.append("file", file);
-  Element.updateAvatar(param).then(res => {
-    setAccountInfo();
-  });
-};
+  let file = event.target.files[0]
+  let param = new FormData()
+  param.append("file", file)
+  Element.updateAvatar(param).then(() => {
+    setAccountInfo()
+  })
+}
 const updateAccount = () => {
   // console.log(newAccountInfo.value);
   if (
@@ -258,18 +259,15 @@ const updateAccount = () => {
     newAccountInfo.value.rqq == accountInfo.value.rqq &&
     newAccountInfo.value.rphone == accountInfo.value.rphone
   ) {
-    bottomDialog.value.cancel();
-    return;
+    bottomDialog.value.cancel()
+    return
   }
-  Element.update(newAccountInfo.value).then(res => {
-    setAccountInfo();
-    bottomDialog.value.cancel();
-  });
-};
-const logOut = () => {
-  localStorage.clear();
-  router.push("/login");
-};
+  Element.update(newAccountInfo.value).then(() => {
+    setAccountInfo()
+    bottomDialog.value.cancel()
+  })
+}
+
 </script>
 <style>
 .logo {

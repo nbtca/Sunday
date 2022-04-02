@@ -1,29 +1,29 @@
-import { h, render } from "vue";
-import BottomDialogCustom from "./BottomDialogCustom.vue";
+import { h, render } from "vue"
+import BottomDialogCustom from "./BottomDialogCustom.vue"
 
-const divVNode = h("div", { class: "fixed inset-x-0 bottom-0 z-50" });
+const divVNode = h("div", { class: "fixed inset-x-0 bottom-0 z-50" })
 
 const BottomDialog = config => {
-  render(divVNode, document.body);
-  const div = divVNode.el;
+  render(divVNode, document.body)
+  const div = divVNode.el
 
-  config.parentNode = div;
-  const comVNode = h(BottomDialogCustom, config);
+  config.parentNode = div
+  const comVNode = h(BottomDialogCustom, config)
 
-  render(comVNode, div);
-  return new Promise((resolve, reject) => {
+  render(comVNode, div)
+  return new Promise(resolve => {
     div.addEventListener("close", e => {
       setTimeout(() => {
-        render(null, div);
-      }, 200);
+        render(null, div)
+      }, 200)
       if (e.detail.event == "cancel") {
         // reject();
-        return 0;
+        return 0
       } else {
-        resolve();
+        resolve()
       }
-    });
-  });
-};
+    })
+  })
+}
 
-export default BottomDialog;
+export default BottomDialog
