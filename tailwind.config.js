@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 module.exports = {
-  // darkMode: 'false', // or 'media' or 'class'
+  darkMode: 'false', // or 'media' or 'class'
   theme: {
     boxShadow: {
       sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
