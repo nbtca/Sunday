@@ -174,6 +174,7 @@ import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue"
 import InputSection from "@/components/Input/InputSection.vue"
 import InputBase from "@/components/Input/InputBase.vue"
 import logOut from "@/composables/LogOut.js"
+import { useRoute } from "vue-router"
 
 const isOpen = ref(false)
 const alias = ref(localStorage.getItem("alias"))
@@ -193,7 +194,6 @@ const menuList = computed(() => {
   })
 })
 
-import { useRoute } from "vue-router"
 const route = useRoute()
 
 const selectedItem = computed(() => {

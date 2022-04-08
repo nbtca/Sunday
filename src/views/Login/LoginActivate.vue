@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-start" style="height: 100vh">
+  <div class="flex flex-col justify-start bg-base-self" style="height: 100vh">
     <div class="flex flex-col items-center">
       <form @submit.prevent="activate" class="grid gap-y-1 place-items-center" style="width: 17vw; min-width: 300px">
         <div class="text-3xl font-bold mt-12 mb-8 md:mt-18">
@@ -60,7 +60,7 @@
           <input id="file-upload" name="file-upload" type="file" class="sr-only" accept="image/*" />
         </label> -->
         <!-- <button class="w-3/5 btn materialThick" @click="updateAvatar">上传头像</button> -->
-        <button class="w-full btn bg-primary text-primaryContent mt-5" @click="activate">提交</button>
+        <button class="w-full btn bg-primary text-primaryContent mt-5" type="submit">提交</button>
       </form>
       <button class="w-full btn bg-warning text-primaryContent mt-5" style="width: 17vw; min-width: 300px" @click="logOut">取消</button>
     </div>
