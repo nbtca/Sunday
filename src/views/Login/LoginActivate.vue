@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col justify-start" style="height: 100vh">
     <div class="flex flex-col items-center">
-      <form class="grid gap-y-1 place-items-center" style="width: 17vw; min-width: 300px">
+      <form @submit.prevent="activate" class="grid gap-y-1 place-items-center" style="width: 17vw; min-width: 300px">
         <div class="text-3xl font-bold mt-12 mb-8 md:mt-18">
           <div>完善个人信息</div>
           <div class="text-lg textDescription mt-2">{{ rid }}</div>
@@ -97,6 +97,9 @@ const activate = async () => {
       localStorage.setItem("alias", res.data.alias)
       localStorage.setItem("user_role", res.data.role)
       localStorage.setItem("rid", res.data.rid)
+    })
+    .finally(()=>{
+      router.push("/Events")
       router.push("/Events")
     })
 }
