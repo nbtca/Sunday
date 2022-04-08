@@ -30,7 +30,7 @@
           center ? 'text-center' : '',
           disabled ? ' bg-opacity-0 border-gray-400/60 shadow-none cursor-default pointer-events-none' : 'border-gray-400/10',
         ]"
-        class="transition duration-100 p-2 w-full rounded-lg shadow-innersm materialInput sm:(bg-transparent border border-gray-500 textInput ) dark:text-white"
+        class="transition duration-100 p-2 w-full rounded-lg shadow-innersm materialInput sm:(bg-transparent border border-gray-500 textInput ) "
         :required="required"
         :placeholder="placeholder"
         v-model.lazy="input"
@@ -58,7 +58,7 @@
         <div v-if="warning == ''" class="textDescription">
           {{ hint }}
         </div>
-        <div class="text-left textDescription text-warning dark:text-blue-300">
+        <div class="text-left textDescription text-warning ">
           {{ warning }}
         </div>
       </div>
