@@ -203,8 +203,7 @@ const addElementByBottomDialog = () => {
             </div>
           </div>
           <div class="flex flex-col h-full justify-center items-center">
-            <!-- <button class="bg-green-500 btnxs">修改</button> -->
-            <!-- <button class="btnxs btnWarning">删除</button> -->
+         
           </div>
         </div>
         <div class="py-14"></div>

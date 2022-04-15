@@ -159,10 +159,10 @@ const destroySelf = e => {
       <!-- desktop  -->
       <TransitionChild
         class="absolute inset-0 hidden sm:block"
-        enter="transition-opacity  duration-200 ease-out"
+        enter="transition-opacity  duration-100 ease-out"
         enter-from="opacity-0"
         enter-to="opacity-100 "
-        leave="transition-opacity duration-200 ease-in"
+        leave="transition-opacity duration-100 ease-in"
         leave-from="opacity-50 "
         leave-to="opacity-0"
       >
@@ -181,8 +181,8 @@ const destroySelf = e => {
                   :confirmMessage="confirmMessage"
                   class="mt-2"
                 ></input-to-confirm>
-                <div v-if="formList">
-                  <div v-for="item in formList" :key="item.id" class="w-full mb-3">
+                <div v-if="formList" class=" w-full">
+                  <div v-for="item in formList" :key="item.id">
                     <input-base
                       class=""
                       :subject="item.subject"

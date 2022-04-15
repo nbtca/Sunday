@@ -8,10 +8,7 @@
       <div class="textSubHeading">{{ statusToText[detail.status + 1] }}</div>
     </div>
     <div class="flex h-full lg:justify-between">
-      <div class="w-1/4 hidden lg:block">
-        <div class="w-auto h-4/5 rounded-2xl border border-gray-300/40 shadow-inner bg-white"></div>
-      </div>
-      <div class="flex flex-col justify-between w-full lg:(w-3/4 ml-3)">
+      <div class="flex flex-col justify-between w-full">
         <div class="">
           <dl>
             <div class="bg-gray-50 infoCell">
@@ -66,11 +63,6 @@
             <button v-if="detail.status == 0" class="bg-primary text-primaryContent w-20 btn" @click="acceptEvent(detail)">接受</button>
           </div>
           <div v-if="detail.rid == rid && detail.status == 1" class="flex flex-col">
-            <textarea
-              v-model="descriptionToSubmit"
-              class="border h-28 shadow-inner mb-7 w-60 textInput self-center md:(w-72) lg:(w-80)"
-              style="resize: none"
-            ></textarea>
             <div>
               <button class="bg-warning text-warningContent mx-5 btn" @click="dropEvent(detail)">放弃</button>
               <button class="bg-primary text-primaryContent btn" @click="submitEvent(detail)">提交</button>
@@ -89,17 +81,16 @@
 <script setup>
 import { watch, ref, inject } from "vue"
 import { useRoute } from "vue-router"
-const route = useRoute()
-
 import { Event } from "@/api/api"
-import { acceptEvent, submitEvent,  dropEvent, getPerviousDescription } from "./EventActions"
+import { acceptEvent, submitEvent, dropEvent, getPerviousDescription } from "./EventActions"
+
+const route = useRoute()
 
 const role = ref(localStorage.getItem("user_role"))
 const rid = ref(localStorage.getItem("rid"))
 const eid = ref(route.params.eid)
 const statusToText = ref(["取消", "待接受", "已接受", "待确认", "关闭"])
 const contactPreference = ref(["QQ", "微信", "电话"])
-const descriptionToSubmit = ref("")
 
 const detail = ref({})
 const setDetail = () => {

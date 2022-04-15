@@ -114,35 +114,6 @@ export default {
       this.showDecline = e.declineAction
       this.content = e.content
       this.confirmMessage = e.confirmMessage
-      // return new Promise((resolve, reject) => {
-      //   let performAction = action => {
-      //     this.message = "processing";
-      //     action(this.passData).then(res => {
-      //       console.log(res);//TODO resCode 判断 success
-      //       this.message = "success";
-      //       setTimeout(() => {
-      //         resolve(this.value);
-      //         this.cleanUp();
-      //       }, 1000);
-      //     });
-      //   };
-      //   this.$watch("closeAction", () => {
-      //     if (this.value === "accept") {
-      //       if (e.acceptAction) {
-      //         console.log(this.passData);
-      //         performAction(e.acceptAction());
-      //       } else {
-      //         resolve(this.value);
-      //         this.cleanUp();
-      //       }
-      //     } else if (this.value === "decline") {
-      //       performAction(e.declineAction());
-      //     } else {
-      //       reject();
-      //       this.cleanUp();
-      //     }
-      //   });
-      // });
     },
     cancel() {
       this.open = false

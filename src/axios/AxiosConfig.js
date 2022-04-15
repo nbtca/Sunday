@@ -1,9 +1,6 @@
 import axios from "axios"
-// import qs from "qs"
 import Notify from "@/components/Notify"
 axios.defaults.baseURL = "api/"
-// axios.defaults.baseURL =
-//   "http://61774500-1018390206127906.test.functioncompute.com/"; //测试
 
 axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8"
 axios.defaults.timeout = 10000
@@ -12,25 +9,6 @@ axios.interceptors.request.use(
   config => {
     const token = localStorage.getItem("access_token")
     config.headers.authorization = "bearer " + token
-    // if (config.type) {
-    //   switch (config.type) {
-    //     case "FORM-DATA":
-    //       config.transformRequest = [
-    //         data => {
-    //           return "args=" + JSON.stringify(data);
-    //         },
-    //       ];
-    //       break;
-    //     case "FORM":
-    //       config.headers["Content-Type"] = "application/x-www-form-urlencoded";
-    //       config.data = qs.stringify(config.data);
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    // } else {
-    //   config.data = qs.stringify(config.data);
-    // }
     return config
   },
   error => {
@@ -131,37 +109,3 @@ export default function axiosApi(url, data, method) {
     }
   })
 }
-
-// {
-//   post(url, data) {
-//     return new Promise((resolve, reject) => {
-//       axios({
-//         method: "post",
-//         url,
-//         data: qs.stringify(data),
-//       })
-//         .then((res) => {
-//           resolve(res.data);
-//         })
-//         .catch((err) => {
-//           reject(err);
-//         });
-//     });
-//   },
-
-//   get(url, data) {
-//     return new Promise((resolve, reject) => {
-//       axios({
-//         method: "get",
-//         url,
-//         params: data,
-//       })
-//         .then((res) => {
-//           resolve(res.data);
-//         })
-//         .catch((err) => {
-//           reject(err);
-//         });
-//     });
-//   },
-// };
