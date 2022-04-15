@@ -108,7 +108,6 @@
           </div>
         </div>
       </div>
-      <!-- <div>event count</div> -->
       <div class="flex flex-col lg:(flex-row)">
         <button class="btnsm m-2 btnNeutral" @click="accountSetting">账号设置</button>
         <button class="btnsm m-2 bg-warning text-warningContent" @click="logOut">登出</button>
@@ -253,7 +252,6 @@ const updateAvatar = event => {
   })
 }
 const updateAccount = () => {
-  // console.log(newAccountInfo.value);
   if (
     newAccountInfo.value.alias == accountInfo.value.ralias &&
     newAccountInfo.value.rqq == accountInfo.value.rqq &&

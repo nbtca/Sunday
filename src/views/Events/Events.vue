@@ -116,6 +116,7 @@ import { setEvents, events, acceptEvent, submitEvent, alterSubmit, dropEvent, ju
 import { TabGroup, TabList, Tab } from "@headlessui/vue"
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue"
 import EventCard from "../../components/EventCard/EventCard.vue"
+import { useRoute } from "vue-router"
 
 const rid = ref(localStorage.getItem("rid"))
 const role = ref(localStorage.getItem("user_role"))
@@ -152,7 +153,6 @@ const filteredList = computed(() => {
   })
 })
 
-import { useRoute } from "vue-router"
 const route = useRoute()
 
 const selectedItem = computed(() => {
@@ -166,11 +166,6 @@ const selectedItem = computed(() => {
 const showDetail = e => {
   router.push("/Events/" + e)
 }
-
-// event actions
-// const setEvents = () => {
-//   Event.get().then(res => (events.value = res.data));
-// };
 setEvents()
 </script>
 
