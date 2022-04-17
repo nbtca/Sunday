@@ -30,7 +30,7 @@
           center ? 'text-center' : '',
           disabled ? ' bg-opacity-0 border-gray-400/60 shadow-none cursor-default pointer-events-none' : 'border-gray-400/10',
         ]"
-        class="transition duration-100 p-2 w-full rounded-lg shadow-innersm materialInput sm:(bg-transparent border border-gray-500 textInput ) "
+        class="transition duration-100 p-2 w-full rounded-lg shadow-innersm materialInput sm:(bg-transparent border border-gray-500 textInput )"
         :required="required"
         :placeholder="placeholder"
         v-model.lazy="input"
@@ -39,15 +39,14 @@
       />
       <textarea
         v-if="type == 'textarea'"
-        class="w-full rounded-xl materialInput h-36 mt-1 p-3 placeholder-gray-600 w-auto mx-5 mt-4 resize-none transition duration-100"
+        class="rounded-xl materialInput h-36 mt-1 p-3 placeholder-gray-600 w-auto mx-5 mt-4 resize-none transition duration-100"
         :class="[
           warning ? 'ring-[2px] ring-warning' : '',
           isValid && input ? '' : '',
           center ? 'text-center' : '',
           disabled ? ' bg-opacity-0 border-gray-400/60 shadow-none cursor-default pointer-events-none' : 'border-gray-400/10',
         ]"
-        cols="30"
-        rows="4"
+        style="width: 100%;"
         :required="required"
         :placeholder="placeholder || '讲三句话...热烈地竹霍...衷心的感谢...办成功...'"
         v-model.lazy="input"
@@ -58,7 +57,7 @@
         <div v-if="warning == ''" class="textDescription">
           {{ hint }}
         </div>
-        <div class="text-left textDescription text-warning ">
+        <div class="text-left textDescription text-warning">
           {{ warning }}
         </div>
       </div>
