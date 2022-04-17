@@ -181,7 +181,7 @@ const destroySelf = e => {
                   :confirmMessage="confirmMessage"
                   class="mt-2"
                 ></input-to-confirm>
-                <div v-if="formList" class=" w-full">
+                <div v-if="formList" class="w-full ">
                   <div v-for="item in formList" :key="item.id">
                     <input-base
                       class=""
