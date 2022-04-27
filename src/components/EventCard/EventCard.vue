@@ -5,7 +5,7 @@
         <slot name="body">body</slot>
       </p>
       <div>
-        <div class="text-left py-0.5 select-none">
+        <div class="text-left py-0.5">
           <slot name="info"></slot>
         </div>
         <div class="flex text-left items-center justify-start select-none">
