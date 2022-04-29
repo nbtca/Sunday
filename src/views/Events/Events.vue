@@ -11,7 +11,7 @@
           v-model="searchQuery"
           placeholder="搜索"
         />
-        <TabGroup class="w-full" :defaultIndex="defaultIndex" >
+        <TabGroup class="w-full" :defaultIndex="defaultIndex">
           <TabList class="flex space-x-1 p-1">
             <Tab v-for="item in filterOptions" as="template" :key="item" v-slot="{ selected }">
               <button
