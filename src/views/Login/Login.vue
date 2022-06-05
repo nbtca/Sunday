@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-center h-screen bg-base-self bg-white">
-    <div class="flex flex-col items-center sm:mt-28">
-      <div class="py-[5vh] h-80 sm:h-auto" style="width: 15vw; min-width: 250px">
+    <div class="flex flex-col items-center sm:mt-16 xl:mt-28">
+      <div class="py-[5vh] h-80 w-[18vw] sm:h-auto" style="min-width: 250px">
         <img src="../../assets/logo.png" alt="" class="filter drop-shadow" />
       </div>
       <form @submit.prevent="login" class="grid gap-6 place-items-center" style="width: 20vw; min-width: 300px">

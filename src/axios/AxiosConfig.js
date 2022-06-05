@@ -1,6 +1,7 @@
 import axios from "axios"
 import Notify from "@/components/Notify"
 import logOut from "@/composables/LogOut"
+
 axios.defaults.baseURL = "api/"
 
 axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8"
@@ -23,7 +24,7 @@ axios.interceptors.response.use(
       logOut()
       Notify("warning", "登入过期，请重新登入")
     } else if (response.data.resultCode != 0) {
-      Notify("warning", response.data.resultMsg)
+      // Notify("warning", response.data.resultMsg)
     }
     return response
   },

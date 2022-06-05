@@ -16,15 +16,7 @@
             </div>
           </div>
         </div>
-        <div
-          class="logo hidden sm:block"
-          @click="
-            $router.push('/Events');
-            isOpen = false;
-          "
-        >
-          sunday
-        </div>
+        <div class="logo hidden sm:block" @click="toEvent">sunday</div>
         <!-- <div v-if="menuList.length < 2" @click="accountSetting" class="rounded-full h-11 w-11 overflow-hidden border block">
           <img class="" :src="avatar" alt="" />
         </div> -->
@@ -109,8 +101,12 @@
         </div>
       </div>
       <div class="flex flex-col lg:(flex-row)">
-        <button class="btnsm m-2 btnNeutral" @click="accountSetting">账号设置</button>
-        <button class="btnsm m-2 bg-warning text-warningContent" @click="logOut">登出</button>
+        <button class="p-2 rounded" @click="accountSetting">
+          <CogIcon class="h-6"></CogIcon>
+        </button>
+        <button class="p-2 rounded" @click="logOut">
+          <LogoutIcon class="h-6"></LogoutIcon>
+        </button>
       </div>
     </div>
     <BottomDialog ref="bottomDialog">
@@ -167,7 +163,7 @@
 import { ref, computed, watch } from "vue"
 import { Element } from "@/api/api"
 import router from "@/router"
-import { MenuIcon } from "@heroicons/vue/outline"
+import { MenuIcon, LogoutIcon, CogIcon } from "@heroicons/vue/outline"
 import { TransitionRoot } from "@headlessui/vue"
 import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue"
 import InputSection from "@/components/Input/InputSection.vue"
@@ -198,17 +194,25 @@ const route = useRoute()
 const selectedItem = computed(() => {
   let fullPath = route.path
   let tailIndex = fullPath.indexOf("/", 1)
+  let ans
   let pagePath = tailIndex == -1 ? fullPath : fullPath.substring(0, tailIndex)
   for (let item of menuList.value) {
     if (item.path == pagePath) {
-      return item
+      ans = item
     }
   }
+  return ans
 })
+
 const toLink = item => {
   if (item != selectedItem.value) {
     router.push(item.path)
   }
+}
+
+const toEvent = () => {
+  this.router.push("/Events")
+  event.value = false
 }
 
 const accountInfo = ref({})
@@ -218,9 +222,9 @@ const setAccountInfo = () => {
     localStorage.setItem("avatar", res.data.ravatar)
     localStorage.setItem("alias", res.data.ralias)
     localStorage.setItem("user_role", res.data.role)
-    avatar.value=res.data.ravatar
-    alias.value=res.data.ralias
-    role.value=res.data.role
+    avatar.value = res.data.ravatar
+    alias.value = res.data.ralias
+    role.value = res.data.role
   })
 }
 
@@ -265,7 +269,6 @@ const updateAccount = () => {
     bottomDialog.value.cancel()
   })
 }
-
 </script>
 <style>
 .logo {

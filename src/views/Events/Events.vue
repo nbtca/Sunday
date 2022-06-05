@@ -2,7 +2,7 @@
   <div class="flex">
     <div class="flex flex-col h-full w-full items-center sm:(w-[24vw] min-w-[250px] border-r border-gray-400/30)">
       <div
-        class="bg-base border-t border-base-standout/70 flex flex-col order-last w-full px-0.5 self-end items-center sm:(order-first border-b px-0)"
+        class="bg-base border-t border-base-standout/70 flex flex-col order-last w-full px-0.5 self-end items-center sm:(border-t-0 order-first border-b px-0 pb-0.5)"
       >
         <input
           type="text"
