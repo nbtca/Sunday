@@ -100,7 +100,7 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-col lg:(flex-row)">
+      <div class="flex flex-row">
         <button class="p-2 rounded" @click="accountSetting">
           <CogIcon class="h-6"></CogIcon>
         </button>
