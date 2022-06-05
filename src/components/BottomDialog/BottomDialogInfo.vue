@@ -3,7 +3,7 @@
     <table class="divide-y divide-gray-400/30 w-full">
       <tr v-for="item in contentList" :key="item.key">
         <td class="w-[43vw] pr-10 text-right whitespace-nowrap sm:w-auto">{{ item.name }}</td>
-        <td class="py-[9px] text-sm text-left font-medium pr-5 sm:(text-base pr-0)">{{ item.value }}</td>
+        <td class="py-[9px] text-sm text-left font-medium pr-5 overflow-ellipsis line-clamp-6 max-h-39  sm:(text-base pr-0)">{{ item.value }}</td>
       </tr>
     </table>
   </div>

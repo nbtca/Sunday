@@ -1,15 +1,18 @@
 <template>
-  <div class="flex flex-col justify-between h-screen">
-    <div class="lg:px-6 pt-4">
-      <div class="flex py-5 px-6 lg:px-0 items-center justify-between">
+  <div class="flex flex-col justify-between h-screen ">
+    <div class="px-3 pt-1 md:(px-6 pt-4)">
+      <div class="flex pb-1 md:(py-5 px-6) lg:px-0 items-center justify-between">
         <div class="text-left">
-          <h3 class="font-medium pt-4 text-4xl">事件详情</h3>
+          <h3 class="font-medium pt-4 text-2xl md:(pt-4 text-4xl)">
+            <div class="hidden md:flex">事件详情</div>
+            <div class="md:hidden">{{ statusToText[detail.status + 1] }}</div>
+          </h3>
           <p class="ml-0.5 textDescription">{{ detail.gmt_create }}</p>
         </div>
-        <div class="textSubHeading">{{ statusToText[detail.status + 1] }}</div>
+        <div class="hidden md:flex textSubHeading">{{ statusToText[detail.status + 1] }}</div>
       </div>
-      <div class="border rounded-lg overflow-hidden">
-        <div class="bg-gray-50 infoCell ">
+      <div class=" border rounded-lg overflow-hidden">
+        <div class="bg-gray-50 infoCell">
           <dt class="text-gray-500 infoHead">型号</dt>
           <dd class="infoContent">
             {{ detail.model }}
@@ -46,7 +49,7 @@
             </table>
           </dd>
         </div>
-        <div class="bg-white infoCell">
+        <div class="bg-white infoCell hidden md:grid">
           <dt class="text-gray-500 infoHead">维修历史</dt>
           <dd class="infoContent">
             <div v-for="item in detail.repair_description" :key="item.time">
@@ -57,7 +60,7 @@
       </div>
     </div>
 
-    <div class="w-full pb-20">
+    <div class="w-full pb-16">
       <div>
         <button v-if="detail.status == 0" class="bg-primary text-primaryContent w-20 btn" @click="acceptEvent(detail)">接受</button>
       </div>
