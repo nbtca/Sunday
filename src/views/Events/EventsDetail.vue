@@ -1,78 +1,75 @@
 <template>
-  <div class="flex flex-col h-screen lg:p-6">
-    <div class="flex py-5 px-6 lg:px-0 items-center justify-between">
-      <div class="text-left">
-        <h3 class="font-medium pt-4 text-4xl">事件详情</h3>
-        <p class="ml-0.5 textDescription">{{ detail.gmt_create }}</p>
+  <div class="flex flex-col justify-between h-screen">
+    <div class="lg:px-6 pt-4">
+      <div class="flex py-5 px-6 lg:px-0 items-center justify-between">
+        <div class="text-left">
+          <h3 class="font-medium pt-4 text-4xl">事件详情</h3>
+          <p class="ml-0.5 textDescription">{{ detail.gmt_create }}</p>
+        </div>
+        <div class="textSubHeading">{{ statusToText[detail.status + 1] }}</div>
       </div>
-      <div class="textSubHeading">{{ statusToText[detail.status + 1] }}</div>
+      <div class="border rounded-lg overflow-hidden">
+        <div class="bg-gray-50 infoCell ">
+          <dt class="text-gray-500 infoHead">型号</dt>
+          <dd class="infoContent">
+            {{ detail.model }}
+          </dd>
+        </div>
+        <div class="bg-white infoCell">
+          <dt class="text-gray-500 infoHead">问题描述</dt>
+          <dd class="infoContent">
+            {{ detail.user_description }}
+          </dd>
+        </div>
+        <div class="bg-gray-50 infoCell">
+          <dt class="text-gray-500 infoHead">联系方式</dt>
+          <dd class="flex infoContent justify-center">
+            <table>
+              <tr>
+                <td class="w-20">QQ</td>
+                <td>
+                  {{ detail.eqq }}
+                </td>
+              </tr>
+              <tr>
+                <td>微信</td>
+                <td>
+                  {{ detail.ephone }}
+                </td>
+              </tr>
+              <tr>
+                <td>偏好</td>
+                <td>
+                  {{ contactPreference[detail.econtact_preference] }}
+                </td>
+              </tr>
+            </table>
+          </dd>
+        </div>
+        <div class="bg-white infoCell">
+          <dt class="text-gray-500 infoHead">维修历史</dt>
+          <dd class="infoContent">
+            <div v-for="item in detail.repair_description" :key="item.time">
+              {{ item.description }}
+            </div>
+          </dd>
+        </div>
+      </div>
     </div>
-    <div class="flex h-full lg:justify-between">
-      <div class="flex flex-col justify-between w-full">
-        <div class="">
-          <dl>
-            <div class="bg-gray-50 infoCell">
-              <dt class="text-gray-500 infoHead">型号</dt>
-              <dd class="infoContent">
-                {{ detail.model }}
-              </dd>
-            </div>
-            <div class="bg-white infoCell">
-              <dt class="text-gray-500 infoHead">问题描述</dt>
-              <dd class="infoContent">
-                {{ detail.user_description }}
-              </dd>
-            </div>
-            <div class="bg-gray-50 infoCell">
-              <dt class="text-gray-500 infoHead">联系方式</dt>
-              <dd class="flex infoContent justify-center">
-                <table>
-                  <tr>
-                    <td class="w-20">QQ</td>
-                    <td>
-                      {{ detail.eqq }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>微信</td>
-                    <td>
-                      {{ detail.ephone }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>偏好</td>
-                    <td>
-                      {{ contactPreference[detail.econtact_preference] }}
-                    </td>
-                  </tr>
-                </table>
-              </dd>
-            </div>
-            <div class="bg-white infoCell">
-              <dt class="text-gray-500 infoHead">维修历史</dt>
-              <dd class="infoContent">
-                <div v-for="item in detail.repair_description" :key="item.time">
-                  {{ item.description }}
-                </div>
-              </dd>
-            </div>
-          </dl>
+
+    <div class="w-full pb-20">
+      <div>
+        <button v-if="detail.status == 0" class="bg-primary text-primaryContent w-20 btn" @click="acceptEvent(detail)">接受</button>
+      </div>
+      <div v-if="detail.rid == rid && detail.status == 1" class="flex flex-col">
+        <div>
+          <button class="bg-warning text-warningContent mx-5 btn" @click="dropEvent(detail)">放弃</button>
+          <button class="bg-primary text-primaryContent btn" @click="submitEvent(detail)">提交</button>
         </div>
-        <div class="mb-20 w-full px-20">
-          <div>
-            <button v-if="detail.status == 0" class="bg-primary text-primaryContent w-20 btn" @click="acceptEvent(detail)">接受</button>
-          </div>
-          <div v-if="detail.rid == rid && detail.status == 1" class="flex flex-col">
-            <div>
-              <button class="bg-warning text-warningContent mx-5 btn" @click="dropEvent(detail)">放弃</button>
-              <button class="bg-primary text-primaryContent btn" @click="submitEvent(detail)">提交</button>
-            </div>
-          </div>
-          <div v-if="detail.status == 2 && role == 'admin'" class="flex flex-nowrap justify-center">
-            <button class="bg-warning text-warningContent mx-4 w-20 btn" @click="rejectEvent(detail)">退回</button>
-            <button class="bg-primary text-primaryContent mx-4 w-20 btn" @click="closeEvent(detail)">通过</button>
-          </div>
-        </div>
+      </div>
+      <div v-if="detail.status == 2 && role == 'admin'" class="flex flex-nowrap justify-center">
+        <button class="bg-warning text-warningContent mx-4 w-20 btn" @click="rejectEvent(detail)">退回</button>
+        <button class="bg-primary text-primaryContent mx-4 w-20 btn" @click="closeEvent(detail)">通过</button>
       </div>
     </div>
   </div>
@@ -89,7 +86,7 @@ const route = useRoute()
 const role = ref(localStorage.getItem("user_role"))
 const rid = ref(localStorage.getItem("rid"))
 const eid = ref(route.params.eid)
-const statusToText = ref(["取消", "待接受", "已接受", "待确认", "关闭"])
+const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"])
 const contactPreference = ref(["QQ", "微信", "电话"])
 
 const detail = ref({})

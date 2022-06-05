@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="relative flex flex-col-reverse bg-base-self sm:(flex-row) overflow-hidden "
-    :style="[isSafari ? 'height: 100vh' : 'height: calc(var(---vh, 1vh) * 100)']"
-  >
+  <div class="relative flex flex-col-reverse bg-base-self sm:(flex-row) overflow-hidden h-screen">
     <div class="sm:(w-[17vw] mix-w-[17vw] bg-current)">
       <Menu ref="menu"></Menu>
     </div>
