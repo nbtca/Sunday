@@ -2,7 +2,7 @@
   <div class="flex">
     <div class="flex flex-col h-full w-full items-center sm:(w-[24vw] min-w-[250px] border-r border-gray-400/30)">
       <div
-        class="bg-base border-t border-base-standout/70 flex flex-col order-last w-full px-0.5 self-end items-center sm:(border-t-0 order-first border-b px-0 pb-0.5)"
+        class="bg-gray-50 border-t border-base-standout/70 flex flex-col order-last w-full px-0.5 self-end items-center sm:(border-t-0 order-first border-b px-0 pb-0.5)"
       >
         <input
           type="text"
@@ -43,11 +43,7 @@
           </button>
         </div>
         <!-- mobile -->
-        <div class="sm:hidden">
-          <div class="py-20"></div>
-          <div v-if="filteredList.length == 0">
-            <div class="mb-2 text-center text-gray-400">现在是空的</div>
-          </div>
+        <div class="sm:hidden flex flex-col-reverse">
           <event-card
             v-for="item in filteredList"
             :key="item.eid"
@@ -100,6 +96,10 @@
               </button>
             </template>
           </event-card>
+          <div v-if="filteredList.length == 0">
+            <div class="mb-2 text-center text-gray-400">现在是空的</div>
+          </div>
+          <div class="py-20"></div>
         </div>
       </scroll-area>
     </div>
@@ -166,6 +166,7 @@ const selectedItem = computed(() => {
 const showDetail = e => {
   router.push("/Events/" + e)
 }
+
 setEvents()
 </script>
 
