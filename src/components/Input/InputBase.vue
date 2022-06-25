@@ -142,7 +142,7 @@ watch(input, () => {
     warning.value = ""
   } else {
     warning.value = ""
-    for (let item of rules.value) {
+    for (const item of rules.value) {
       if (!item.rule.test(input.value)) {
         warning.value = item.warning
         break

@@ -46,7 +46,7 @@ import { ref, computed } from "vue"
 import md5 from "blueimp-md5"
 import router from "@/router"
 import InputBase from "@/components/Input/InputBase.vue"
-import { isFormValid } from "@/utils/isFormValid.js"
+import { isFormValid } from "@/utils/isFormValid.ts"
 import { Element } from "@/api/api"
 import logOut from "@/composables/LogOut.js"
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex flex-col-reverse bg-base-self sm:(flex-row) overflow-hidden h-screen">
+  <div class="relative flex flex-col-reverse  sm:(flex-row) overflow-hidden h-screen">
     <div class="sm:(w-[17vw] mix-w-[17vw] bg-current)">
       <Menu ref="menu"></Menu>
     </div>

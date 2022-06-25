@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script>
+<script >
 import { Event } from "@/api/api"
 export default {
   name: "Design",
@@ -31,11 +31,6 @@ export default {
       this.isOpen = false
       console.log(this.isOpen)
     },
-    // open() {
-    //   this.$refs.BottomDialog.openModal({ subject: "subject" })
-    //     .then()
-    //     .catch(() => {});
-    // },
     changeRole(role) {
       localStorage.setItem("user_role", role)
       this.role = role

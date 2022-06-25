@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-between h-screen ">
+  <div class="flex flex-col justify-between h-screen">
     <div class="px-3 pt-1 md:(px-6 pt-4)">
       <div class="flex pb-1 md:(py-5 px-6) lg:px-0 items-center justify-between">
         <div class="text-left">
@@ -11,7 +11,7 @@
         </div>
         <div class="hidden md:flex textSubHeading">{{ statusToText[detail.status + 1] }}</div>
       </div>
-      <div class=" border rounded-lg overflow-hidden">
+      <div class="border border-gray-200 rounded-lg overflow-hidden">
         <div class="bg-gray-50 infoCell">
           <dt class="text-gray-500 infoHead">型号</dt>
           <dd class="infoContent">

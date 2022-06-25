@@ -6,12 +6,10 @@ module.exports = {
   extends: [
     "plugin:vue/vue3-essential",
     "eslint:recommended",
-    "prettier",
+    "@vue/eslint-config-typescript/recommended",
   ],
-  env: {
-    "vue/setup-compiler-macros": true,
-  },
   rules: {
     semi: ["error", "never"],
+    "vue/comment-directive": 'off'
   },
 }

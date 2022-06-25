@@ -16,7 +16,7 @@ export default defineConfig({
       "/api": {
         target: "https://api.vingilote.icu/",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: path => path.replace(/^\/api/, ""),
       },
     },
   },
