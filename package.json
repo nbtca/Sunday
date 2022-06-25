@@ -2,6 +2,7 @@
   "name": "sunday",
   "version": "0.0.0",
   "scripts": {
+    "test": "vitest",
     "dev": "cross-env NODE_ENV=development && vite",
     "build": "vite build",
     "serve": "vite preview",
