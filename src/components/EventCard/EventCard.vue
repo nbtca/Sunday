@@ -1,5 +1,5 @@
 <template>
-  <div class="cellsm " :class="class">
+  <div class="cellsm" :class="class">
     <div class="flex flex-col h-full w-3/4 justify-between">
       <p class="text-left font-medium h-10 overflow-ellipsis overflow-hidden line-clamp-2">
         <slot name="body">body</slot>
@@ -20,6 +20,7 @@
   </div>
 </template>
 <script setup>
+
 const props = defineProps({
   class: {
     type: String,

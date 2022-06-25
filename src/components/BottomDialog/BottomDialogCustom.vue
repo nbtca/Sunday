@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from "vue"
 import { TransitionRoot, TransitionChild } from "@headlessui/vue"
-import { isFormValid } from "@/utils/isFormValid.js"
+import { isFormValid } from "@/utils/isFormValid.ts"
 import BottomDialogInfo from "@/components/BottomDialog/BottomDialogInfo.vue"
 import InputBase from "../Input/InputBase.vue"
 import InputToConfirm from "../Input/InputToConfirm.vue"
@@ -181,7 +181,7 @@ const destroySelf = e => {
                   :confirmMessage="confirmMessage"
                   class="mt-2"
                 ></input-to-confirm>
-                <div v-if="formList" class="w-full ">
+                <div v-if="formList" class="w-full">
                   <div v-for="item in formList" :key="item.id">
                     <input-base
                       class=""

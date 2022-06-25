@@ -85,7 +85,7 @@ axios.interceptors.response.use(
   }
 )
 
-export default function axiosApi(url, data, method) {
+export default function Axios(url, data, method) {
   return new Promise((resolve, reject) => {
     if (method === "get") {
       axios({

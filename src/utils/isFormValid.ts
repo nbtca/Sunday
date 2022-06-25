@@ -1,5 +1,5 @@
 const isFormValid = form => {
-  for (let item in form) {
+  for (const item in form) {
     if (form[item] === false) {
       return false
     }
