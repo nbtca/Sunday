@@ -19,7 +19,7 @@
     <div v-if="bannerMessage" class="cellBanner">{{ bannerMessage }}</div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 
 const props = defineProps({
   class: {

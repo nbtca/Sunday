@@ -9,8 +9,8 @@
   </div>
 </template>
 
-<script setup>
-import { computed, toRefs } from "@vue/reactivity"
+<script setup lang="ts">
+import { computed, toRefs } from "vue"
 
 const props = defineProps({
   content: {
@@ -20,7 +20,7 @@ const props = defineProps({
 const { content } = toRefs(props)
 
 const contentList = computed(() => {
-  let ans = []
+  const ans = []
   if (content.value != null)
     for (let item of content.value) {
       for (let key in item) {

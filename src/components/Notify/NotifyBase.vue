@@ -20,7 +20,7 @@
   </TransitionRoot>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from "vue"
 import { TransitionRoot } from "@headlessui/vue"
 import { ExclamationIcon } from "@heroicons/vue/outline"

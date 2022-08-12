@@ -73,7 +73,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 // TODO add length limit
 // TODO add icon "show" when type is password
 
