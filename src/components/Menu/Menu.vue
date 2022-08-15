@@ -159,7 +159,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from "vue"
 import { Element } from "@/api/api"
 import router from "@/router"

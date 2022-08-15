@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios, { type Method } from "axios"
 import Notify from "@/components/Notify"
 import logOut from "@/composables/LogOut"
 
@@ -85,7 +85,7 @@ axios.interceptors.response.use(
   }
 )
 
-export default function Axios(url, data, method) {
+export default function Axios(url:string, data:object, method:Method) {
   return new Promise((resolve, reject) => {
     if (method === "get") {
       axios({

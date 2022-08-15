@@ -66,7 +66,7 @@
   </TransitionRoot>
 </template>
 
-<script>
+<script lang="ts">
 import { TransitionRoot, TransitionChild } from "@headlessui/vue"
 import BottomDialogInfo from "@/components/BottomDialog/BottomDialogInfo.vue"
 import InputBase from "../Input/InputBase.vue"

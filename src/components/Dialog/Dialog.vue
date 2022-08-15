@@ -50,7 +50,7 @@
   </TransitionRoot>
 </template>
 
-<script>
+<script lang="ts">
 import { TransitionRoot, TransitionChild, Dialog, DialogOverlay } from "@headlessui/vue"
 export default {
   name: "dialog",

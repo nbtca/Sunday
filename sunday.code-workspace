@@ -1,0 +1,13 @@
+{
+  "settings": {
+    "vue3snippets.enable-compile-vue-file-on-did-save-code": false,
+    "volar.codeLens.references": false,
+    "volar.completion.preferredTagNameCase": "pascal",
+    "editor.autoClosingQuotes": "always"
+  },
+  "folders": [
+    {
+        "path": "."
+    }
+]
+}

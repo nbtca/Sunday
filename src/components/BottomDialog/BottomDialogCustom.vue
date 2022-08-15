@@ -1,19 +1,36 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
 import { TransitionRoot, TransitionChild } from "@headlessui/vue"
-import { isFormValid } from "@/utils/isFormValid.ts"
+import { isFormValid } from "@/utils/isFormValid"
 import BottomDialogInfo from "@/components/BottomDialog/BottomDialogInfo.vue"
 import InputBase from "../Input/InputBase.vue"
 import InputToConfirm from "../Input/InputToConfirm.vue"
+type formItem = {
+    name: string
+    id:string
+    required:boolean
+    subject:string
+    type:string
+    placeholder:string
+    maxLength:number
+    hint:string
+    rules:string[]
+    val:string
+}
 const props = defineProps({
-  parentNode: Object,
+  parentNode: {
+    type: Object,
+    default() {
+        return {}
+    }
+  },
   subject: {
     type: String,
     default: "主题",
   },
   description: String,
   content: Array, // info列表内容
-  formList: { type: Array, default: () => [] },
+  formList: { type: Array<formItem>, default: () => [] },
   confirmMessage: {
     type: String,
     default: "",
@@ -46,11 +63,11 @@ onMounted(() => {
 const getFormInput = ref({})
 const message = ref("")
 const isConfirmInputValid = ref(false)
-const performAction = action => {
-  let formInput = isFormValid(getFormInput.value)
+const performAction = (action:any) => {
+  const formInput = isFormValid(getFormInput.value)
   if ((isConfirmInputValid.value !== false || !props.confirmMessage) && (formInput != false || props.formList == null)) {
     message.value = "处理中..."
-    action(formInput).then(res => {
+    action(formInput).then((res:any) => {
       if (res.resultCode == 0) {
         message.value = "成功!"
       } else {
@@ -65,9 +82,9 @@ const performAction = action => {
   }
 }
 
-const destroySelf = e => {
+const destroySelf = (e:any) => {
   open.value = false
-  let closeEvent = new CustomEvent("close", { detail: { event: e } })
+  const closeEvent = new CustomEvent("close", { detail: { event: e } })
   props.parentNode.dispatchEvent(closeEvent)
 }
 </script>
