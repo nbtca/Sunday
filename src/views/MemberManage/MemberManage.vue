@@ -5,7 +5,7 @@ import { Element } from "@/api/api"
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue"
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue"
 import { UserIcon, UploadIcon, PlusIcon, UserAddIcon } from "@heroicons/vue/outline"
-import ElementCard from "./ElementCard.vue"
+import ElementCard from "./MemberCard.vue"
 
 const elementList = ref([])
 const setElement = () => {

@@ -28,7 +28,7 @@ const asyncRoutes = [
       {
         path: "/ElementManage",
         name: "ElementManage",
-        component: () => import("@/views/ElementManage/ElementManage.vue"),
+        component: () => import("@/views/MemberManage/MemberManage.vue"),
         meta: {
           menuIcon: "true",
           roles: ["admin"],

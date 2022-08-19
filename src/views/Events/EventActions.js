@@ -15,7 +15,20 @@ const eventBottomDialog = config => {
 const acceptEvent = event => {
   BottomDialog({
     subject: "接受事件",
-    content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+    content: [
+      {
+        key: "型号",
+        value: event.model
+      },
+      {
+        key: "问题描述",
+        value: event.user_description
+      },
+      {
+        key: "创建时间",
+        value: event.gmt_create
+      }
+    ],
     acceptAction: () => {
       return Event.accept({ eid: event.eid })
     },
@@ -36,7 +49,20 @@ const submitEvent = event => {
       },
     ],
     rounded: true,
-    content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+    content: [
+      {
+        key: "型号",
+        value: event.model
+      },
+      {
+        key: "问题描述",
+        value: event.user_description
+      },
+      {
+        key: "创建时间",
+        value: event.gmt_create
+      }
+    ],
     acceptActionName: "提交",
     acceptAction: e => {
       return Event.submit({ eid: event.eid, description: e.description })
@@ -45,7 +71,7 @@ const submitEvent = event => {
 }
 const alterSubmit = event => {
   Event.get(event.eid).then(res => {
-    let eventDetail = res.data.repair_description
+    const eventDetail = res.data.repair_description
     eventBottomDialog({
       subject: "修改提交",
       formList: [
@@ -58,7 +84,20 @@ const alterSubmit = event => {
         },
       ],
       rounded: true,
-      content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+      content: [
+        {
+          key: "型号",
+          value: event.model
+        },
+        {
+          key: "问题描述",
+          value: event.user_description
+        },
+        {
+          key: "创建时间",
+          value: event.gmt_create
+        }
+      ],
       acceptActionName: "提交",
       acceptAction: e => {
         return Event.alterSubmit({ eid: event.eid, description: e.description })
@@ -70,30 +109,55 @@ const dropEvent = event => {
   eventBottomDialog({
     subject: "放弃事件",
     confirmMessage: "放弃",
-    content: [{ 型号: event.model }, { 问题描述: event.user_description }, { 创建时间: event.gmt_create }],
+    content: [
+      {
+        key: "型号",
+        value: event.model
+      },
+      {
+        key: "问题描述",
+        value: event.user_description
+      },
+      {
+        key: "创建时间",
+        value: event.gmt_create
+      }
+    ],
     acceptAction: () => {
       return Event.drop({ eid: event.eid })
     },
   })
 }
 const getPerviousDescription = async eid => {
-  let res = await Event.get(eid)
-  let repairDescription = res.data.repair_description
-  let previousRepairDescription = repairDescription[repairDescription.length - 1]
+  const res = await Event.get(eid)
+  const repairDescription = res.data.repair_description
+  const previousRepairDescription = repairDescription[repairDescription.length - 1]
   return previousRepairDescription
 }
 const judgeSubmit = async event => {
-  let previousRepairDescription = await getPerviousDescription(event.eid)
+  const previousRepairDescription = await getPerviousDescription(event.eid)
   eventBottomDialog({
     subject: "审核提交",
     acceptActionName: "通过",
     declineActionName: "退回",
     rounded: true,
     content: [
-      { 型号: event.model },
-      { 问题描述: event.user_description },
-      { 维修描述: previousRepairDescription.description },
-      { 提交时间: previousRepairDescription.time },
+      {
+        key: "型号",
+        value: event.model
+      },
+      {
+        key: "问题描述",
+        value: event.user_description
+      },
+      {
+        key: "维修描述",
+        value: event.gmt_create
+      },
+      {
+        key: "提交时间",
+        value: event.gmt_create
+      }
     ],
     acceptAction: () => {
       return Event.close({ eid: event.eid })

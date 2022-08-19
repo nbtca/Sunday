@@ -168,7 +168,7 @@ import { TransitionRoot } from "@headlessui/vue"
 import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue"
 import InputSection from "@/components/Input/InputSection.vue"
 import InputBase from "@/components/Input/InputBase.vue"
-import logOut from "@/composables/LogOut.js"
+import logOut from "@/composables/LogOut.ts"
 import { useRoute } from "vue-router"
 
 const isOpen = ref(false)
@@ -177,26 +177,40 @@ const avatar = ref(localStorage.getItem("avatar"))
 const role = ref(localStorage.getItem("user_role"))
 const rid = ref(localStorage.getItem("rid"))
 
-const newAccountInfo = ref({})
+const newAccountInfo = ref({
+  alias: "",
+  rphone: "",
+  rqq: "",
+})
 
 const menuList = computed(() => {
-  return router.options.routes[0].children.filter(item => {
-    for (let i of item.meta.roles) {
-      if (i == role.value) {
-        return item.meta.menuIcon != null
+  if (router) {
+    return router.options.routes[0].children.filter(item => {
+      if (!item.meta) {
+        return null
       }
-    }
-  })
+      const roles = item.meta.roles as string[]
+      for (const i of roles) {
+        if (i == role.value) {
+          return item.meta.menuIcon != null
+        }
+      }
+    })
+  }
+  return null
 })
 
 const route = useRoute()
 
 const selectedItem = computed(() => {
-  let fullPath = route.path
-  let tailIndex = fullPath.indexOf("/", 1)
+  const fullPath = route.path
+  const tailIndex = fullPath.indexOf("/", 1)
+  const pagePath = tailIndex == -1 ? fullPath : fullPath.substring(0, tailIndex)
+  if (menuList.value == null) {
+    return null
+  }
   let ans
-  let pagePath = tailIndex == -1 ? fullPath : fullPath.substring(0, tailIndex)
-  for (let item of menuList.value) {
+  for (const item of menuList.value) {
     if (item.path == pagePath) {
       ans = item
     }
@@ -247,9 +261,9 @@ const accountSetting = () => {
     })
   })
 }
-const updateAvatar = event => {
-  let file = event.target.files[0]
-  let param = new FormData()
+const updateAvatar = (e: Event) => {
+  const file = e.target.files[0]
+  const param = new FormData()
   param.append("file", file)
   Element.updateAvatar(param).then(() => {
     setAccountInfo()

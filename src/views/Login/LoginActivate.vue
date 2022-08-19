@@ -41,23 +41,25 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue"
 import md5 from "blueimp-md5"
 import router from "@/router"
 import InputBase from "@/components/Input/InputBase.vue"
 import { isFormValid } from "@/utils/isFormValid.ts"
 import { Element } from "@/api/api"
-import logOut from "@/composables/LogOut.js"
+import logOut from "@/composables/LogOut.ts"
 
 const rid = ref(localStorage.getItem("rid"))
-const account = ref({})
+const account = ref({
+  password: "",
+})
 const reg = computed(() => {
   return new RegExp("^" + account.value.password + "$")
 })
 
 const activate = async () => {
-  let formInput = isFormValid(account.value)
+  const formInput = isFormValid(account.value)
   formInput.password = md5(formInput.password)
   Element.activate(formInput)
     .then(() => {

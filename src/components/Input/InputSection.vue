@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const props = defineProps({
   subject: {
     type: String,

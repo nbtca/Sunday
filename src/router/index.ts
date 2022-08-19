@@ -10,17 +10,21 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("access_token")
-  const userRole = localStorage.getItem("user_role")
+  let userRole = localStorage.getItem("user_role")
+  if (userRole == null) {
+    userRole = ""
+  }
   const target = to.matched[to.matched.length - 1]
   if (to.matched.length !== 0) {
     // 404
     if (token) {
-      // login
       if (to.path === "/login") {
+        // login
         next({ path: "/Events" })
       } else {
         // role
-        if (!target.meta || !target.meta.roles || target.meta.roles.length == 0 || target.meta.roles.indexOf(userRole) !== -1) {
+        const roles = target.meta.role || []
+        if (!target.meta || !target.meta.roles || roles.length == 0 || roles.indexOf(userRole) !== -1) {
           if (userRole == "notActivated") {
             if (to.path === "/activate") {
               next()

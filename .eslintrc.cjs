@@ -10,6 +10,7 @@ module.exports = {
   ],
   rules: {
     semi: ["error", "never"],
-    "vue/comment-directive": 'off'
+    "vue/comment-directive": 'off',
+    "vue/no-setup-props-destructure": 'off',
   },
 }

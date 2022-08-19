@@ -1,3 +1,17 @@
+<script lang="ts">
+interface FormItem {
+  name: string
+  id: string
+  required: boolean
+  subject: string
+  type: string
+  placeholder: string
+  maxLength: number
+  hint: string
+  rules: string[]
+  val: string
+}
+</script>
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
 import { TransitionRoot, TransitionChild } from "@headlessui/vue"
@@ -5,32 +19,21 @@ import { isFormValid } from "@/utils/isFormValid"
 import BottomDialogInfo from "@/components/BottomDialog/BottomDialogInfo.vue"
 import InputBase from "../Input/InputBase.vue"
 import InputToConfirm from "../Input/InputToConfirm.vue"
-type formItem = {
-    name: string
-    id:string
-    required:boolean
-    subject:string
-    type:string
-    placeholder:string
-    maxLength:number
-    hint:string
-    rules:string[]
-    val:string
-}
 const props = defineProps({
   parentNode: {
     type: Object,
     default() {
-        return {}
-    }
+      return {}
+    },
   },
   subject: {
     type: String,
     default: "主题",
   },
   description: String,
-  content: Array, // info列表内容
-  formList: { type: Array<formItem>, default: () => [] },
+  content: Array<Content>, // info列表内容
+  // eslint-disable-next-line no-undef
+  formList: { type: Array<FormItem>, default: () => [] },
   confirmMessage: {
     type: String,
     default: "",
@@ -63,11 +66,14 @@ onMounted(() => {
 const getFormInput = ref({})
 const message = ref("")
 const isConfirmInputValid = ref(false)
-const performAction = (action:any) => {
+
+// type Action = (val: any) => void
+
+const performAction = (action: any) => {
   const formInput = isFormValid(getFormInput.value)
   if ((isConfirmInputValid.value !== false || !props.confirmMessage) && (formInput != false || props.formList == null)) {
     message.value = "处理中..."
-    action(formInput).then((res:any) => {
+    action(formInput).then((res: any) => {
       if (res.resultCode == 0) {
         message.value = "成功!"
       } else {
@@ -82,7 +88,7 @@ const performAction = (action:any) => {
   }
 }
 
-const destroySelf = (e:any) => {
+const destroySelf = (e: any) => {
   open.value = false
   const closeEvent = new CustomEvent("close", { detail: { event: e } })
   props.parentNode.dispatchEvent(closeEvent)
