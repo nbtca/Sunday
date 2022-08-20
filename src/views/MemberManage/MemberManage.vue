@@ -21,7 +21,7 @@ const addElementConfig = {
   formList: [
     {
       subject: "ID",
-      id: "rid",
+      id: "memberId",
       required: true,
       type: "text",
       placeholder: "学号",
@@ -144,7 +144,7 @@ const addElementByBottomDialog = () => {
                       <span v-if="element.role == 2" class="bg-green-100 text-green-800 badge"> 管理员 </span>
                     </div>
                     <div class="textDescription">
-                      {{ element.rid }}
+                      {{ element.memberId }}
                     </div>
                   </div>
                 </div>
@@ -154,13 +154,13 @@ const addElementByBottomDialog = () => {
                   <tr>
                     <td class="w-20">QQ</td>
                     <td class="text-left">
-                      {{ element.rqq || "null" }}
+                      {{ element.qq || "null" }}
                     </td>
                   </tr>
                   <tr>
                     <td>手机</td>
                     <td class="text-left">
-                      {{ element.rphone || "null" }}
+                      {{ element.phone || "null" }}
                     </td>
                   </tr>
                 </table>
@@ -170,7 +170,7 @@ const addElementByBottomDialog = () => {
               </td>
               <td class="tableCell">{{ element.isActivated }}</td>
               <td class="tableCell hidden md:block">
-                {{ element.gmt_modified }}
+                {{ element.gmtModified }}
               </td>
               <td class="font-medium text-right text-sm tableCell">
                 <a href="#" class="textLink">Edit</a>
@@ -182,7 +182,7 @@ const addElementByBottomDialog = () => {
     </div>
     <div class="sm:hidden">
       <scroll-area>
-        <ElementCard v-for="element in elementList" :key="element.rid" :element="element"></ElementCard>
+        <ElementCard v-for="element in elementList" :key="element.memberId" :element="element"></ElementCard>
         <div class="py-14"></div>
       </scroll-area>
       <div class="border-t flex h-12 w-full py-2 px-1 items-center">

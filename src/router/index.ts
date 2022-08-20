@@ -9,8 +9,8 @@ const router = createRouter({
   routes,
 })
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem("access_token")
-  let userRole = localStorage.getItem("user_role")
+  const token = localStorage.getItem("token")
+  let userRole = localStorage.getItem("role")
   if (userRole == null) {
     userRole = ""
   }

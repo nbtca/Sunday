@@ -7,7 +7,7 @@
             <div class="hidden md:flex">事件详情</div>
             <div class="md:hidden">{{ statusToText[detail.status + 1] }}</div>
           </h3>
-          <p class="ml-0.5 textDescription">{{ detail.gmt_create }}</p>
+          <p class="ml-0.5 textDescription">{{ detail.gmtCreate }}</p>
         </div>
         <div class="hidden md:flex textSubHeading">{{ statusToText[detail.status + 1] }}</div>
       </div>
@@ -64,7 +64,7 @@
       <div>
         <button v-if="detail.status == 0" class="bg-primary text-primaryContent w-20 btn" @click="acceptEvent(detail)">接受</button>
       </div>
-      <div v-if="detail.rid == rid && detail.status == 1" class="flex flex-col">
+      <div v-if="detail.memberId == memberId && detail.status == 1" class="flex flex-col">
         <div>
           <button class="bg-warning text-warningContent mx-5 btn" @click="dropEvent(detail)">放弃</button>
           <button class="bg-primary text-primaryContent btn" @click="submitEvent(detail)">提交</button>
@@ -86,16 +86,16 @@ import { acceptEvent, submitEvent, dropEvent, getPerviousDescription } from "./E
 
 const route = useRoute()
 
-const role = ref(localStorage.getItem("user_role"))
-const rid = ref(localStorage.getItem("rid"))
-const eid = ref(route.params.eid)
+const role = ref(localStorage.getItem("role"))
+const memberId = ref(localStorage.getItem("memberId"))
+const eventId = ref(route.params.eventId)
 const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"])
 const contactPreference = ref(["QQ", "微信", "电话"])
 
 const detail = ref({})
 const setDetail = () => {
-  eid.value = route.params.eid
-  Event.get(eid.value).then(res => {
+  eventId.value = route.params.eventId
+  Event.get(eventId.value).then(res => {
     detail.value = res.data
   })
 }
@@ -105,7 +105,7 @@ watch(route, setDetail)
 const BottomDialog = inject("BottomDialog")
 // not working yet
 const rejectEvent = async event => {
-  let previousRepairDescription = await getPerviousDescription(eid.value)
+  let previousRepairDescription = await getPerviousDescription(eventId.value)
   BottomDialog({
     subject: "审核提交",
     acceptActionName: "退回",
@@ -113,17 +113,17 @@ const rejectEvent = async event => {
     content: [
       { 型号: event.model },
       { 问题描述: event.user_description },
-      { 创建时间: event.gmt_create },
+      { 创建时间: event.gmtCreate },
       { 维修描述: previousRepairDescription.description },
       { 提交时间: previousRepairDescription.time },
     ],
     acceptAction: () => {
-      return Event.reject({ eid: event.eid })
+      return Event.reject({ eventId: event.eventId })
     },
   })
 }
 const closeEvent = async event => {
-  let previousRepairDescription = await getPerviousDescription(eid.value)
+  let previousRepairDescription = await getPerviousDescription(eventId.value)
   BottomDialog({
     subject: "审核提交",
     acceptActionName: "通过",
@@ -131,12 +131,12 @@ const closeEvent = async event => {
     content: [
       { 型号: event.model },
       { 问题描述: event.user_description },
-      { 创建时间: event.gmt_create },
+      { 创建时间: event.gmtCreate },
       { 维修描述: previousRepairDescription.description },
       { 提交时间: previousRepairDescription.time },
     ],
     acceptAction: () => {
-      return Event.close({ eid: event.eid })
+      return Event.close({ eventId: event.eventId })
     },
   })
 }

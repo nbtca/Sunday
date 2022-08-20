@@ -4,7 +4,7 @@
       <form @submit.prevent="activate" class="grid gap-y-1 place-items-center" style="width: 17vw; min-width: 300px">
         <div class="text-3xl font-bold mt-12 mb-8 md:mt-18">
           <div>完善个人信息</div>
-          <div class="text-lg textDescription mt-2">{{ rid }}</div>
+          <div class="text-lg textDescription mt-2">{{ memberId }}</div>
         </div>
         <InputBase subject="密码" required type="password" class="w-full" v-model:content="account.password" />
         <InputBase
@@ -50,7 +50,7 @@ import { isFormValid } from "@/utils/isFormValid.ts"
 import { Element } from "@/api/api"
 import logOut from "@/composables/LogOut.ts"
 
-const rid = ref(localStorage.getItem("rid"))
+const memberId = ref(localStorage.getItem("memberId"))
 const account = ref({
   password: "",
 })
@@ -64,15 +64,15 @@ const activate = async () => {
   Element.activate(formInput)
     .then(() => {
       return Element.login({
-        id: localStorage.getItem("rid"),
+        id: localStorage.getItem("memberId"),
         password: account.value.password,
       })
     })
     .then(res => {
-      localStorage.setItem("access_token", res.data.token)
+      localStorage.setItem("token", res.data.token)
       localStorage.setItem("alias", res.data.alias)
-      localStorage.setItem("user_role", res.data.role)
-      localStorage.setItem("rid", res.data.rid)
+      localStorage.setItem("role", res.data.role)
+      localStorage.setItem("memberId", res.data.memberId)
     })
     .finally(() => {
       router.push("/Events")

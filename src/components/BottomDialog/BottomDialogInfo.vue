@@ -13,16 +13,9 @@
 
 <script setup lang="ts">
 import { computed, toRefs } from "vue"
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type Content = {
-  key: string
-  value: string
-}
-
+import type { Content } from "./types";
 const props = defineProps({
   content: {
-    // eslint-disable-next-line no-undef
     type: Array<Content>,
   },
 })
@@ -37,7 +30,7 @@ const contentList = computed(() => {
     for (const item of content.value) {
       ans.push({
         name: item.key,
-        value: item.value,
+        value: item.value || "无",
       })
     }
   return ans

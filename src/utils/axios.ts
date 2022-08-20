@@ -9,8 +9,9 @@ axios.defaults.timeout = 10000
 
 axios.interceptors.request.use(
   config => {
-    const token = localStorage.getItem("access_token")
-    config.headers.authorization = "bearer " + token
+    const token = localStorage.getItem("token")
+    // config.headers.authorization = "bearer " + token
+    config.headers.authorization = token
     return config
   },
   error => {
@@ -20,12 +21,12 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   response => {
-    if (response.data.resultCode == 12) {
-      logOut()
-      Notify("warning", "登入过期，请重新登入")
-    } else if (response.data.resultCode != 0) {
-      // Notify("warning", response.data.resultMsg)
-    }
+    // if (response.data.resultCode == 12) {
+    //   logOut()
+    //   Notify("warning", "登入过期，请重新登入")
+    // } else if (response.data.resultCode != 0) {
+    //   // Notify("warning", response.data.resultMsg)
+    // }
     return response
   },
   error => {
@@ -85,7 +86,7 @@ axios.interceptors.response.use(
   }
 )
 
-export default function Axios(url:string, data:object, method:Method) {
+export default function Axios(url: string, data: any, method: Method) {
   return new Promise((resolve, reject) => {
     if (method === "get") {
       axios({

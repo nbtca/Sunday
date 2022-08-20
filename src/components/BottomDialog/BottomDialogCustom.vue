@@ -1,17 +1,4 @@
-<script lang="ts">
-interface FormItem {
-  name: string
-  id: string
-  required: boolean
-  subject: string
-  type: string
-  placeholder: string
-  maxLength: number
-  hint: string
-  rules: string[]
-  val: string
-}
-</script>
+<script lang="ts"></script>
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
 import { TransitionRoot, TransitionChild } from "@headlessui/vue"
@@ -19,6 +6,8 @@ import { isFormValid } from "@/utils/isFormValid"
 import BottomDialogInfo from "@/components/BottomDialog/BottomDialogInfo.vue"
 import InputBase from "../Input/InputBase.vue"
 import InputToConfirm from "../Input/InputToConfirm.vue"
+import type { Content, FormItem } from "./types"
+
 const props = defineProps({
   parentNode: {
     type: Object,
@@ -31,8 +20,7 @@ const props = defineProps({
     default: "主题",
   },
   description: String,
-  content: Array<Content>, // info列表内容
-  // eslint-disable-next-line no-undef
+  content: Array<Content>,
   formList: { type: Array<FormItem>, default: () => [] },
   confirmMessage: {
     type: String,
@@ -66,8 +54,6 @@ onMounted(() => {
 const getFormInput = ref({})
 const message = ref("")
 const isConfirmInputValid = ref(false)
-
-// type Action = (val: any) => void
 
 const performAction = (action: any) => {
   const formInput = isFormValid(getFormInput.value)

@@ -86,7 +86,7 @@ interface Props {
   hint?: string
   confirmBeforeInput?: boolean
   rules?: any[]
-  maxLength?: number
+  maxLength?: string
   passWarning?: string
   passValue?: string
   content?: string | boolean
@@ -109,7 +109,10 @@ const getProps = () => {
 const { passValue, passWarning, rules } = getProps()
 
 const input = ref()
-const emit = defineEmits(["update:content"])
+const emit = defineEmits<{
+  (event: "update:content", value: string | boolean): void
+}>()
+
 const emitInput = () => {
   emit("update:content", isValid.value ? input.value : false)
 }

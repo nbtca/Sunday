@@ -1,43 +1,52 @@
 import { ref } from "vue"
 
 import BottomDialog from "@/components/BottomDialog/index.js"
-import { Event } from "@/api/api"
-const events = ref([])
+import EventService from "@/services/event"
+import type { Event } from "@/models/event"
+import type { BottomDialogConfig } from "@/components/BottomDialog/types"
+const events = ref(Array<Event>())
 const setEvents = () => {
-  Event.get().then(res => (events.value = res.data))
+  EventService.getAll()
+    .then(res => {
+      events.value = res
+    })
+    .catch(err => {
+      // TODO handle
+      console.log(err)
+    })
 }
 
-const eventBottomDialog = config => {
+const eventBottomDialog = (config: BottomDialogConfig) => {
   // TODO condition
   BottomDialog(config).then(() => setEvents())
 }
 
-const acceptEvent = event => {
+const acceptEvent = (event: Event) => {
   BottomDialog({
     subject: "接受事件",
     content: [
       {
         key: "型号",
-        value: event.model
+        value: event.model,
       },
       {
         key: "问题描述",
-        value: event.user_description
+        value: event.problem,
       },
       {
         key: "创建时间",
-        value: event.gmt_create
-      }
+        value: event.gmtCreate,
+      },
     ],
     acceptAction: () => {
-      return Event.accept({ eid: event.eid })
+      return EventService.accept(event.eventId)
     },
   }).then(() => {
     setEvents()
-    // filterHandler("我的");
   })
 }
-const submitEvent = event => {
+
+const submitEvent = (event: Event) => {
   eventBottomDialog({
     subject: "提交维修",
     formList: [
@@ -52,25 +61,25 @@ const submitEvent = event => {
     content: [
       {
         key: "型号",
-        value: event.model
+        value: event.model,
       },
       {
         key: "问题描述",
-        value: event.user_description
+        value: event.problem,
       },
       {
         key: "创建时间",
-        value: event.gmt_create
-      }
+        value: event.gmtCreate,
+      },
     ],
     acceptActionName: "提交",
     acceptAction: e => {
-      return Event.submit({ eid: event.eid, description: e.description })
+      return Event.submit({ eventId: event.eventId, description: e.description })
     },
   })
 }
-const alterSubmit = event => {
-  Event.get(event.eid).then(res => {
+const alterSubmit = (event:Event) => {
+  Event.get(event.eventId).then(res => {
     const eventDetail = res.data.repair_description
     eventBottomDialog({
       subject: "修改提交",
@@ -87,55 +96,56 @@ const alterSubmit = event => {
       content: [
         {
           key: "型号",
-          value: event.model
+          value: event.model,
         },
         {
           key: "问题描述",
-          value: event.user_description
+          value: event.user_description,
         },
         {
           key: "创建时间",
-          value: event.gmt_create
-        }
+          value: event.gmtCreate,
+        },
       ],
       acceptActionName: "提交",
       acceptAction: e => {
-        return Event.alterSubmit({ eid: event.eid, description: e.description })
+        return Event.alterSubmit({ eventId: event.eventId, description: e.description })
       },
     })
   })
 }
-const dropEvent = event => {
+const dropEvent = (event: Event) => {
   eventBottomDialog({
     subject: "放弃事件",
     confirmMessage: "放弃",
     content: [
       {
         key: "型号",
-        value: event.model
+        value: event.model,
       },
       {
         key: "问题描述",
-        value: event.user_description
+        value: event.problem,
       },
       {
         key: "创建时间",
-        value: event.gmt_create
-      }
+        value: event.gmtCreate,
+      },
     ],
     acceptAction: () => {
-      return Event.drop({ eid: event.eid })
+      // return Event.drop({ eventId: event.eventId })
+      return EventService.drop(event.eventId)
     },
   })
 }
-const getPerviousDescription = async eid => {
-  const res = await Event.get(eid)
+const getPerviousDescription = async (eventId: string) => {
+  const res = await Event.get(eventId)
   const repairDescription = res.data.repair_description
   const previousRepairDescription = repairDescription[repairDescription.length - 1]
   return previousRepairDescription
 }
-const judgeSubmit = async event => {
-  const previousRepairDescription = await getPerviousDescription(event.eid)
+const judgeSubmit = async (event: Event) => {
+  const previousRepairDescription = await getPerviousDescription(event.eventId)
   eventBottomDialog({
     subject: "审核提交",
     acceptActionName: "通过",
@@ -144,26 +154,26 @@ const judgeSubmit = async event => {
     content: [
       {
         key: "型号",
-        value: event.model
+        value: event.model,
       },
       {
         key: "问题描述",
-        value: event.user_description
+        value: event.problem,
       },
       {
         key: "维修描述",
-        value: event.gmt_create
+        value: event.gmtCreate,
       },
       {
         key: "提交时间",
-        value: event.gmt_create
-      }
+        value: event.gmtCreate,
+      },
     ],
     acceptAction: () => {
-      return Event.close({ eid: event.eid })
+      return Event.close({ eventId: event.eventId })
     },
     declineAction: () => {
-      return Event.reject({ eid: event.eid })
+      return Event.reject({ eventId: event.eventId })
     },
   })
 }
