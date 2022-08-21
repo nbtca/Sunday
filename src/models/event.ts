@@ -20,21 +20,35 @@ enum Status {
   Closed = "closed",
 }
 
-interface Event {
-  eventId: string
-  clientId: string
-  model: string
-  phone: string
-  qq: string
-  contactPreference: string
-  problem: string
-  member: Member
-  closedBy: string
-  closedByMember: Member
-  status: Status
-  logs: EventLog[]
-  gmtCreate: string
-  gmtModified: string
+class Event {
+  eventId!: string
+  clientId!: string
+  model!: string
+  phone!: string
+  qq!: string
+  contactPreference!: string
+  problem!: string
+  member!: Member
+  closedBy!: string
+  closedByMember!: Member
+  status!: Status
+  logs!: EventLog[]
+  gmtCreate!: string
+  gmtModified!: string
+
+  isCurrentMember(memberId: string) {
+    if (this.member == null) {
+      return false
+    }
+    return this.member.memberId === memberId
+  }
+
+  getPreviousLog(): EventLog | undefined {
+    if (this.logs.length === 0) {
+      return undefined
+    }
+    return this.logs[this.logs.length - 1]
+  }
 }
 
 interface EventLog {

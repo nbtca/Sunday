@@ -58,13 +58,12 @@ const login = async () => {
       password: hashedPassword,
     })
       .then(res => {
-        console.log(res)
         localStorage.setItem("token", res.token)
         localStorage.setItem("alias", res.alias)
         localStorage.setItem("avatar", res.avatar || avatarHolder)
         localStorage.setItem("role", res.role)
-        localStorage.setItem("memberId", res.member_id)
-        if (res.data.role == "notActivated") {
+        localStorage.setItem("memberId", res.memberId)
+        if (res.role == "notActivated") {
           router.push("/activate")
           router.push("/activate")
         } else {

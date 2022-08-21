@@ -110,7 +110,7 @@
             <div class="leading-tight textDescription">{{ accountInfo.memberId }}</div>
           </div>
         </div>
-        <form @submit="updateAccount" class="relative">
+        <form @submit.prevent="updateAccount" class="relative">
           <input-section subject="昵称">
             <input-base subject="" :passValue="accountInfo.alias" confirmBeforeInput v-model:content="newAccountInfo.alias"></input-base>
           </input-section>

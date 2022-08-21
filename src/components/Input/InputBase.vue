@@ -89,7 +89,7 @@ interface Props {
   maxLength?: string
   passWarning?: string
   passValue?: string
-  content?: string | boolean
+  content?: string | boolean | object
   placeholder?: string
 }
 
@@ -150,7 +150,7 @@ watch(input, () => {
 // required: match rule
 // passing warning is empty
 const isValid = computed(() => {
-  return warning.value == "" && (input.value != "" || !props.required) ? true : false
+  return (warning.value == "" || warning.value == undefined) && (input.value != "" || !props.required) ? true : false
 })
 
 const disabled = ref(false)

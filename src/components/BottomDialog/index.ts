@@ -7,8 +7,12 @@ const BottomDialog = (config: BottomDialogConfig) => {
   render(divVNode, document.body)
   const div = divVNode.el
 
-  config.parentNode = div
-  const comVNode = h(BottomDialogCustom, config)
+  // config.parentNode = div
+  let c = Object.assign(config, {
+    parentNode: div,
+  })
+
+  const comVNode = h(BottomDialogCustom, c)
 
   render(comVNode, div)
   return new Promise(resolve => {

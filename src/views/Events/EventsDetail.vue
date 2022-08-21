@@ -5,23 +5,23 @@
         <div class="text-left">
           <h3 class="font-medium pt-4 text-2xl md:(pt-4 text-4xl)">
             <div class="hidden md:flex">事件详情</div>
-            <div class="md:hidden">{{ statusToText[detail.status + 1] }}</div>
+            <div class="md:hidden">{{ detail?.status }}</div>
           </h3>
-          <p class="ml-0.5 textDescription">{{ detail.gmtCreate }}</p>
+          <p class="ml-0.5 textDescription">{{ detail?.gmtCreate }}</p>
         </div>
-        <div class="hidden md:flex textSubHeading">{{ statusToText[detail.status + 1] }}</div>
+        <div class="hidden md:flex textSubHeading">{{ detail?.status }}</div>
       </div>
       <div class="border border-gray-200 rounded-lg overflow-hidden">
         <div class="bg-gray-50 infoCell">
           <dt class="text-gray-500 infoHead">型号</dt>
           <dd class="infoContent">
-            {{ detail.model }}
+            {{ detail?.model }}
           </dd>
         </div>
         <div class="bg-white infoCell">
           <dt class="text-gray-500 infoHead">问题描述</dt>
           <dd class="infoContent">
-            {{ detail.user_description }}
+            {{ detail?.problem }}
           </dd>
         </div>
         <div class="bg-gray-50 infoCell">
@@ -31,19 +31,19 @@
               <tr>
                 <td class="w-20">QQ</td>
                 <td>
-                  {{ detail.eqq }}
+                  {{ detail?.qq }}
                 </td>
               </tr>
               <tr>
                 <td>微信</td>
                 <td>
-                  {{ detail.ephone }}
+                  {{ detail?.phone }}
                 </td>
               </tr>
               <tr>
                 <td>偏好</td>
                 <td>
-                  {{ contactPreference[detail.econtact_preference] }}
+                  {{ detail?.contactPreference }}
                 </td>
               </tr>
             </table>
@@ -52,8 +52,8 @@
         <div class="bg-white infoCell hidden md:grid">
           <dt class="text-gray-500 infoHead">维修历史</dt>
           <dd class="infoContent">
-            <div v-for="item in detail.repair_description" :key="item.time">
-              {{ item.description }}
+            <div v-for="log in detail?.logs" :key="log.logId">
+              {{ log.description }}
             </div>
           </dd>
         </div>
@@ -62,81 +62,84 @@
 
     <div class="w-full pb-16">
       <div>
-        <button v-if="detail.status == 0" class="bg-primary text-primaryContent w-20 btn" @click="acceptEvent(detail)">接受</button>
+        <button v-if="detail?.status == 'open'" class="bg-primary text-primaryContent w-20 btn" @click="acceptEvent(detail)">接受</button>
       </div>
-      <div v-if="detail.memberId == memberId && detail.status == 1" class="flex flex-col">
+        <div v-if="isCurrentMember(detail,memberId) && detail.status == 'accepted'" class="flex flex-col">
         <div>
           <button class="bg-warning text-warningContent mx-5 btn" @click="dropEvent(detail)">放弃</button>
-          <button class="bg-primary text-primaryContent btn" @click="submitEvent(detail)">提交</button>
+          <button class="bg-primary text-primaryContent btn" @click="commitEvent(detail)">提交</button>
         </div>
       </div>
-      <div v-if="detail.status == 2 && role == 'admin'" class="flex flex-nowrap justify-center">
+      <div v-if="detail?.status == 'committed' && role == 'admin'" class="flex flex-nowrap justify-center">
         <button class="bg-warning text-warningContent mx-4 w-20 btn" @click="rejectEvent(detail)">退回</button>
         <button class="bg-primary text-primaryContent mx-4 w-20 btn" @click="closeEvent(detail)">通过</button>
       </div>
     </div>
   </div>
 </template>
-//TODO:display repair_description
-<script setup>
-import { watch, ref, inject } from "vue"
+
+<script setup lang="ts">
+import { watch, ref, inject  } from "vue"
 import { useRoute } from "vue-router"
-import { Event } from "@/api/api"
-import { acceptEvent, submitEvent, dropEvent, getPerviousDescription } from "./EventActions"
+import { acceptEvent, commitEvent, dropEvent } from "./EventActions"
+import EventService from "@/services/event"
+import { isCurrentMember } from "@/utils/event"
+import type { Event } from "@/models/event"
 
 const route = useRoute()
 
 const role = ref(localStorage.getItem("role"))
-const memberId = ref(localStorage.getItem("memberId"))
-const eventId = ref(route.params.eventId)
+const memberId = ref(localStorage.getItem("memberId") || "")
+const eventId = ref(route.params.eventId) as Ref<string>
 const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"])
 const contactPreference = ref(["QQ", "微信", "电话"])
 
-const detail = ref({})
-const setDetail = () => {
-  eventId.value = route.params.eventId
-  Event.get(eventId.value).then(res => {
-    detail.value = res.data
+const detail = ref<Event>()
+// const event = await EventService.getMemberEvent(eventId.value)
+// const detail = ref()
+const setDetail = async () => {
+  eventId.value = route.params.eventId as string
+  EventService.getMemberEvent(eventId.value).then(res => {
+    detail.value = res
   })
 }
 setDetail()
 watch(route, setDetail)
 
 const BottomDialog = inject("BottomDialog")
-// not working yet
-const rejectEvent = async event => {
-  let previousRepairDescription = await getPerviousDescription(eventId.value)
+
+const rejectEvent = async (event: Event) => {
+  // let previousRepairDescription = await getPerviousDescription(eventId.value)
   BottomDialog({
     subject: "审核提交",
     acceptActionName: "退回",
     rounded: true,
     content: [
       { 型号: event.model },
-      { 问题描述: event.user_description },
+      { 问题描述: event.problem },
       { 创建时间: event.gmtCreate },
-      { 维修描述: previousRepairDescription.description },
-      { 提交时间: previousRepairDescription.time },
+      { 维修描述: event.getPreviousLog()?.description },
+      { 提交时间: event.getPreviousLog()?.gmtCreate },
     ],
     acceptAction: () => {
-      return Event.reject({ eventId: event.eventId })
+      return EventService.rejectCommit(event.eventId)
     },
   })
 }
-const closeEvent = async event => {
-  let previousRepairDescription = await getPerviousDescription(eventId.value)
+const closeEvent = async (event: Event) => {
   BottomDialog({
     subject: "审核提交",
     acceptActionName: "通过",
     rounded: true,
     content: [
       { 型号: event.model },
-      { 问题描述: event.user_description },
+      { 问题描述: event.problem },
       { 创建时间: event.gmtCreate },
-      { 维修描述: previousRepairDescription.description },
-      { 提交时间: previousRepairDescription.time },
+      { 维修描述: event.getPreviousLog()?.description },
+      { 提交时间: event.getPreviousLog()?.gmtCreate },
     ],
     acceptAction: () => {
-      return Event.close({ eventId: event.eventId })
+      return EventService.close(event.eventId)
     },
   })
 }

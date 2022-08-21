@@ -59,14 +59,14 @@
                 <div>
                   <button
                     v-if="item.status == 'accepted' && isCurrentMember(item, memberId)"
-                    @click="submitEvent(item)"
+                    @click="commitEvent(item)"
                     class="btnxs btnActiveReverse"
                   >
                     提交
                   </button>
                   <button
                     v-if="item.status == 'committed' && isCurrentMember(item, memberId) && eventsMatchingByRID"
-                    @click="alterSubmit(item)"
+                    @click="alterCommit(item)"
                     class="btnxs btnWarningReverse"
                   >
                     修改
@@ -98,7 +98,7 @@
               <div class="w-17 truncate">{{ item.model || "无型号" }}</div>
               <span class="text-xs ml-2 textDescription">{{ item.gmtCreate }}</span>
               <button
-                v-if="(item.status == 'accepted' || item.status == 'committed') && isCurrentMember(item, memberId) && eventsMatchingByRID"
+                v-if="item.status == 'accepted' && isCurrentMember(item, memberId) && eventsMatchingByRID"
                 @click="dropEvent(item)"
                 class="text-xs font-medium text-warning w-8 p-[1px] rounded ml-2 mb-0.5 border border-warning hover:(bg-warning text-warningContent)"
               >
@@ -122,22 +122,15 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
 import router from "@/router"
-import { setEvents, events, acceptEvent, submitEvent, alterSubmit, dropEvent, judgeSubmit } from "./EventActions"
+import { setEvents, events, acceptEvent, commitEvent, alterCommit, dropEvent, judgeSubmit } from "./EventActions"
 import { TabGroup, TabList, Tab } from "@headlessui/vue"
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue"
 import EventCard from "../../components/EventCard/EventCard.vue"
 import { useRoute } from "vue-router"
-import type { Event } from "@/models/event"
+import { isCurrentMember } from "@/utils/event"
 
 const memberId = ref(localStorage.getItem("memberId") || "")
 const role = ref(localStorage.getItem("role"))
-
-const isCurrentMember = (event: Event, memberId: string) => {
-  if (event.member == null) {
-    return false
-  }
-  return event.member.memberId == memberId
-}
 
 const statusToText = ref(["已取消", "待接受", "已接受", "待审核", "已关闭"])
 
@@ -160,15 +153,19 @@ const filterHandler = (e: string) => {
   }
 }
 const filteredList = computed(() => {
-  return events.value.filter(event => {
-    return (
-      // ((!checkOnly.value && eventsMatchingByRID.value && event.memberId === memberId.value) ||
-      //   (!checkOnly.value && !eventsMatchingByRID.value && event.status == "open") ||
-      //   (checkOnly.value && event.status == "committed")) &&
-      // event.problem.indexOf(searchQuery.value) >= 0 &&
-      // event.status != "closed"
-      true
-    )
+  const menuFilter = events.value.filter(event => {
+    if (checkOnly.value === true) {
+      // for admin to validate commits
+      return event.status == "committed"
+    } else if (eventsMatchingByRID.value === true) {
+      return isCurrentMember(event, memberId.value) && event.status != "closed"
+    } else {
+      return event.status == "open"
+    }
+  })
+  return menuFilter.filter(event => {
+    // TODO new API for searching events
+    return event.problem.indexOf(searchQuery.value) >= 0
   })
 })
 

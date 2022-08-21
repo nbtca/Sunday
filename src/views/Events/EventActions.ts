@@ -16,6 +16,16 @@ const setEvents = () => {
     })
 }
 
+const getLastLog = (e: Event) => {
+  if (e.logs == null) {
+    return null
+  } else {
+    const last = e.logs[e.logs.length - 1]
+    console.log(last)
+    return e.logs[e.logs.length - 1]
+  }
+}
+
 const eventBottomDialog = (config: BottomDialogConfig) => {
   // TODO condition
   BottomDialog(config).then(() => setEvents())
@@ -46,7 +56,7 @@ const acceptEvent = (event: Event) => {
   })
 }
 
-const submitEvent = (event: Event) => {
+const commitEvent = (event: Event) => {
   eventBottomDialog({
     subject: "提交维修",
     formList: [
@@ -74,13 +84,14 @@ const submitEvent = (event: Event) => {
     ],
     acceptActionName: "提交",
     acceptAction: e => {
-      return Event.submit({ eventId: event.eventId, description: e.description })
+      return EventService.commit(event.eventId, e.description)
     },
   })
 }
-const alterSubmit = (event:Event) => {
-  Event.get(event.eventId).then(res => {
-    const eventDetail = res.data.repair_description
+
+const alterCommit = (event: Event) => {
+  EventService.getMemberEvent(event.eventId).then(res => {
+    // TODO if last log action is not commit ?????????
     eventBottomDialog({
       subject: "修改提交",
       formList: [
@@ -89,7 +100,7 @@ const alterSubmit = (event:Event) => {
           id: "description",
           required: true,
           type: "textarea",
-          val: eventDetail[eventDetail.length - 1].description,
+          val: getLastLog(res)?.description,
         },
       ],
       rounded: true,
@@ -100,7 +111,7 @@ const alterSubmit = (event:Event) => {
         },
         {
           key: "问题描述",
-          value: event.user_description,
+          value: event.problem,
         },
         {
           key: "创建时间",
@@ -109,11 +120,12 @@ const alterSubmit = (event:Event) => {
       ],
       acceptActionName: "提交",
       acceptAction: e => {
-        return Event.alterSubmit({ eventId: event.eventId, description: e.description })
+        return EventService.alterCommit(event.eventId, e.description)
       },
     })
   })
 }
+
 const dropEvent = (event: Event) => {
   eventBottomDialog({
     subject: "放弃事件",
@@ -133,19 +145,12 @@ const dropEvent = (event: Event) => {
       },
     ],
     acceptAction: () => {
-      // return Event.drop({ eventId: event.eventId })
       return EventService.drop(event.eventId)
     },
   })
 }
-const getPerviousDescription = async (eventId: string) => {
-  const res = await Event.get(eventId)
-  const repairDescription = res.data.repair_description
-  const previousRepairDescription = repairDescription[repairDescription.length - 1]
-  return previousRepairDescription
-}
+
 const judgeSubmit = async (event: Event) => {
-  const previousRepairDescription = await getPerviousDescription(event.eventId)
   eventBottomDialog({
     subject: "审核提交",
     acceptActionName: "通过",
@@ -162,7 +167,7 @@ const judgeSubmit = async (event: Event) => {
       },
       {
         key: "维修描述",
-        value: event.gmtCreate,
+        value: event.getPreviousLog()?.description || "",
       },
       {
         key: "提交时间",
@@ -170,12 +175,12 @@ const judgeSubmit = async (event: Event) => {
       },
     ],
     acceptAction: () => {
-      return Event.close({ eventId: event.eventId })
+      return EventService.accept(event.eventId)
     },
     declineAction: () => {
-      return Event.reject({ eventId: event.eventId })
+      return EventService.rejectCommit(event.eventId)
     },
   })
 }
 
-export { setEvents, events, getPerviousDescription, acceptEvent, submitEvent, alterSubmit, dropEvent, judgeSubmit }
+export { setEvents, events, acceptEvent, commitEvent, alterCommit, dropEvent, judgeSubmit }

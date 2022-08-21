@@ -19,8 +19,8 @@ const Event = {
   async submit(e) {
     return await Axios("/events/submit", e, "post")
   },
-  async alterSubmit(e) {
-    return await Axios("/events/alterSubmit", e, "post")
+  async alterCommit(e) {
+    return await Axios("/events/alterCommit", e, "post")
   },
 }
 const Element = {
