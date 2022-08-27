@@ -1,19 +1,23 @@
-<script setup>
+<script setup lang="ts">
 import { ref, inject } from "vue"
 import { Element } from "@/api/api"
-// import Dialog from "@/components/Dialog/Dialog.vue";
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue"
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue"
 import { UserIcon, UploadIcon, PlusIcon, UserAddIcon } from "@heroicons/vue/outline"
 import ElementCard from "./MemberCard.vue"
+import MemberService from "@/services/member"
+import type Member from "@/models/member"
 
-const elementList = ref([])
-const setElement = () => {
-  Element.get().then(res => {
-    elementList.value = res.data
+const members = ref(Array<Member>())
+const setMembers = () => {
+  MemberService.getByPage(0, 0).then(res => {
+    members.value = res
   })
+  // Element.get().then(res => {
+  //   members.value = res.data
+  // })
 }
-setElement()
+setMembers()
 
 const BottomDialog = inject("BottomDialog")
 const addElementConfig = {
@@ -62,7 +66,7 @@ const addElementConfig = {
   },
 }
 const addElementByBottomDialog = () => {
-  BottomDialog(addElementConfig).then(() => setElement())
+  BottomDialog(addElementConfig).then(() => setMembers())
 }
 </script>
 <template>
@@ -120,31 +124,26 @@ const addElementByBottomDialog = () => {
             <tr>
               <th scope="col" class="tableHead"></th>
               <th scope="col" class="tableHead">联系方式</th>
-              <th scope="col" class="tableHead hidden lg:block">完成事件数</th>
-              <th scope="col" class="tableHead">状态</th>
-              <th scope="col" class="tableHead hidden md:block">创建日期</th>
-              <th scope="col" class="tableHead">
-                <span>Edit</span>
-              </th>
+              <th scope="col" class="tableHead hidden md:block">最后登入</th>
             </tr>
           </thead>
           <tbody class="divide-y border divide-base-standout">
-            <tr v-for="element in elementList" :key="element.email">
+            <tr v-for="member in members" :key="member.memberId">
               <td class="tableCell">
                 <div class="flex items-center">
                   <div class="border rounded-full flex-shrink-0 h-14 w-14 overflow-hidden hidden relative lg:block">
-                    <img v-if="element.ravatar" class="object-fill absolute" :src="element.ravatar" alt="" />
-                    <UserIcon v-if="!element.ravatar" class="bg-base-standout object-fill p-1" />
+                    <img v-if="member.avatar" class="object-fill absolute" :src="member.avatar" alt="" />
+                    <UserIcon v-if="!member.avatar" class="bg-base-standout object-fill p-1" />
                   </div>
                   <div class="flex flex-col md:ml-4 items-start">
                     <div class="inline-flex items-center">
                       <div class="font-medium text-lg tracking-wider">
-                        {{ element.ralias || "null" }}
+                        {{ member.alias || "null" }}
                       </div>
-                      <span v-if="element.role == 2" class="bg-green-100 text-green-800 badge"> 管理员 </span>
+                      <span v-if="member.role == 'admin'" class="bg-green-100 text-green-800 badge"> 管理员 </span>
                     </div>
                     <div class="textDescription">
-                      {{ element.memberId }}
+                      {{ member.memberId }}
                     </div>
                   </div>
                 </div>
@@ -154,26 +153,19 @@ const addElementByBottomDialog = () => {
                   <tr>
                     <td class="w-20">QQ</td>
                     <td class="text-left">
-                      {{ element.qq || "null" }}
+                      {{ member.qq || "null" }}
                     </td>
                   </tr>
                   <tr>
                     <td>手机</td>
                     <td class="text-left">
-                      {{ element.phone || "null" }}
+                      {{ member.phone || "null" }}
                     </td>
                   </tr>
                 </table>
               </td>
-              <td class="tableCell hidden lg:block">
-                {{ element.event_count }}
-              </td>
-              <td class="tableCell">{{ element.isActivated }}</td>
               <td class="tableCell hidden md:block">
-                {{ element.gmtModified }}
-              </td>
-              <td class="font-medium text-right text-sm tableCell">
-                <a href="#" class="textLink">Edit</a>
+                {{ member.gmtModified }}
               </td>
             </tr>
           </tbody>
@@ -182,7 +174,7 @@ const addElementByBottomDialog = () => {
     </div>
     <div class="sm:hidden">
       <scroll-area>
-        <ElementCard v-for="element in elementList" :key="element.memberId" :element="element"></ElementCard>
+        <ElementCard v-for="member in members" :key="member.memberId" :member="member"></ElementCard>
         <div class="py-14"></div>
       </scroll-area>
       <div class="border-t flex h-12 w-full py-2 px-1 items-center">

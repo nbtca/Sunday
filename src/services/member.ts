@@ -20,6 +20,14 @@ const MemberService = {
     const res = await Axios("/member", null, "get")
     return res as Member
   },
+  async getByPage(offset: number, limit: number) {
+    const res = await Axios("/members", null, "get")
+    return res as Member[]
+  },
+  async update(member:Member){
+    const res = await Axios("/member", member, "put")
+    return res as Member
+  }
 }
 
 export default MemberService

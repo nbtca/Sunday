@@ -167,7 +167,7 @@ const judgeSubmit = async (event: Event) => {
       },
       {
         key: "维修描述",
-        value: event.getPreviousLog()?.description || "",
+        value: getLastLog(event)?.description || "",
       },
       {
         key: "提交时间",
@@ -175,7 +175,7 @@ const judgeSubmit = async (event: Event) => {
       },
     ],
     acceptAction: () => {
-      return EventService.accept(event.eventId)
+      return EventService.close(event.eventId)
     },
     declineAction: () => {
       return EventService.rejectCommit(event.eventId)

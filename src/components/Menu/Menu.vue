@@ -121,7 +121,7 @@
               confirmBeforeInput
               v-model:content="newAccountInfo.phone"
             ></input-base>
-            <input-base subject="QQ" :passValue="accountInfo.qq" confirmBeforeInput v-model:content="newAccountInfo.rqq"></input-base>
+            <input-base subject="QQ" :passValue="accountInfo.qq" confirmBeforeInput v-model:content="newAccountInfo.qq"></input-base>
           </input-section>
           <input-section subject="" class="mt-4">
             <button type="submit" class="materialBtn btnPrimaryReverse shadow">确定</button>
@@ -144,17 +144,28 @@ import { TransitionRoot } from "@headlessui/vue"
 import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue"
 import InputSection from "@/components/Input/InputSection.vue"
 import InputBase from "@/components/Input/InputBase.vue"
-import logOut from "@/composables/LogOut.ts"
+import logOut from "@/composables/LogOut"
 import { useRoute, type RouteRecordRaw } from "vue-router"
 import MemberService from "@/services/member"
 import type Member from "@/models/member"
 
 const isOpen = ref(false)
-const alias = ref(localStorage.getItem("alias"))
-// TODO change null to place holder
-const avatar = ref(localStorage.getItem("avatar") || "")
-const role = ref(localStorage.getItem("role"))
-const memberId = ref(localStorage.getItem("memberId") || "")
+
+// TODO use global state to store personal info
+const alias = ref()
+const avatar = ref()
+const role = ref()
+const memberId = ref()
+
+const setMenuInfo = () => {
+  alias.value = localStorage.getItem("alias")
+  // TODO change null to place holder
+  avatar.value = localStorage.getItem("avatar") || ""
+  role.value = localStorage.getItem("role")
+  memberId.value = localStorage.getItem("memberId") || ""
+}
+
+setMenuInfo()
 
 const newAccountInfo = ref({
   alias: "",
@@ -181,7 +192,6 @@ const menuList = computed(() => {
     }
   })
 })
-console.log(menuList.value)
 
 const route = useRoute()
 
@@ -212,7 +222,7 @@ const toEvent = () => {
 }
 
 const accountInfo: Ref<Member> = ref({})
-const setAccountInfo = () => {
+const setAccountInfo = async () => {
   return MemberService.get()
     .then(res => {
       localStorage.setItem("alias", res.alias || "")
@@ -220,6 +230,7 @@ const setAccountInfo = () => {
       localStorage.setItem("role", res.role || "")
       localStorage.setItem("memberId", res.memberId || "")
       accountInfo.value = res
+      setMenuInfo()
     })
     .catch(err => {
       // TODO handel
@@ -240,7 +251,7 @@ const accountSetting = () => {
       rounded: true,
       acceptAction: () => {
         return () => {
-          return Element.get()
+          return MemberService.get()
         }
       },
     })
@@ -266,9 +277,8 @@ const updateAccount = () => {
     bottomDialog.value.cancel()
     return
   }
-  // TODO change api here
-  Element.update(newAccountInfo.value).then(() => {
-    setAccountInfo()
+  MemberService.update(newAccountInfo.value).then(async res => {
+    await setAccountInfo()
     bottomDialog.value.cancel()
   })
 }
