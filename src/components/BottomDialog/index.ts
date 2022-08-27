@@ -7,7 +7,6 @@ const BottomDialog = (config: BottomDialogConfig) => {
   render(divVNode, document.body)
   const div = divVNode.el
 
-  // config.parentNode = div
   let c = Object.assign(config, {
     parentNode: div,
   })

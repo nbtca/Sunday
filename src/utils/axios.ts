@@ -10,7 +10,6 @@ axios.defaults.timeout = 10000
 axios.interceptors.request.use(
   config => {
     const token = localStorage.getItem("token")
-    // config.headers.authorization = "bearer " + token
     config.headers.authorization = token
     return config
   },
@@ -21,12 +20,6 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   response => {
-    // if (response.data.resultCode == 12) {
-    //   logOut()
-    //   Notify("warning", "登入过期，请重新登入")
-    // } else if (response.data.resultCode != 0) {
-    //   // Notify("warning", response.data.resultMsg)
-    // }
     return response
   },
   error => {

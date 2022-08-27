@@ -13,9 +13,6 @@ const setMembers = () => {
   MemberService.getByPage(0, 0).then(res => {
     members.value = res
   })
-  // Element.get().then(res => {
-  //   members.value = res.data
-  // })
 }
 setMembers()
 

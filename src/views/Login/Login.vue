@@ -67,7 +67,6 @@ const login = async () => {
           router.push("/activate")
           router.push("/activate")
         } else {
-          // window.history.back(-1);
           router.push("/Events")
         }
       })
@@ -75,35 +74,6 @@ const login = async () => {
         // TODO code 422 id or password is wrong
         console.log("fail")
       })
-    // await Element.login({
-    //   id: account.id,
-    //   password: hashedPassword,
-    // })
-    //   .then(res => {
-    //     console.log(res)
-    //     const resultCode = res.resultCode
-    //     if (resultCode === 0) {
-    //       localStorage.setItem("access_token", res.data.token)
-    //       localStorage.setItem("alias", res.data.alias)
-    //       localStorage.setItem("avatar", res.data.avatar || avatarHolder)
-    //       localStorage.setItem("user_role", res.data.role)
-    //       localStorage.setItem("rid", res.data.rid)
-    //       if (res.data.role == "notActivated") {
-    //         router.push("/activate")
-    //         router.push("/activate")
-    //       } else {
-    //         // window.history.back(-1);
-    //         router.push("/Events")
-    //       }
-    //     } else if (resultCode === 1010) {
-    //       isIDValid.value = "账号不存在"
-    //     } else if (resultCode === 1011) {
-    //       isPasswordValid.value = "密码错误"
-    //     }
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error.res)
-    //   })
   }
 }
 </script>

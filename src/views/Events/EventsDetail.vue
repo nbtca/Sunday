@@ -95,8 +95,6 @@ const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关�
 const contactPreference = ref(["QQ", "微信", "电话"])
 
 const detail = ref<Event>()
-// const event = await EventService.getMemberEvent(eventId.value)
-// const detail = ref()
 const setDetail = async () => {
   eventId.value = route.params.eventId as string
   EventService.getMemberEvent(eventId.value).then(res => {
@@ -109,7 +107,6 @@ watch(route, setDetail)
 const BottomDialog = inject("BottomDialog")
 
 const rejectEvent = async (event: Event) => {
-  // let previousRepairDescription = await getPerviousDescription(eventId.value)
   BottomDialog({
     subject: "审核提交",
     acceptActionName: "退回",

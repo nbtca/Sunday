@@ -24,12 +24,6 @@ interface Props {
 }
 const props = defineProps<Props>()
 
-// let formListIds!: Object
-// if (props.formList) {
-//   formListIds = props.formList.reduce((accumulator, value) => {
-//     return { ...accumulator, [value.id]: "" }
-//   }, {})
-// }
 const getFormInput = ref(new Object())
 
 const open = ref(false)
