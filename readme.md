@@ -1,6 +1,22 @@
-<div align="center">
-      <img src="https://clas-bucket.oss-cn-hangzhou.aliyuncs.com/uPic/logo.png" alt="license" style="width:300px">  
-</div>
-<h1 align="center">Sunday</h1>
+# Sunday
+> Today is Sunday, I would like to relex.
 
->             Today is Sunday, I would like to rest.
+## 简介
++ 使用 vue3 / typescript / windicss 搭建的维修服务管理前端
++ 相关项目
+   + [Saturday](https://github.com/nbtca/Saturday) (项目后端)
+   + [Hawaii](https://github.com/nbtca/Hawaii) (维修小程序)
+
+## 如何运行
+1. 安装 `nodejs`
+2. 安装项目依赖
+
+   在项目根目录下运行
+   ``` sh
+   npm install
+   ```
+3. 启动服务
+   在项目根目录下运行
+   ``` sh
+   npm run dev
+   ```

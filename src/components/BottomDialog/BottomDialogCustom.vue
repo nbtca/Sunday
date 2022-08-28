@@ -1,73 +1,48 @@
+<script lang="ts"></script>
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
+import { onMounted, ref, watch } from "vue"
 import { TransitionRoot, TransitionChild } from "@headlessui/vue"
 import { isFormValid } from "@/utils/isFormValid"
 import BottomDialogInfo from "@/components/BottomDialog/BottomDialogInfo.vue"
 import InputBase from "../Input/InputBase.vue"
 import InputToConfirm from "../Input/InputToConfirm.vue"
-type formItem = {
-    name: string
-    id:string
-    required:boolean
-    subject:string
-    type:string
-    placeholder:string
-    maxLength:number
-    hint:string
-    rules:string[]
-    val:string
+import type { Content, FormItem } from "./types"
+
+interface Props {
+  parentNode: Element
+  subject: string
+  description?: String
+  content?: Array<Content>
+  formList?: Array<FormItem>
+  confirmMessage?: string // 输入来确认
+  acceptActionName?: string
+  acceptAction: Function
+  declineActionName?: string
+  declineAction?: Function
+  btnClass?: string
+  rounded?: boolean
 }
-const props = defineProps({
-  parentNode: {
-    type: Object,
-    default() {
-        return {}
-    }
-  },
-  subject: {
-    type: String,
-    default: "主题",
-  },
-  description: String,
-  content: Array, // info列表内容
-  formList: { type: Array<formItem>, default: () => [] },
-  confirmMessage: {
-    type: String,
-    default: "",
-  }, // 输入来确认
-  acceptActionName: {
-    type: String,
-    default: "确认",
-  },
-  acceptAction: Function,
-  declineActionName: {
-    type: String,
-    default: "取消",
-  },
-  declineAction: Function,
-  btnClass: {
-    type: String,
-    default: "",
-  },
-  rounded: {
-    type: Boolean,
-    default: false,
-  }, // 上部圆角
-})
+const props = defineProps<Props>()
+
+const getFormInput = ref(new Object())
 
 const open = ref(false)
+
 onMounted(() => {
   open.value = true
 })
 
-const getFormInput = ref({})
 const message = ref("")
 const isConfirmInputValid = ref(false)
-const performAction = (action:any) => {
+
+const performAction = (action: any) => {
   const formInput = isFormValid(getFormInput.value)
-  if ((isConfirmInputValid.value !== false || !props.confirmMessage) && (formInput != false || props.formList == null)) {
+  console.log(getFormInput.value)
+  console.log(formInput)
+  // confirm input is valid when confirmMessage is required and form input is valid
+  if ((isConfirmInputValid.value == true || props.confirmMessage != "") && (formInput != false || props.formList == null)) {
     message.value = "处理中..."
-    action(formInput).then((res:any) => {
+    action(formInput).then((res: any) => {
       if (res.resultCode == 0) {
         message.value = "成功!"
       } else {
@@ -78,11 +53,12 @@ const performAction = (action:any) => {
       }, 1000)
     })
   } else {
+    console.log("unable")
     //TODO focus on input
   }
 }
 
-const destroySelf = (e:any) => {
+const destroySelf = (e: any) => {
   open.value = false
   const closeEvent = new CustomEvent("close", { detail: { event: e } })
   props.parentNode.dispatchEvent(closeEvent)
@@ -129,7 +105,7 @@ const destroySelf = (e:any) => {
           <div class="flex flex-col items-center">
             <bottom-dialog-info v-if="content != []" :content="content"></bottom-dialog-info>
             <input-to-confirm
-              v-if="confirmMessage"
+              v-if="confirmMessage && confirmMessage != ''"
               v-model:content="isConfirmInputValid"
               :confirmMessage="confirmMessage"
               class="mt-2"
@@ -142,10 +118,10 @@ const destroySelf = (e:any) => {
                   :required="item.required"
                   :type="item.type"
                   :placeholder="item.placeholder"
-                  :maxLength="item.maxLength"
+                  :max-length="item.maxLength"
                   :hint="item.hint"
                   :rules="item.rules"
-                  :val="item.val"
+                  :pass-value="item.val"
                   v-model:content="getFormInput[item.id]"
                 ></input-base>
               </div>
@@ -155,7 +131,7 @@ const destroySelf = (e:any) => {
             {{ message }}
             <div v-if="message == ''" class="" :class="[declineAction ? 'flex justify-around w-[90vw]' : '']">
               <button v-if="declineAction" @click="performAction(declineAction)" class="materialBtn mx-2 btnWarningReverse">
-                {{ declineActionName }}
+                {{ declineActionName || "取消" }}
               </button>
               <button
                 @click="performAction(acceptAction)"
@@ -166,7 +142,7 @@ const destroySelf = (e:any) => {
                   btnClass,
                 ]"
               >
-                {{ acceptActionName }}
+                {{ acceptActionName || "确认" }}
               </button>
             </div>
           </div>
@@ -217,7 +193,9 @@ const destroySelf = (e:any) => {
               </div>
               <div class="w-full bg-transparent border border-t border-gray-900/10 px-6"></div>
               <div class="grid gap-y-3 pt-3">
-                <button @click="performAction(acceptAction)" class="materialBtn btnPositiveReverse">{{ acceptActionName }}</button>
+                <button @click="performAction(acceptAction)" class="materialBtn btnPositiveReverse">
+                  {{ acceptActionName || "确认" }}
+                </button>
                 <!-- <button class="materialBtn btnPositiveReverse">123</button> -->
               </div>
               <div

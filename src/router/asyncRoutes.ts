@@ -9,28 +9,28 @@ const asyncRoutes = [
         name: "Events",
         component: () => import("@/views/Events/Events.vue"),
         meta: {
-          menuIcon: "true",
-          roles: ["admin", "element"],
+          menuIcon: true,
+          roles: ["admin", "member"],
           title: "维修事件",
         },
         children: [
           {
-            path: ":eid",
+            path: ":eventId",
             name: "EventsDetail",
             component: () => import("@/views/Events/EventsDetail.vue"),
             meta: {
               title: "事件详情",
-              roles: ["admin", "element"],
+              roles: ["admin", "member"],
             },
           },
         ],
       },
       {
-        path: "/ElementManage",
-        name: "ElementManage",
-        component: () => import("@/views/ElementManage/ElementManage.vue"),
+        path: "/MemberManage",
+        name: "MemberManage",
+        component: () => import("@/views/MemberManage/MemberManage.vue"),
         meta: {
-          menuIcon: "true",
+          menuIcon: true,
           roles: ["admin"],
           title: "成员管理",
         },
@@ -40,7 +40,7 @@ const asyncRoutes = [
         name: "design",
         component: () => import("@/views/Design/Design.vue"),
         meta: {
-          menuIcon: "true",
+          menuIcon: true,
           roles: ["admin"],
           title: "设计",
         },

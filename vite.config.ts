@@ -4,7 +4,9 @@ import WindiCSS from "vite-plugin-windicss"
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), WindiCSS()],
+  plugins: [vue({
+    reactivityTransform: true
+  }), WindiCSS()],
   resolve: {
     alias: {
       "@": "/src",
@@ -14,7 +16,8 @@ export default defineConfig({
     host: "0.0.0.0",
     proxy: {
       "/api": {
-        target: "https://api.vingilote.icu/",
+        // target: "https://api.vingilote.icu/",
+        target: "http://localhost:8080",
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, ""),
       },

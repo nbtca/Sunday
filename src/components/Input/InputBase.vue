@@ -46,7 +46,7 @@
           center ? 'text-center' : '',
           disabled ? ' bg-opacity-0 border-gray-400/60 shadow-none cursor-default pointer-events-none' : 'border-gray-400/10',
         ]"
-        style="width: 100%;"
+        style="width: 100%"
         :required="required"
         :placeholder="placeholder || '讲三句话...热烈地竹霍...衷心的感谢...办成功...'"
         v-model.lazy="input"
@@ -74,73 +74,66 @@
 </template>
 
 <script setup lang="ts">
-// TODO add length limit
 // TODO add icon "show" when type is password
 
-import { onMounted, computed, ref, toRefs, watch } from "vue"
+import { onMounted, computed, ref, toRefs, watch, type Ref } from "vue"
 
-const props = defineProps({
-  type: {
-    type: String,
-    default: "text",
-  },
-  subject: String,
-  required: {
-    type: Boolean,
-    default: false,
-  },
-  center: {
-    type: Boolean,
-    default: false,
-  },
-  hint: {
-    type: String,
-    default: "",
-  },
-  confirmBeforeInput: {
-    type: Boolean,
-    default: false,
-  },
-  rules: {
-    type: Array,
-    default: () => [],
-  },
-  maxLength: {
-    type: Number,
-    default: null,
-  },
-  passWarning: {
-    type: String,
-    default: "",
-  },
-  passValue: {
-    type: String,
-    default: "",
-  },
-  content: String | Boolean,
-  placeholder: String,
-})
-const { passValue, passWarning, rules } = toRefs(props)
+interface Props {
+  type?: string
+  subject?: string
+  required?: boolean
+  center?: boolean
+  hint?: string
+  confirmBeforeInput?: boolean
+  rules?: any[]
+  maxLength?: string
+  passWarning?: string
+  passValue?: string
+  content?: string | boolean | object
+  placeholder?: string
+}
 
-const input = ref("")
-const emit = defineEmits(["update:content"])
+const props = defineProps<Props>()
+
+const getProps = () => {
+  let { passValue, passWarning, rules } = toRefs(props)
+  passValue = passValue as Ref<string>
+  passWarning = passWarning as Ref<string>
+  rules = rules as Ref<any[]>
+  return {
+    passValue,
+    passWarning,
+    rules,
+  }
+}
+const { passValue, passWarning, rules } = getProps()
+
+const input = ref()
+const emit = defineEmits<{
+  (event: "update:content", value: string | boolean): void
+}>()
+
 const emitInput = () => {
   emit("update:content", isValid.value ? input.value : false)
 }
 watch(passValue, () => {
-  input.value = passValue.value
+  if (passValue != undefined) {
+    input.value = passValue.value
+  }
 })
 
-const warning = ref("")
+const warning = ref()
 watch(passWarning, () => {
-  warning.value = passWarning.value
+  if (passWarning != undefined) {
+    warning.value = passWarning.value
+  }
   emitInput()
 })
 
 watch(input, () => {
   if (!props.required && input.value == "") {
     warning.value = ""
-  } else {
+  } else if (rules.value != undefined) {
     warning.value = ""
     for (const item of rules.value) {
       if (!item.rule.test(input.value)) {
@@ -157,14 +150,16 @@ watch(input, () => {
 // required: match rule
 // passing warning is empty
 const isValid = computed(() => {
-  return warning.value == "" && (input.value != "" || !props.required) ? true : false
+  return (warning.value == "" || warning.value == undefined) && (input.value != "" || !props.required) ? true : false
 })
 
 const disabled = ref(false)
 onMounted(() => {
   warning.value = passWarning.value
   input.value = passValue.value
-  disabled.value = props.confirmBeforeInput
+  if (props.confirmBeforeInput) {
+    disabled.value = true
+  }
   emitInput()
 })
 </script>

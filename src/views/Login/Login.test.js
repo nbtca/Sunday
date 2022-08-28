@@ -11,8 +11,6 @@ describe("first test", () => {
   it("should input id", async () => {
     const wrapper = mount(Login)
 
-    // await wrapper.find("InputBase").setValue("123123")
-    // await wrapper.find("InputBase").trigger("blur")
     expect(wrapper.find("from").text()).toContain("格式错误")
   })
 

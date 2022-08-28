@@ -29,16 +29,16 @@
         <div class="hidden sm:block">
           <button
             v-for="item in filteredList"
-            :key="item.eid"
+            :key="item.eventId"
             class="flex flex-row flex-nowrap cell justify-between"
-            :class="[item.eid == selectedItem ? 'bg-gray-400/30 cursor-default shadow' : '']"
-            @click="showDetail(item.eid)"
+            :class="[item.eventId == selectedItem ? 'bg-gray-400/30 cursor-default shadow' : '']"
+            @click="showDetail(item.eventId)"
           >
             <div class="text-left w-2/3 truncate">
-              {{ item.user_description }}
+              {{ item.problem }}
             </div>
             <div>
-              {{ statusToText[item.status + 1] }}
+              {{ item.status }}
             </div>
           </button>
         </div>
@@ -46,49 +46,59 @@
         <div class="sm:hidden flex flex-col-reverse">
           <event-card
             v-for="item in filteredList"
-            :key="item.eid"
-            :class="[item.rid == rid ? 'h-30' : '']"
-            :bannerMessage="item.status == 2 && eventsMatchingByRID ? '已提交' : ''"
+            :key="item.eventId"
+            :class="isCurrentMember(item, memberId) ? 'h-30' : ''"
+            :bannerMessage="item.status == 'committed' && eventsMatchingByRID ? '已提交' : ''"
           >
             <template #body>
-              {{ item.user_description }}
+              {{ item.problem }}
             </template>
             <template #action>
-              <button v-if="item.status == 0" @click="acceptEvent(item)" class="btnxs btnPrimary">接受</button>
+              <button v-if="item.status == 'open'" @click="acceptEvent(item)" class="btnxs btnPrimary">接受</button>
               <div class="relative">
                 <div>
-                  <button v-if="item.status == 1 && item.rid == rid" @click="submitEvent(item)" class="btnxs btnActiveReverse">提交</button>
                   <button
-                    v-if="item.status == 2 && item.rid == rid && eventsMatchingByRID"
-                    @click="alterSubmit(item)"
+                    v-if="item.status == 'accepted' && isCurrentMember(item, memberId)"
+                    @click="commitEvent(item)"
+                    class="btnxs btnActiveReverse"
+                  >
+                    提交
+                  </button>
+                  <button
+                    v-if="item.status == 'committed' && isCurrentMember(item, memberId) && eventsMatchingByRID"
+                    @click="alterCommit(item)"
                     class="btnxs btnWarningReverse"
                   >
                     修改
                   </button>
                 </div>
               </div>
-              <button v-if="item.status == 2 && role == 'admin' && checkOnly" @click="judgeSubmit(item)" class="btnxs btnWarningReverse">
+              <button
+                v-if="item.status == 'committed' && role == 'admin' && checkOnly"
+                @click="judgeSubmit(item)"
+                class="btnxs btnWarningReverse"
+              >
                 审核
               </button>
-              <div v-if="item.status == -1 || item.status == 3">
-                {{ statusToText[item.status + 1] }}
+              <div v-if="item.status == 'cancelled' || item.status == 'closed'">
+                {{ item.status }}
               </div>
             </template>
             <template #info>
-              <div v-if="item.rid == rid">
+              <div v-if="isCurrentMember(item, memberId)">
                 <div>
-                  QQ:<em>{{ item.eqq || "无" }}</em>
+                  QQ:<em>{{ item.qq || "无" }}</em>
                 </div>
                 <div>
-                  电话:<em>{{ item.ephone || "无" }}</em>
+                  电话:<em>{{ item.phone || "无" }}</em>
                 </div>
               </div>
             </template>
             <template #footer>
               <div class="w-17 truncate">{{ item.model || "无型号" }}</div>
-              <span class="text-xs ml-2 textDescription">{{ item.gmt_create }}</span>
+              <span class="text-xs ml-2 textDescription">{{ item.gmtCreate }}</span>
               <button
-                v-if="(item.status == 1 || item.status == 2) && item.rid == rid && eventsMatchingByRID"
+                v-if="item.status == 'accepted' && isCurrentMember(item, memberId) && eventsMatchingByRID"
                 @click="dropEvent(item)"
                 class="text-xs font-medium text-warning w-8 p-[1px] rounded ml-2 mb-0.5 border border-warning hover:(bg-warning text-warningContent)"
               >
@@ -109,17 +119,18 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref } from "vue"
 import router from "@/router"
-import { setEvents, events, acceptEvent, submitEvent, alterSubmit, dropEvent, judgeSubmit } from "./EventActions"
+import { setEvents, events, acceptEvent, commitEvent, alterCommit, dropEvent, judgeSubmit } from "./EventActions"
 import { TabGroup, TabList, Tab } from "@headlessui/vue"
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue"
 import EventCard from "../../components/EventCard/EventCard.vue"
 import { useRoute } from "vue-router"
+import { isCurrentMember } from "@/utils/event"
 
-const rid = ref(localStorage.getItem("rid"))
-const role = ref(localStorage.getItem("user_role"))
+const memberId = ref(localStorage.getItem("memberId") || "")
+const role = ref(localStorage.getItem("role"))
 
 const statusToText = ref(["已取消", "待接受", "已接受", "待审核", "已关闭"])
 
@@ -130,7 +141,7 @@ const checkOnly = ref(false)
 const eventsMatchingByRID = ref(false)
 const searchQuery = ref("")
 
-const filterHandler = e => {
+const filterHandler = (e: string) => {
   checkOnly.value = false
   eventsMatchingByRID.value = false
   if (e == "全部") {
@@ -142,14 +153,19 @@ const filterHandler = e => {
   }
 }
 const filteredList = computed(() => {
-  return events.value.filter(event => {
-    return (
-      ((!checkOnly.value && eventsMatchingByRID.value && event.rid === rid.value) ||
-        (!checkOnly.value && !eventsMatchingByRID.value && event.status == 0) ||
-        (checkOnly.value && event.status == 2)) &&
-      event.user_description.indexOf(searchQuery.value) >= 0 &&
-      event.status != 3
-    )
+  const menuFilter = events.value.filter(event => {
+    if (checkOnly.value === true) {
+      // for admin to validate commits
+      return event.status == "committed"
+    } else if (eventsMatchingByRID.value === true) {
+      return isCurrentMember(event, memberId.value) && event.status != "closed"
+    } else {
+      return event.status == "open"
+    }
+  })
+  return menuFilter.filter(event => {
+    // TODO new API for searching events
+    return event.problem.indexOf(searchQuery.value) >= 0
   })
 })
 
@@ -162,8 +178,7 @@ const selectedItem = computed(() => {
   return pagePath
 })
 
-// detail handler
-const showDetail = e => {
+const showDetail = (e: string) => {
   router.push("/Events/" + e)
 }
 

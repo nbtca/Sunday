@@ -12,14 +12,11 @@
               <span v-if="role == 'admin'" class="bg-green-100 h-5 text-green-800 badge"> 管理员 </span>
             </div>
             <div class="text-left leading-tight textDescription">
-              {{ rid }}
+              {{ memberId }}
             </div>
           </div>
         </div>
         <div class="logo hidden sm:block" @click="toEvent">sunday</div>
-        <!-- <div v-if="menuList.length < 2" @click="accountSetting" class="rounded-full h-11 w-11 overflow-hidden border block">
-          <img class="" :src="avatar" alt="" />
-        </div> -->
         <MenuIcon v-if="menuList.length > 1" class="bg-bg-gray-900 h-9 w-9 sm:(hidden)" @click="isOpen = !isOpen"></MenuIcon>
       </div>
       <div class="hidden sm:(block)">
@@ -61,27 +58,6 @@
               </button>
             </div>
           </div>
-          <!-- <div
-            class="rounded-xl flex backdrop-filter backdrop-blur h-13 shadow my-1.5 p-1 items-center justify-between border border-gray-400/50"
-          >
-            <div class="flex items-center">
-              <div class="rounded-lg h-11 w-11 overflow-hidden border block">
-                <img class="" :src="avatar" alt="" />
-              </div>
-              <div class="ml-2">
-                <div class="flex items-center">
-                  <div class="textSubHeading">{{ alias }}</div>
-                  <span v-if="role == 'admin'" class="bg-green-100 h-5 text-green-800 badge"> 管理员 </span>
-                </div>
-                <div class="text-left leading-tight textDescription">
-                  {{ rid }}
-                </div>
-              </div>
-            </div>
-            <div class="mr-1">
-              <button @click="accountSetting" class="btnsm btnNeutralReverse">设置</button>
-            </div>
-          </div> -->
         </div>
       </TransitionRoot>
     </div>
@@ -96,7 +72,7 @@
             <span v-if="role == 'admin'" class="bg-green-100 h-5 text-green-800 badge"> 管理员 </span>
           </div>
           <div class="text-left textDescription">
-            {{ rid }}
+            {{ memberId }}
           </div>
         </div>
       </div>
@@ -117,7 +93,7 @@
           <div class="flex items-center">
             <div class="relative flex">
               <div class="rounded-full border border-gray-400/30 h-20 w-20 overflow-hidden">
-                <img class="object-cover" :src="accountInfo.ravatar" alt="" />
+                <img class="object-cover" :src="accountInfo.avatar" alt="" />
               </div>
               <label for="file-upload" class="absolute relative textLink text-xs self-end cursor-pointer rounded-xl">
                 <span>修改头像</span>
@@ -129,23 +105,23 @@
           <div class="flex flex-col items-start">
             <div class="flex text-base font-medium">
               <div class="mr-2">{{ accountInfo.name }}</div>
-              <div>{{ accountInfo.class }}</div>
+              <div>{{ accountInfo.section }}</div>
             </div>
-            <div class="leading-tight textDescription">{{ accountInfo.rid }}</div>
+            <div class="leading-tight textDescription">{{ accountInfo.memberId }}</div>
           </div>
         </div>
-        <form @submit="updateAccount" class="relative">
+        <form @submit.prevent="updateAccount" class="relative">
           <input-section subject="昵称">
-            <input-base subject="" :passValue="accountInfo.ralias" confirmBeforeInput v-model:content="newAccountInfo.alias"></input-base>
+            <input-base subject="" :passValue="accountInfo.alias" confirmBeforeInput v-model:content="newAccountInfo.alias"></input-base>
           </input-section>
           <input-section subject="联系方式">
             <input-base
               subject="手机"
-              :passValue="accountInfo.rphone"
+              :passValue="accountInfo.phone"
               confirmBeforeInput
-              v-model:content="newAccountInfo.rphone"
+              v-model:content="newAccountInfo.phone"
             ></input-base>
-            <input-base subject="QQ" :passValue="accountInfo.rqq" confirmBeforeInput v-model:content="newAccountInfo.rqq"></input-base>
+            <input-base subject="QQ" :passValue="accountInfo.qq" confirmBeforeInput v-model:content="newAccountInfo.qq"></input-base>
           </input-section>
           <input-section subject="" class="mt-4">
             <button type="submit" class="materialBtn btnPrimaryReverse shadow">确定</button>
@@ -160,7 +136,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue"
+import { ref, computed, watch, type Ref } from "vue"
 import { Element } from "@/api/api"
 import router from "@/router"
 import { MenuIcon, LogoutIcon, CogIcon } from "@heroicons/vue/outline"
@@ -168,23 +144,51 @@ import { TransitionRoot } from "@headlessui/vue"
 import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue"
 import InputSection from "@/components/Input/InputSection.vue"
 import InputBase from "@/components/Input/InputBase.vue"
-import logOut from "@/composables/LogOut.js"
-import { useRoute } from "vue-router"
+import logOut from "@/composables/LogOut"
+import { useRoute, type RouteRecordRaw } from "vue-router"
+import MemberService from "@/services/member"
+import type Member from "@/models/member"
 
 const isOpen = ref(false)
-const alias = ref(localStorage.getItem("alias"))
-const avatar = ref(localStorage.getItem("avatar"))
-const role = ref(localStorage.getItem("user_role"))
-const rid = ref(localStorage.getItem("rid"))
 
-const newAccountInfo = ref({})
+// TODO use global state to store personal info
+const alias = ref()
+const avatar = ref()
+const role = ref()
+const memberId = ref()
+
+const setMenuInfo = () => {
+  alias.value = localStorage.getItem("alias")
+  // TODO change null to place holder
+  avatar.value = localStorage.getItem("avatar") || ""
+  role.value = localStorage.getItem("role")
+  memberId.value = localStorage.getItem("memberId") || ""
+}
+
+setMenuInfo()
+
+const newAccountInfo = ref({
+  alias: "",
+  phone: "",
+  qq: "",
+})
+
+// TODO what if roles is null ????
+interface RouterMeta {
+  menuIcon: boolean
+  roles: string[]
+  title: string
+}
 
 const menuList = computed(() => {
-  return router.options.routes[0].children.filter(item => {
-    for (let i of item.meta.roles) {
-      if (i == role.value) {
-        return item.meta.menuIcon != null
-      }
+  const children = router.options.routes[0].children as RouteRecordRaw[]
+  return children.filter(item => {
+    if (item.meta == null) {
+      return false
+    }
+    const meta = item.meta as unknown as RouterMeta
+    for (const r of meta.roles) {
+      return r == role.value && meta.menuIcon != null
     }
   })
 })
@@ -192,11 +196,14 @@ const menuList = computed(() => {
 const route = useRoute()
 
 const selectedItem = computed(() => {
-  let fullPath = route.path
-  let tailIndex = fullPath.indexOf("/", 1)
+  const fullPath = route.path
+  const tailIndex = fullPath.indexOf("/", 1)
+  const pagePath = tailIndex == -1 ? fullPath : fullPath.substring(0, tailIndex)
+  if (menuList.value == null) {
+    return null
+  }
   let ans
-  let pagePath = tailIndex == -1 ? fullPath : fullPath.substring(0, tailIndex)
-  for (let item of menuList.value) {
+  for (const item of menuList.value) {
     if (item.path == pagePath) {
       ans = item
     }
@@ -204,34 +211,37 @@ const selectedItem = computed(() => {
   return ans
 })
 
-const toLink = item => {
+const toLink = (item: RouteRecordRaw) => {
   if (item != selectedItem.value) {
     router.push(item.path)
   }
 }
 
 const toEvent = () => {
-  this.router.push("/Events")
-  event.value = false
+  router.push("/Events")
 }
 
-const accountInfo = ref({})
-const setAccountInfo = () => {
-  return Element.get(rid.value).then(res => {
-    accountInfo.value = res.data
-    localStorage.setItem("avatar", res.data.ravatar)
-    localStorage.setItem("alias", res.data.ralias)
-    localStorage.setItem("user_role", res.data.role)
-    avatar.value = res.data.ravatar
-    alias.value = res.data.ralias
-    role.value = res.data.role
-  })
+const accountInfo: Ref<Member> = ref({})
+const setAccountInfo = async () => {
+  return MemberService.get()
+    .then(res => {
+      localStorage.setItem("alias", res.alias || "")
+      localStorage.setItem("avatar", res.avatar || "")
+      localStorage.setItem("role", res.role || "")
+      localStorage.setItem("memberId", res.memberId || "")
+      accountInfo.value = res
+      setMenuInfo()
+    })
+    .catch(err => {
+      // TODO handel
+      console.log(err)
+    })
 }
 
 watch(route, setAccountInfo)
 
 const loading = ref(false)
-const bottomDialog = ref(null)
+const bottomDialog = ref()
 const accountSetting = () => {
   loading.value = true
   setAccountInfo().then(() => {
@@ -241,31 +251,34 @@ const accountSetting = () => {
       rounded: true,
       acceptAction: () => {
         return () => {
-          return Element.get()
+          return MemberService.get()
         }
       },
     })
   })
 }
-const updateAvatar = event => {
-  let file = event.target.files[0]
-  let param = new FormData()
+const updateAvatar = (e: InputEvent) => {
+  const target = e.target as HTMLInputElement
+  const fileList = target.files as FileList
+  const file = fileList[0]
+  const param = new FormData()
   param.append("file", file)
   Element.updateAvatar(param).then(() => {
     setAccountInfo()
   })
 }
+
 const updateAccount = () => {
   if (
-    newAccountInfo.value.alias == accountInfo.value.ralias &&
-    newAccountInfo.value.rqq == accountInfo.value.rqq &&
-    newAccountInfo.value.rphone == accountInfo.value.rphone
+    newAccountInfo.value.alias == accountInfo.value.alias &&
+    newAccountInfo.value.qq == accountInfo.value.qq &&
+    newAccountInfo.value.phone == accountInfo.value.phone
   ) {
     bottomDialog.value.cancel()
     return
   }
-  Element.update(newAccountInfo.value).then(() => {
-    setAccountInfo()
+  MemberService.update(newAccountInfo.value).then(async res => {
+    await setAccountInfo()
     bottomDialog.value.cancel()
   })
 }
