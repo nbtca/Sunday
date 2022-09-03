@@ -28,13 +28,8 @@
             },
           ]"
         />
-        <InputBase
-          required
-          subject="QQ"
-          class="w-full"
-          v-model:content="account.qq"
-          :rules="[{ rule: /[1-9][0-9]{4,14}/, warning: '格式错误' }]"
-        />
+        <InputBase required subject="QQ" class="w-full" v-model:content="account.qq" :rules="qqRule" />
+
         <button class="w-full btn bg-primary text-primaryContent mt-5" type="submit">提交</button>
       </form>
       <button class="w-full btn bg-warning text-primaryContent mt-5" style="width: 17vw; min-width: 300px" @click="logOut">取消</button>
@@ -60,6 +55,7 @@ const account = ref({
   phone: "",
   qq: "",
 })
+const qqRule = ref([{ rule: /[1-9][0-9]{4,14}/, warning: "格式错误" }])
 const reg = computed(() => {
   return new RegExp("^" + account.value.password + "$")
 })

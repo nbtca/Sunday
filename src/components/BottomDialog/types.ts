@@ -1,3 +1,6 @@
+import type { InjectionKey } from "vue"
+import type { InputProps, Rule } from "../Input/types"
+
 type Content = {
   key: string
   value: string
@@ -11,15 +14,15 @@ interface FormItem {
   placeholder?: string
   maxLength?: number
   hint?: string
-  rules?: string[]
-  val?: string
+  rules?: Rule[]
+  value?: string
 }
 
 interface BottomDialogConfig {
   subject?: string
   description?: string
   content?: Content[]
-  formList?: FormItem[]
+  formList?: InputProps[]
   confirmMessage?: string
   acceptActionName?: string
   acceptAction?: (e: any) => Promise<any>
@@ -29,4 +32,9 @@ interface BottomDialogConfig {
   rounded?: true
 }
 
-export type { BottomDialogConfig, Content, FormItem }
+type BottomDialogType = (config: BottomDialogConfig) => Promise<any>
+
+const BottomDialogInjectionKey = Symbol() as InjectionKey<(config: BottomDialogConfig) => Promise<unknown>>
+
+export type { BottomDialogConfig, Content, FormItem, BottomDialogType }
+export { BottomDialogInjectionKey }

@@ -6,6 +6,7 @@ import { UserIcon, UploadIcon, PlusIcon, UserAddIcon } from "@heroicons/vue/outl
 import ElementCard from "./MemberCard.vue"
 import MemberService from "@/services/member"
 import type Member from "@/models/member"
+import { BottomDialogInjectionKey, type BottomDialogType } from "@/components/BottomDialog/types"
 
 const members = ref(Array<Member>())
 const setMembers = () => {
@@ -15,28 +16,28 @@ const setMembers = () => {
 }
 setMembers()
 
-const BottomDialog = inject("BottomDialog")
+const BottomDialog = inject(BottomDialogInjectionKey) as BottomDialogType
 const addElementConfig = {
   subject: "添加成员",
   formList: [
     {
-      subject: "ID",
       id: "memberId",
+      subject: "ID",
       required: true,
       type: "text",
       placeholder: "学号",
-      hint: "(应该是)",
       maxLength: 10,
+      hint: "(应该是)",
       rules: [{ rule: /^\d{10}$/, warning: "格式错误" }],
       value: "",
     },
     {
-      subject: "姓名",
       id: "name",
+      subject: "姓名",
       required: true,
       type: "text",
-      hint: "真名!",
       maxLength: 4,
+      hint: "真名!",
       rules: [{ rule: /^[\u4e00-\u9fa5]{2,4}$/, warning: "格式错误" }],
       value: "",
     },
@@ -54,7 +55,6 @@ const addElementConfig = {
           warning: "格式错误",
         },
       ],
-      value: "",
     },
   ],
   acceptAction: e => {

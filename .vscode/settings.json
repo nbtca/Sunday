@@ -6,5 +6,6 @@
 		"innerlg",
 		"innersm",
 		"sclass"
-	]
+	],
+	"testing.automaticallyOpenPeekView": "never"
 }

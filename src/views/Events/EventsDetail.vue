@@ -86,6 +86,7 @@ import EventService from "@/services/event"
 import { isCurrentMember } from "@/utils/event"
 import type { Event } from "@/models/event"
 import { useAccountStore } from "@/stores/account"
+import { BottomDialogInjectionKey, type BottomDialogType } from "@/components/BottomDialog/types"
 
 const route = useRoute()
 const store = useAccountStore()
@@ -103,8 +104,7 @@ const setDetail = async () => {
 }
 setDetail()
 watch(route, setDetail)
-
-const BottomDialog = inject("BottomDialog")
+const BottomDialog = inject(BottomDialogInjectionKey) as BottomDialogType
 
 const rejectEvent = async (event: Event) => {
   BottomDialog({
@@ -112,11 +112,11 @@ const rejectEvent = async (event: Event) => {
     acceptActionName: "退回",
     rounded: true,
     content: [
-      { 型号: event.model },
-      { 问题描述: event.problem },
-      { 创建时间: event.gmtCreate },
-      { 维修描述: event.getPreviousLog()?.description },
-      { 提交时间: event.getPreviousLog()?.gmtCreate },
+      { key: "型号", value: event.model },
+      { key: "问题描述", value: event.problem },
+      { key: "创建时间", value: event.gmtCreate },
+      { key: "维修描述", value: event.getPreviousLog()?.description || "" },
+      { key: "提交时间", value: event.getPreviousLog()?.gmtCreate || "" },
     ],
     acceptAction: () => {
       return EventService.rejectCommit(event.eventId)
@@ -129,11 +129,11 @@ const closeEvent = async (event: Event) => {
     acceptActionName: "通过",
     rounded: true,
     content: [
-      { 型号: event.model },
-      { 问题描述: event.problem },
-      { 创建时间: event.gmtCreate },
-      { 维修描述: event.getPreviousLog()?.description },
-      { 提交时间: event.getPreviousLog()?.gmtCreate },
+      { key: "型号", value: event.model },
+      { key: "问题描述", value: event.problem },
+      { key: "创建时间", value: event.gmtCreate },
+      { key: "维修描述", value: event.getPreviousLog()?.description || "" },
+      { key: "提交时间", value: event.getPreviousLog()?.gmtCreate || "" },
     ],
     acceptAction: () => {
       return EventService.close(event.eventId)

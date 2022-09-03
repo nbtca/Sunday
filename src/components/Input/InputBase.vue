@@ -77,23 +77,9 @@
 // TODO add icon "show" when type is password
 
 import { onMounted, computed, ref, toRefs, watch, type Ref } from "vue"
+import type { InputProps } from "./types"
 
-interface Props {
-  type?: string
-  subject?: string
-  required?: boolean
-  center?: boolean
-  hint?: string
-  confirmBeforeInput?: boolean
-  rules?: any[]
-  maxLength?: string
-  passWarning?: string
-  passValue?: string
-  content?: string | boolean | object
-  placeholder?: string
-}
-
-const props = defineProps<Props>()
+const props = defineProps<InputProps>()
 
 const getProps = () => {
   let { passValue, passWarning, rules } = toRefs(props)
