@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, inject } from "vue"
-import { Element } from "@/api/api"
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue"
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue"
 import { UserIcon, UploadIcon, PlusIcon, UserAddIcon } from "@heroicons/vue/outline"
@@ -10,7 +9,7 @@ import type Member from "@/models/member"
 
 const members = ref(Array<Member>())
 const setMembers = () => {
-  MemberService.getByPage(0, 0).then(res => {
+  MemberService.getByPage(0, 30).then(res => {
     members.value = res
   })
 }
@@ -43,7 +42,7 @@ const addElementConfig = {
     },
     {
       subject: "班级",
-      id: "class",
+      id: "section",
       required: true,
       type: "text",
       placeholder: "专业+班级",
@@ -59,7 +58,7 @@ const addElementConfig = {
     },
   ],
   acceptAction: e => {
-    return Element.create(e)
+    return MemberService.create(e)
   },
 }
 const addElementByBottomDialog = () => {

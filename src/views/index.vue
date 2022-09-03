@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex flex-col-reverse  sm:(flex-row) overflow-hidden h-screen">
+  <div class="relative flex flex-col-reverse sm:(flex-row) overflow-hidden h-screen">
     <div class="sm:(w-[17vw] mix-w-[17vw] bg-current)">
       <Menu ref="menu"></Menu>
     </div>
@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Menu from "@/components/Menu/Menu.vue"
 import { ref } from "@vue/reactivity"
 const isSafari = ref(false)

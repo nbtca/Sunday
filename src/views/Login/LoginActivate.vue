@@ -4,7 +4,7 @@
       <form @submit.prevent="activate" class="grid gap-y-1 place-items-center" style="width: 17vw; min-width: 300px">
         <div class="text-3xl font-bold mt-12 mb-8 md:mt-18">
           <div>完善个人信息</div>
-          <div class="text-lg textDescription mt-2">{{ memberId }}</div>
+          <div class="text-lg textDescription mt-2">{{ store.account.memberId }}</div>
         </div>
         <InputBase subject="密码" required type="password" class="w-full" v-model:content="account.password" />
         <InputBase
@@ -46,13 +46,19 @@ import { ref, computed } from "vue"
 import md5 from "blueimp-md5"
 import router from "@/router"
 import InputBase from "@/components/Input/InputBase.vue"
-import { isFormValid } from "@/utils/isFormValid.ts"
-import { Element } from "@/api/api"
-import logOut from "@/composables/LogOut.ts"
+import { isFormValid } from "@/utils/isFormValid"
+import logOut from "@/composables/LogOut"
+import MemberService from "@/services/member"
+import { useAccountStore } from "@/stores/account"
 
-const memberId = ref(localStorage.getItem("memberId"))
+const store = useAccountStore()
+
 const account = ref({
   password: "",
+  passwordConfirm: "",
+  alias: "",
+  phone: "",
+  qq: "",
 })
 const reg = computed(() => {
   return new RegExp("^" + account.value.password + "$")
@@ -60,23 +66,26 @@ const reg = computed(() => {
 
 const activate = async () => {
   const formInput = isFormValid(account.value)
-  formInput.password = md5(formInput.password)
-  Element.activate(formInput)
-    .then(() => {
-      return Element.login({
-        id: localStorage.getItem("memberId"),
-        password: account.value.password,
-      })
+  const password = md5(formInput.password)
+  formInput.password = MemberService.active({
+    password: password,
+    alias: formInput.alias,
+    phone: formInput.phone,
+    qq: formInput.qq,
+  }).then(() => {
+    MemberService.createToken({
+      id: store.account.memberId || "",
+      password: password,
+    }).then(res => {
+      store.account = res
+      store.token = res.token
+      if (res.role.includes("inactive")) {
+        router.push("/activate")
+        router.push("/activate")
+      } else {
+        router.push("/Events")
+      }
     })
-    .then(res => {
-      localStorage.setItem("token", res.data.token)
-      localStorage.setItem("alias", res.data.alias)
-      localStorage.setItem("role", res.data.role)
-      localStorage.setItem("memberId", res.data.memberId)
-    })
-    .finally(() => {
-      router.push("/Events")
-      router.push("/Events")
-    })
+  })
 }
 </script>

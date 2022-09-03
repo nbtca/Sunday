@@ -15,7 +15,7 @@ import Notify from "@/components/Notify"
 app.provide("BottomDialog", BottomDialog)
 app.provide("Notify", Notify)
 
-app.use(router)
 app.use(pinia)
+app.use(router)
 
 app.mount("#app")

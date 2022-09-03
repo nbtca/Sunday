@@ -1,15 +1,18 @@
 import axios, { type Method } from "axios"
 import Notify from "@/components/Notify"
 import logOut from "@/composables/LogOut"
+import { useAccountStore } from "@/stores/account"
 
 axios.defaults.baseURL = "api/"
 
 axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8"
 axios.defaults.timeout = 10000
 
+const store = useAccountStore()
+
 axios.interceptors.request.use(
   config => {
-    const token = localStorage.getItem("token")
+    const token = store.token
     config.headers.authorization = token
     return config
   },

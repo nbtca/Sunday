@@ -64,7 +64,7 @@
       <div>
         <button v-if="detail?.status == 'open'" class="bg-primary text-primaryContent w-20 btn" @click="acceptEvent(detail)">接受</button>
       </div>
-        <div v-if="isCurrentMember(detail,memberId) && detail.status == 'accepted'" class="flex flex-col">
+      <div v-if="isCurrentMember(detail, store.account.memberId) && detail.status == 'accepted'" class="flex flex-col">
         <div>
           <button class="bg-warning text-warningContent mx-5 btn" @click="dropEvent(detail)">放弃</button>
           <button class="bg-primary text-primaryContent btn" @click="commitEvent(detail)">提交</button>
@@ -79,17 +79,17 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, inject  } from "vue"
+import { watch, ref, inject, type Ref } from "vue"
 import { useRoute } from "vue-router"
 import { acceptEvent, commitEvent, dropEvent } from "./EventActions"
 import EventService from "@/services/event"
 import { isCurrentMember } from "@/utils/event"
 import type { Event } from "@/models/event"
+import { useAccountStore } from "@/stores/account"
 
 const route = useRoute()
+const store = useAccountStore()
 
-const role = ref(localStorage.getItem("role"))
-const memberId = ref(localStorage.getItem("memberId") || "")
 const eventId = ref(route.params.eventId) as Ref<string>
 const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"])
 const contactPreference = ref(["QQ", "微信", "电话"])
