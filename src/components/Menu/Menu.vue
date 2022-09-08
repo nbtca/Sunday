@@ -4,15 +4,15 @@
       <div class="flex h-15 mb-2 p-2 z-40 justify-between items-center sm:(p-0 m-0) md:(w-full h-24) lg:(p-2)">
         <div class="flex items-center sm:hidden" @click="accountSetting">
           <div class="rounded-full h-11 w-11 overflow-hidden border block">
-            <img class="" :src="avatar" alt="" />
+            <img class="" :src="store.account.avatar" alt="" />
           </div>
           <div class="ml-2">
             <div class="flex items-center">
-              <div class="textSubHeading">{{ alias }}</div>
-              <span v-if="role == 'admin'" class="bg-green-100 h-5 text-green-800 badge"> 管理员 </span>
+              <div class="textSubHeading">{{ store.account.alias }}</div>
+              <span v-if="store.account.role == 'admin'" class="bg-green-100 h-5 text-green-800 badge"> 管理员 </span>
             </div>
             <div class="text-left leading-tight textDescription">
-              {{ memberId }}
+              {{ store.account.memberId }}
             </div>
           </div>
         </div>
@@ -64,15 +64,15 @@
     <div class="flex flex-col mb-4 hidden items-center sm:(flex)">
       <div class="flex flex-col items-center xl:(flex-row mb-4)">
         <div class="rounded-full overflow-hidden hidden border sm:(h-20 w-20 block) md:(h-28 w-28)">
-          <img class="" :src="avatar" alt="" />
+          <img class="" :src="store.account.avatar" alt="" />
         </div>
         <div class="relative xl:(self-end ml-2)">
           <div class="flex justify-center items-center xl:(flex-col items-start)">
-            <div class="textSubHeading">{{ alias }}</div>
-            <span v-if="role == 'admin'" class="bg-green-100 h-5 text-green-800 badge"> 管理员 </span>
+            <div class="textSubHeading">{{ store.account.alias }}</div>
+            <span v-if="store.account.role == 'admin'" class="bg-green-100 h-5 text-green-800 badge"> 管理员 </span>
           </div>
           <div class="text-left textDescription">
-            {{ memberId }}
+            {{ store.account.memberId }}
           </div>
         </div>
       </div>
@@ -93,38 +93,37 @@
           <div class="flex items-center">
             <div class="relative flex">
               <div class="rounded-full border border-gray-400/30 h-20 w-20 overflow-hidden">
-                <img class="object-cover" :src="accountInfo.avatar" alt="" />
+                <img class="object-cover" :src="store.account.avatar" alt="" />
               </div>
               <label for="file-upload" class="absolute relative textLink text-xs self-end cursor-pointer rounded-xl">
                 <span>修改头像</span>
                 <input id="file-upload" name="file-upload" type="file" class="sr-only" accept="image/*" @change="updateAvatar" />
               </label>
-              <!-- <button @click="updateAvatar" class="">修改头像</button> -->
             </div>
           </div>
           <div class="flex flex-col items-start">
             <div class="flex text-base font-medium">
-              <div class="mr-2">{{ accountInfo.name }}</div>
-              <div>{{ accountInfo.section }}</div>
+              <div class="mr-2">{{ store.account.name }}</div>
+              <div>{{ store.account.section }}</div>
             </div>
-            <div class="leading-tight textDescription">{{ accountInfo.memberId }}</div>
+            <div class="leading-tight textDescription">{{ store.account.memberId }}</div>
           </div>
         </div>
-        <form @submit.prevent="updateAccount" class="relative">
+        <form @submit.prevent="" class="relative">
           <input-section subject="昵称">
-            <input-base subject="" :passValue="accountInfo.alias" confirmBeforeInput v-model:content="newAccountInfo.alias"></input-base>
+            <input-base subject="" :passValue="store.account.alias" confirmBeforeInput v-model:content="newAccountInfo.alias"></input-base>
           </input-section>
           <input-section subject="联系方式">
             <input-base
               subject="手机"
-              :passValue="accountInfo.phone"
+              :passValue="store.account.phone"
               confirmBeforeInput
               v-model:content="newAccountInfo.phone"
             ></input-base>
-            <input-base subject="QQ" :passValue="accountInfo.qq" confirmBeforeInput v-model:content="newAccountInfo.qq"></input-base>
+            <input-base subject="QQ" :passValue="store.account.qq" confirmBeforeInput v-model:content="newAccountInfo.qq"></input-base>
           </input-section>
           <input-section subject="" class="mt-4">
-            <button type="submit" class="materialBtn btnPrimaryReverse shadow">确定</button>
+            <button @click="updateAccount" type="submit" class="materialBtn btnPrimaryReverse shadow">确定</button>
           </input-section>
         </form>
       </template>
@@ -137,7 +136,6 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, type Ref } from "vue"
-import { Element } from "@/api/api"
 import router from "@/router"
 import { MenuIcon, LogoutIcon, CogIcon } from "@heroicons/vue/outline"
 import { TransitionRoot } from "@headlessui/vue"
@@ -148,24 +146,12 @@ import logOut from "@/composables/LogOut"
 import { useRoute, type RouteRecordRaw } from "vue-router"
 import MemberService from "@/services/member"
 import type Member from "@/models/member"
+import CommonService from "@/services/common"
+import { useAccountStore } from "@/stores/account"
+
+const store = useAccountStore()
 
 const isOpen = ref(false)
-
-// TODO use global state to store personal info
-const alias = ref()
-const avatar = ref()
-const role = ref()
-const memberId = ref()
-
-const setMenuInfo = () => {
-  alias.value = localStorage.getItem("alias")
-  // TODO change null to place holder
-  avatar.value = localStorage.getItem("avatar") || ""
-  role.value = localStorage.getItem("role")
-  memberId.value = localStorage.getItem("memberId") || ""
-}
-
-setMenuInfo()
 
 const newAccountInfo = ref({
   alias: "",
@@ -188,7 +174,7 @@ const menuList = computed(() => {
     }
     const meta = item.meta as unknown as RouterMeta
     for (const r of meta.roles) {
-      return r == role.value && meta.menuIcon != null
+      return r == store.account.role && meta.menuIcon != null
     }
   })
 })
@@ -221,16 +207,10 @@ const toEvent = () => {
   router.push("/Events")
 }
 
-const accountInfo: Ref<Member> = ref({})
 const setAccountInfo = async () => {
   return MemberService.get()
     .then(res => {
-      localStorage.setItem("alias", res.alias || "")
-      localStorage.setItem("avatar", res.avatar || "")
-      localStorage.setItem("role", res.role || "")
-      localStorage.setItem("memberId", res.memberId || "")
-      accountInfo.value = res
-      setMenuInfo()
+      store.account = res
     })
     .catch(err => {
       // TODO handel
@@ -240,45 +220,39 @@ const setAccountInfo = async () => {
 
 watch(route, setAccountInfo)
 
-const loading = ref(false)
 const bottomDialog = ref()
 const accountSetting = () => {
-  loading.value = true
-  setAccountInfo().then(() => {
-    loading.value = false
-    bottomDialog.value.openModal({
-      subject: "账号设置",
-      rounded: true,
-      acceptAction: () => {
-        return () => {
-          return MemberService.get()
-        }
-      },
-    })
+  bottomDialog.value.openModal({
+    subject: "账号设置",
+    rounded: true,
+    acceptAction: () => {
+      return () => {
+        return MemberService.get()
+      }
+    },
   })
 }
-const updateAvatar = (e: InputEvent) => {
+const updateAvatar = async (e: InputEvent) => {
   const target = e.target as HTMLInputElement
   const fileList = target.files as FileList
   const file = fileList[0]
-  const param = new FormData()
-  param.append("file", file)
-  Element.updateAvatar(param).then(() => {
-    setAccountInfo()
+  const url = await CommonService.upload(file)
+  MemberService.updateAvatar(url.url).then(res => {
+    store.account.avatar = url.url
   })
 }
 
 const updateAccount = () => {
   if (
-    newAccountInfo.value.alias == accountInfo.value.alias &&
-    newAccountInfo.value.qq == accountInfo.value.qq &&
-    newAccountInfo.value.phone == accountInfo.value.phone
+    newAccountInfo.value.alias == store.account.alias &&
+    newAccountInfo.value.qq == store.account.qq &&
+    newAccountInfo.value.phone == store.account.phone
   ) {
     bottomDialog.value.cancel()
     return
   }
   MemberService.update(newAccountInfo.value).then(async res => {
-    await setAccountInfo()
+    store.account = res
     bottomDialog.value.cancel()
   })
 }

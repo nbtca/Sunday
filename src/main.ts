@@ -11,11 +11,13 @@ pinia.use(piniaPersist)
 
 import BottomDialog from "@/components/BottomDialog"
 import Notify from "@/components/Notify"
+import { BottomDialogInjectionKey } from "./components/BottomDialog/types"
+import { NotifyInjectionKey } from "./components/Notify/types"
 
-app.provide("BottomDialog", BottomDialog)
-app.provide("Notify", Notify)
+app.provide(BottomDialogInjectionKey, BottomDialog)
+app.provide(NotifyInjectionKey, Notify)
 
-app.use(router)
 app.use(pinia)
+app.use(router)
 
 app.mount("#app")

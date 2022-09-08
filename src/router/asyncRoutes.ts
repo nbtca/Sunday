@@ -35,16 +35,6 @@ const asyncRoutes = [
           title: "成员管理",
         },
       },
-      {
-        path: "/Design",
-        name: "design",
-        component: () => import("@/views/Design/Design.vue"),
-        meta: {
-          menuIcon: true,
-          roles: ["admin"],
-          title: "设计",
-        },
-      },
     ],
   },
   {

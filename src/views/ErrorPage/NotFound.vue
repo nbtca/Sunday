@@ -6,10 +6,10 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const back = () => {
-  window.history.back(-1)
-  window.history.back(-1)
+  window.history.back()
+  window.history.back()
 }
 </script>
 

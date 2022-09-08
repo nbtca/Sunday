@@ -64,7 +64,7 @@
       <div>
         <button v-if="detail?.status == 'open'" class="bg-primary text-primaryContent w-20 btn" @click="acceptEvent(detail)">接受</button>
       </div>
-        <div v-if="isCurrentMember(detail,memberId) && detail.status == 'accepted'" class="flex flex-col">
+      <div v-if="isCurrentMember(detail, store.account.memberId) && detail.status == 'accepted'" class="flex flex-col">
         <div>
           <button class="bg-warning text-warningContent mx-5 btn" @click="dropEvent(detail)">放弃</button>
           <button class="bg-primary text-primaryContent btn" @click="commitEvent(detail)">提交</button>
@@ -79,17 +79,18 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, inject  } from "vue"
+import { watch, ref, inject, type Ref } from "vue"
 import { useRoute } from "vue-router"
 import { acceptEvent, commitEvent, dropEvent } from "./EventActions"
 import EventService from "@/services/event"
 import { isCurrentMember } from "@/utils/event"
 import type { Event } from "@/models/event"
+import { useAccountStore } from "@/stores/account"
+import { BottomDialogInjectionKey, type BottomDialogType } from "@/components/BottomDialog/types"
 
 const route = useRoute()
+const store = useAccountStore()
 
-const role = ref(localStorage.getItem("role"))
-const memberId = ref(localStorage.getItem("memberId") || "")
 const eventId = ref(route.params.eventId) as Ref<string>
 const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"])
 const contactPreference = ref(["QQ", "微信", "电话"])
@@ -103,8 +104,7 @@ const setDetail = async () => {
 }
 setDetail()
 watch(route, setDetail)
-
-const BottomDialog = inject("BottomDialog")
+const BottomDialog = inject(BottomDialogInjectionKey) as BottomDialogType
 
 const rejectEvent = async (event: Event) => {
   BottomDialog({
@@ -112,11 +112,11 @@ const rejectEvent = async (event: Event) => {
     acceptActionName: "退回",
     rounded: true,
     content: [
-      { 型号: event.model },
-      { 问题描述: event.problem },
-      { 创建时间: event.gmtCreate },
-      { 维修描述: event.getPreviousLog()?.description },
-      { 提交时间: event.getPreviousLog()?.gmtCreate },
+      { key: "型号", value: event.model },
+      { key: "问题描述", value: event.problem },
+      { key: "创建时间", value: event.gmtCreate },
+      { key: "维修描述", value: event.getPreviousLog()?.description || "" },
+      { key: "提交时间", value: event.getPreviousLog()?.gmtCreate || "" },
     ],
     acceptAction: () => {
       return EventService.rejectCommit(event.eventId)
@@ -129,11 +129,11 @@ const closeEvent = async (event: Event) => {
     acceptActionName: "通过",
     rounded: true,
     content: [
-      { 型号: event.model },
-      { 问题描述: event.problem },
-      { 创建时间: event.gmtCreate },
-      { 维修描述: event.getPreviousLog()?.description },
-      { 提交时间: event.getPreviousLog()?.gmtCreate },
+      { key: "型号", value: event.model },
+      { key: "问题描述", value: event.problem },
+      { key: "创建时间", value: event.gmtCreate },
+      { key: "维修描述", value: event.getPreviousLog()?.description || "" },
+      { key: "提交时间", value: event.getPreviousLog()?.gmtCreate || "" },
     ],
     acceptAction: () => {
       return EventService.close(event.eventId)

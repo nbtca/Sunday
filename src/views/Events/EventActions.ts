@@ -100,7 +100,7 @@ const alterCommit = (event: Event) => {
           id: "description",
           required: true,
           type: "textarea",
-          val: getLastLog(res)?.description,
+          value: getLastLog(res)?.description,
         },
       ],
       rounded: true,

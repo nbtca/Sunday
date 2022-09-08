@@ -22,6 +22,7 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.0",
     "@testing-library/vue": "^6.4.2",
+    "@types/blueimp-md5": "^2.18.0",
     "@vitejs/plugin-vue": "^2.3.3",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/eslint-config-typescript": "^11.0.0",

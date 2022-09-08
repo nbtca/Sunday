@@ -74,7 +74,7 @@
                 </div>
               </div>
               <button
-                v-if="item.status == 'committed' && role == 'admin' && checkOnly"
+                v-if="item.status == 'committed' && store.account.role == 'admin' && checkOnly"
                 @click="judgeSubmit(item)"
                 class="btnxs btnWarningReverse"
               >
@@ -128,15 +128,16 @@ import ScrollArea from "@/components/ScrollArea/ScrollArea.vue"
 import EventCard from "../../components/EventCard/EventCard.vue"
 import { useRoute } from "vue-router"
 import { isCurrentMember } from "@/utils/event"
+import { useAccountStore } from "@/stores/account"
 
-const memberId = ref(localStorage.getItem("memberId") || "")
-const role = ref(localStorage.getItem("role"))
+const store = useAccountStore()
+const memberId = ref(store.account.memberId || "")
 
-const statusToText = ref(["已取消", "待接受", "已接受", "待审核", "已关闭"])
+// const statusToText = ref(["已取消", "待接受", "已接受", "待审核", "已关闭"])
 
 // filter
 const defaultIndex = ref(0)
-const filterOptions = ref(role.value == "admin" ? ["全部", "我的", "审核"] : ["待接受", "我的"])
+const filterOptions = ref(store.account.role == "admin" ? ["全部", "我的", "审核"] : ["待接受", "我的"])
 const checkOnly = ref(false)
 const eventsMatchingByRID = ref(false)
 const searchQuery = ref("")

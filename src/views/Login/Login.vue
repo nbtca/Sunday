@@ -28,14 +28,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import { Element } from "@/api/api"
 import { isFormValid } from "@/utils/isFormValid"
 import InputBase from "@/components/Input/InputBase.vue"
 import { ref } from "vue"
 import router from "@/router"
 import md5 from "blueimp-md5"
 import MemberService from "@/services/member"
+import { useAccountStore } from "@/stores/account"
 
+const store = useAccountStore()
 const avatarHolder = "https://sunday-res.oss-cn-hangzhou.aliyuncs.com/img/logo.png"
 
 const accountInput = ref({
@@ -50,7 +51,7 @@ const login = async () => {
   const account = isFormValid(accountInput.value)
   if (account != false) {
     let hashedPassword = ""
-    if (account.password !== "") {
+    if (account.password != undefined && account.password != "") {
       hashedPassword = md5(account.password)
     }
     await MemberService.createToken({
@@ -58,12 +59,9 @@ const login = async () => {
       password: hashedPassword,
     })
       .then(res => {
-        localStorage.setItem("token", res.token)
-        localStorage.setItem("alias", res.alias)
-        localStorage.setItem("avatar", res.avatar || avatarHolder)
-        localStorage.setItem("role", res.role)
-        localStorage.setItem("memberId", res.memberId)
-        if (res.role == "notActivated") {
+        store.account = res
+        store.token = res.token
+        if (res.role.includes("inactive")) {
           router.push("/activate")
           router.push("/activate")
         } else {

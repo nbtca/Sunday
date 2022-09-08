@@ -22,6 +22,7 @@ interface Props {
   btnClass?: string
   rounded?: boolean
 }
+
 const props = defineProps<Props>()
 
 const getFormInput = ref(new Object())
@@ -121,7 +122,7 @@ const destroySelf = (e: any) => {
                   :max-length="item.maxLength"
                   :hint="item.hint"
                   :rules="item.rules"
-                  :pass-value="item.val"
+                  :pass-value="item.value"
                   v-model:content="getFormInput[item.id]"
                 ></input-base>
               </div>
@@ -185,7 +186,7 @@ const destroySelf = (e: any) => {
                       :maxLength="item.maxLength"
                       :hint="item.hint"
                       :rules="item.rules"
-                      :val="item.val"
+                      :value="item.value"
                       v-model:content="getFormInput[item.id]"
                     ></input-base>
                   </div>
