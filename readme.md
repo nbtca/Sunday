@@ -1,5 +1,5 @@
 # Sunday
-> Today is Sunday, I would like to relex.
+> Today is Sunday, I would like to relax.
 
 ## 简介
 + 使用 vue3 / typescript / windicss 搭建的维修服务管理前端
