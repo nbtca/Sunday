@@ -2,7 +2,7 @@ import axios from "axios"
 import Notify from "@/components/Notify"
 import logOut from "@/composables/LogOut"
 
-axios.defaults.baseURL = "api/"
+axios.defaults.baseURL = process.env.NODE_ENV == "development" ? "api/" : "https://api.repair.space/"
 
 axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8"
 axios.defaults.timeout = 10000
