@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from "vue-router"
+import { createRouter, createWebHashHistory, createWebHistory } from "vue-router"
 import constantRoutes from "./constantRoutes"
 import asyncRoutes from "./asyncRoutes"
 import { useAccountStore } from "@/stores/account"
@@ -6,7 +6,8 @@ import { useAccountStore } from "@/stores/account"
 const routes = asyncRoutes.concat(constantRoutes)
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
+  // history: createWebHashHistory(),
   routes,
 })
 router.beforeEach((to, from, next) => {

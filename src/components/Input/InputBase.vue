@@ -28,7 +28,9 @@
           warning ? 'ring-[2px] ring-warning' : '',
           isValid && input ? '' : '',
           center ? 'text-center' : '',
-          disabled ? ' bg-opacity-0 border-gray-400/60 shadow-none cursor-default pointer-events-none' : 'border-gray-400/10',
+          disabled
+            ? ' bg-opacity-0 border-gray-400/60 shadow-none cursor-default pointer-events-none'
+            : 'border-gray-400/10',
         ]"
         class="transition duration-100 p-2 w-full rounded-lg shadow-innersm materialInput sm:(bg-transparent border border-gray-500 textInput )"
         :required="required"
@@ -44,7 +46,9 @@
           warning ? 'ring-[2px] ring-warning' : '',
           isValid && input ? '' : '',
           center ? 'text-center' : '',
-          disabled ? ' bg-opacity-0 border-gray-400/60 shadow-none cursor-default pointer-events-none' : 'border-gray-400/10',
+          disabled
+            ? ' bg-opacity-0 border-gray-400/60 shadow-none cursor-default pointer-events-none'
+            : 'border-gray-400/10',
         ]"
         style="width: 100%"
         :required="required"
@@ -53,7 +57,10 @@
         :readonly="disabled"
         type="textarea"
       ></textarea>
-      <div class="absolute pr-2 flex items-center sm:hidden" :class="[type == 'textarea' ? 'bottom-4 right-1' : 'inset-y-0 right-0']">
+      <div
+        class="absolute pr-2 flex items-center sm:hidden"
+        :class="[type == 'textarea' ? 'bottom-4 right-1' : 'inset-y-0 right-0']"
+      >
         <div v-if="warning == ''" class="textDescription">
           {{ hint }}
         </div>
@@ -77,8 +84,21 @@
 // TODO add icon "show" when type is password
 
 import { onMounted, computed, ref, toRefs, watch, type Ref } from "vue"
-import type { InputProps } from "./types"
-
+// import type { InputProps } from "./types"
+interface InputProps {
+  type?: string
+  subject?: string
+  required?: boolean
+  center?: boolean
+  hint?: string
+  confirmBeforeInput?: boolean
+  rules?: Rule[]
+  maxLength?: string
+  passWarning?: string
+  passValue?: string
+  content?: string | boolean | object
+  placeholder?: string
+}
 const props = defineProps<InputProps>()
 
 const getProps = () => {

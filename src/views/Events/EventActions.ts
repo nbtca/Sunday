@@ -32,20 +32,23 @@ const eventBottomDialog = (config: BottomDialogConfig) => {
 }
 
 const acceptEvent = (event: Event) => {
+  if (event.eventId == undefined) {
+    return
+  }
   BottomDialog({
     subject: "接受事件",
     content: [
       {
         key: "型号",
-        value: event.model,
+        value: event.model || "无型号",
       },
       {
         key: "问题描述",
-        value: event.problem,
+        value: event.problem as string,
       },
       {
         key: "创建时间",
-        value: event.gmtCreate,
+        value: event.gmtCreate as string,
       },
     ],
     acceptAction: () => {
@@ -71,7 +74,7 @@ const commitEvent = (event: Event) => {
     content: [
       {
         key: "型号",
-        value: event.model,
+        value: event.model || "无型号",
       },
       {
         key: "问题描述",
@@ -107,7 +110,7 @@ const alterCommit = (event: Event) => {
       content: [
         {
           key: "型号",
-          value: event.model,
+          value: event.model || "无型号",
         },
         {
           key: "问题描述",
@@ -133,7 +136,7 @@ const dropEvent = (event: Event) => {
     content: [
       {
         key: "型号",
-        value: event.model,
+        value: event.model || "无型号",
       },
       {
         key: "问题描述",
@@ -159,7 +162,7 @@ const judgeSubmit = async (event: Event) => {
     content: [
       {
         key: "型号",
-        value: event.model,
+        value: event.model || "无型号",
       },
       {
         key: "问题描述",

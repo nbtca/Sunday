@@ -13,17 +13,17 @@ const asyncRoutes = [
           roles: ["admin", "member"],
           title: "维修事件",
         },
-        children: [
-          {
-            path: ":eventId",
-            name: "EventsDetail",
-            component: () => import("@/views/Events/EventsDetail.vue"),
-            meta: {
-              title: "事件详情",
-              roles: ["admin", "member"],
-            },
-          },
-        ],
+        // children: [
+        //   {
+        //     path: "/Events/:eventId",
+        //     name: "EventsDetail",
+        //     component: () => import("@/views/Events/EventsDetail.vue"),
+        //     meta: {
+        //       title: "事件详情",
+        //       roles: ["admin", "member"],
+        //     },
+        //   },
+        // ],
       },
       {
         path: "/MemberManage",

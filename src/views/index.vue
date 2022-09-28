@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex flex-col-reverse sm:(flex-row) overflow-hidden h-screen">
+  <div class="safe-container relative flex flex-col-reverse sm:(flex-row) overflow-hidden h-screen">
     <div class="sm:(w-[17vw] mix-w-[17vw] bg-current)">
       <Menu ref="menu"></Menu>
     </div>
@@ -25,4 +25,22 @@ let vh = window.innerHeight * 0.01
 document.documentElement.style.setProperty("---vh", `${vh}px`)
 </script>
 
-<style></style>
+<style>
+@supports (padding-top: constant(safe-area-inset-top)) {
+  .safe-container {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+}
+
+@media (display-mode: fullscreen) {
+  .safe-container {
+    padding: 0;
+  }
+}
+
+@media (display-mode: standalone) {
+  .safe-container {
+    padding: 0;
+  }
+}
+</style>

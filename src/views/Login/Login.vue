@@ -22,7 +22,12 @@
           class="w-full"
           v-model:content="accountInput.password"
         />
-        <button class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md" type="submit">登入</button>
+        <button
+          class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md"
+          type="submit"
+        >
+          登入
+        </button>
       </form>
     </div>
   </div>
@@ -37,7 +42,6 @@ import MemberService from "@/services/member"
 import { useAccountStore } from "@/stores/account"
 
 const store = useAccountStore()
-const avatarHolder = "https://sunday-res.oss-cn-hangzhou.aliyuncs.com/img/logo.png"
 
 const accountInput = ref({
   id: "",

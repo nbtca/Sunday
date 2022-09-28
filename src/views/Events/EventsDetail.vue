@@ -62,7 +62,13 @@
 
     <div class="w-full pb-16">
       <div>
-        <button v-if="detail?.status == 'open'" class="bg-primary text-primaryContent w-20 btn" @click="acceptEvent(detail)">接受</button>
+        <button
+          v-if="detail?.status == 'open'"
+          class="bg-primary text-primaryContent w-20 btn"
+          @click="acceptEvent(detail)"
+        >
+          接受
+        </button>
       </div>
       <div v-if="isCurrentMember(detail, store.account.memberId) && detail.status == 'accepted'" class="flex flex-col">
         <div>
@@ -79,31 +85,36 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, inject, type Ref } from "vue"
-import { useRoute } from "vue-router"
+import { watch, ref, inject, onMounted } from "vue"
 import { acceptEvent, commitEvent, dropEvent } from "./EventActions"
 import EventService from "@/services/event"
 import { isCurrentMember } from "@/utils/event"
 import type { Event } from "@/models/event"
 import { useAccountStore } from "@/stores/account"
 import { BottomDialogInjectionKey, type BottomDialogType } from "@/components/BottomDialog/types"
+import { useEventStore } from "@/stores/event"
 
-const route = useRoute()
 const store = useAccountStore()
+const eventStore = useEventStore()
 
-const eventId = ref(route.params.eventId) as Ref<string>
-const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"])
-const contactPreference = ref(["QQ", "微信", "电话"])
+// const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"])
+// const contactPreference = ref(["QQ", "微信", "电话"])
 
 const detail = ref<Event>()
 const setDetail = async () => {
-  eventId.value = route.params.eventId as string
-  EventService.getMemberEvent(eventId.value).then(res => {
+  if (eventStore.eventId == null) {
+    return
+  }
+  EventService.getMemberEvent(eventStore.eventId).then(res => {
     detail.value = res
   })
 }
-setDetail()
-watch(route, setDetail)
+
+onMounted(() => {
+  setDetail()
+})
+
+watch(() => eventStore.eventId, setDetail)
 const BottomDialog = inject(BottomDialogInjectionKey) as BottomDialogType
 
 const rejectEvent = async (event: Event) => {

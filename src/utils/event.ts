@@ -1,13 +1,14 @@
 import type { Event } from "@/models/event"
 
 const isCurrentMember = (event: Event, memberId: string) => {
-  if (event.member == undefined) {
+  if (event == undefined) {
     return false
+  } else {
+    if (event.member == undefined) {
+      return false
+    }
+    return event.member.memberId == memberId
   }
-  return event.member.memberId == memberId
 }
 
-
-export {
-  isCurrentMember
-}
+export { isCurrentMember }

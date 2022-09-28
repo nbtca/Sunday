@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <div class="flex flex-col h-full w-full items-center sm:(w-[24vw] min-w-[250px] border-r border-gray-400/30)">
+    <div class="flex flex-col h-full w-full items-center sm:(w-[24vw] min-w-[270px] border-r border-gray-400/30)">
       <div
         class="bg-gray-50 border-t border-base-standout/70 flex flex-col order-last w-full px-0.5 self-end items-center sm:(border-t-0 order-first border-b px-0 pb-0.5)"
       >
@@ -17,7 +17,11 @@
               <button
                 @click="filterHandler(item)"
                 class="rounded-lg font-semibold w-full py-2.5 text-indigo-600 leading-5 focus:(outline-none border-base-standout )"
-                :class="[selected ? 'bg-white shadow cursor-default' : 'text-gray-400 hover:bg-gray-50/[0.12] hover:text-blue-400']"
+                :class="[
+                  selected
+                    ? 'bg-white shadow cursor-default'
+                    : 'text-gray-400 hover:bg-gray-50/[0.12] hover:text-blue-400',
+                ]"
               >
                 {{ item }}
               </button>
@@ -31,8 +35,8 @@
             v-for="item in filteredList"
             :key="item.eventId"
             class="flex flex-row flex-nowrap cell justify-between"
-            :class="[item.eventId == selectedItem ? 'bg-gray-400/30 cursor-default shadow' : '']"
-            @click="showDetail(item.eventId)"
+            :class="[item.eventId == eventStore.eventId ? 'bg-gray-400/30 cursor-default shadow' : '']"
+            @click="showDetail(item.eventId as number)"
           >
             <div class="text-left w-2/3 truncate">
               {{ item.problem }}
@@ -114,7 +118,9 @@
       </scroll-area>
     </div>
     <div class="w-full hidden sm:block">
-      <router-view @update="setEvents()"></router-view>
+      <div v-if="eventStore.eventId != undefined">
+        <events-detail></events-detail>
+      </div>
     </div>
   </div>
 </template>
@@ -126,11 +132,14 @@ import { setEvents, events, acceptEvent, commitEvent, alterCommit, dropEvent, ju
 import { TabGroup, TabList, Tab } from "@headlessui/vue"
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue"
 import EventCard from "../../components/EventCard/EventCard.vue"
+import EventsDetail from "./EventsDetail.vue"
 import { useRoute } from "vue-router"
 import { isCurrentMember } from "@/utils/event"
 import { useAccountStore } from "@/stores/account"
+import { useEventStore } from "@/stores/event"
 
 const store = useAccountStore()
+const eventStore = useEventStore()
 const memberId = ref(store.account.memberId || "")
 
 // const statusToText = ref(["已取消", "待接受", "已接受", "待审核", "已关闭"])
@@ -170,17 +179,8 @@ const filteredList = computed(() => {
   })
 })
 
-const route = useRoute()
-
-const selectedItem = computed(() => {
-  let fullPath = route.path
-  let tailIndex = fullPath.lastIndexOf("/")
-  let pagePath = fullPath.substring(tailIndex + 1)
-  return pagePath
-})
-
-const showDetail = (e: string) => {
-  router.push("/Events/" + e)
+const showDetail = (e: number) => {
+  eventStore.eventId = e
 }
 
 setEvents()
