@@ -4,7 +4,10 @@
       <div class="flex pb-1 md:(py-5 px-6) lg:px-0 items-center justify-between">
         <div class="text-left">
           <h3 class="font-medium pt-4 text-2xl md:(pt-4 text-4xl)">
-            <div class="hidden md:flex">事件详情</div>
+            <div class="hidden md:flex">
+              事件详情
+              <span class="text-3xl pl-2 text-gray-400 font-medium">{{ "#" + detail?.eventId }}</span>
+            </div>
             <div class="md:hidden">{{ detail?.status }}</div>
           </h3>
           <p class="ml-0.5 textDescription">{{ detail?.gmtCreate }}</p>
@@ -12,19 +15,19 @@
         <div class="hidden md:flex textSubHeading">{{ detail?.status }}</div>
       </div>
       <div class="border border-gray-200 rounded-lg overflow-hidden">
-        <div class="bg-gray-50 infoCell">
+        <div class="infoCell">
           <dt class="text-gray-500 infoHead">型号</dt>
           <dd class="infoContent">
-            {{ detail?.model }}
+            {{ detail?.model || "无型号" }}
           </dd>
         </div>
-        <div class="bg-white infoCell">
+        <div class="infoCell">
           <dt class="text-gray-500 infoHead">问题描述</dt>
           <dd class="infoContent">
             {{ detail?.problem }}
           </dd>
         </div>
-        <div class="bg-gray-50 infoCell">
+        <div class="infoCell" v-if="eventStore.mine">
           <dt class="text-gray-500 infoHead">联系方式</dt>
           <dd class="flex infoContent justify-center">
             <table>
@@ -49,7 +52,7 @@
             </table>
           </dd>
         </div>
-        <div class="bg-white infoCell hidden md:grid">
+        <div class="infoCell hidden md:grid">
           <dt class="text-gray-500 infoHead">维修历史</dt>
           <dd class="infoContent">
             <div v-for="log in detail?.logs" :key="log.logId">
@@ -65,8 +68,7 @@
         <button
           v-if="detail?.status == 'open'"
           class="bg-primary text-primaryContent w-20 btn"
-          @click="acceptEvent(detail)"
-        >
+          @click="acceptEvent(detail)">
           接受
         </button>
       </div>
@@ -76,7 +78,9 @@
           <button class="bg-primary text-primaryContent btn" @click="commitEvent(detail)">提交</button>
         </div>
       </div>
-      <div v-if="detail?.status == 'committed' && role == 'admin'" class="flex flex-nowrap justify-center">
+      <div
+        v-if="detail?.status == 'committed' && store.account.role == 'admin'"
+        class="flex flex-nowrap justify-center">
         <button class="bg-warning text-warningContent mx-4 w-20 btn" @click="rejectEvent(detail)">退回</button>
         <button class="bg-primary text-primaryContent mx-4 w-20 btn" @click="closeEvent(detail)">通过</button>
       </div>
@@ -86,7 +90,7 @@
 
 <script setup lang="ts">
 import { watch, ref, inject, onMounted } from "vue"
-import { acceptEvent, commitEvent, dropEvent } from "./EventActions"
+import { acceptEvent, commitEvent, dropEvent, getLastLog } from "./EventActions"
 import EventService from "@/services/event"
 import { isCurrentMember } from "@/utils/event"
 import type { Event } from "@/models/event"
@@ -105,9 +109,16 @@ const setDetail = async () => {
   if (eventStore.eventId == null) {
     return
   }
-  EventService.getMemberEvent(eventStore.eventId).then(res => {
-    detail.value = res
-  })
+  console.log(eventStore.mine)
+  if (eventStore.mine) {
+    EventService.getMemberEvent(eventStore.eventId).then(res => {
+      detail.value = res
+    })
+  } else {
+    EventService.get(eventStore.eventId).then(res => {
+      detail.value = res
+    })
+  }
 }
 
 onMounted(() => {
@@ -123,11 +134,11 @@ const rejectEvent = async (event: Event) => {
     acceptActionName: "退回",
     rounded: true,
     content: [
-      { key: "型号", value: event.model },
+      { key: "型号", value: event.model || "无型号" },
       { key: "问题描述", value: event.problem },
       { key: "创建时间", value: event.gmtCreate },
-      { key: "维修描述", value: event.getPreviousLog()?.description || "" },
-      { key: "提交时间", value: event.getPreviousLog()?.gmtCreate || "" },
+      { key: "维修描述", value: getLastLog(event)?.description || "" },
+      { key: "提交时间", value: getLastLog(event)?.gmtCreate || "" },
     ],
     acceptAction: () => {
       return EventService.rejectCommit(event.eventId)
@@ -140,11 +151,11 @@ const closeEvent = async (event: Event) => {
     acceptActionName: "通过",
     rounded: true,
     content: [
-      { key: "型号", value: event.model },
+      { key: "型号", value: event.model || "无型号" },
       { key: "问题描述", value: event.problem },
       { key: "创建时间", value: event.gmtCreate },
-      { key: "维修描述", value: event.getPreviousLog()?.description || "" },
-      { key: "提交时间", value: event.getPreviousLog()?.gmtCreate || "" },
+      { key: "维修描述", value: getLastLog(event)?.description || "" },
+      { key: "提交时间", value: getLastLog(event)?.gmtCreate || "" },
     ],
     acceptAction: () => {
       return EventService.close(event.eventId)

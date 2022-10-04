@@ -48,6 +48,7 @@ const pwaOptions: Partial<VitePWAOptions> = {
         },
       },
     ],
+    navigateFallback: "index.html",
   },
   devOptions: {
     enabled: true,
@@ -67,6 +68,7 @@ export default defineConfig({
     proxy: {
       "/api": {
         target: "https://api.nbtca.space/dev/",
+        // target: "http://localhost:4000",
         changeOrigin: true,
         rewrite: path => {
           return path.replace(/^\/api/, "")

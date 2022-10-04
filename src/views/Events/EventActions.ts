@@ -186,4 +186,4 @@ const judgeSubmit = async (event: Event) => {
   })
 }
 
-export { setEvents, events, acceptEvent, commitEvent, alterCommit, dropEvent, judgeSubmit }
+export { setEvents, getLastLog, events, acceptEvent, commitEvent, alterCommit, dropEvent, judgeSubmit }

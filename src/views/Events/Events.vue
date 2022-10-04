@@ -36,7 +36,7 @@
             :key="item.eventId"
             class="flex flex-row flex-nowrap cell justify-between"
             :class="[item.eventId == eventStore.eventId ? 'bg-gray-400/30 cursor-default shadow' : '']"
-            @click="showDetail(item.eventId as number)"
+            @click="showDetail(item)"
           >
             <div class="text-left w-2/3 truncate">
               {{ item.problem }}
@@ -137,6 +137,8 @@ import { useRoute } from "vue-router"
 import { isCurrentMember } from "@/utils/event"
 import { useAccountStore } from "@/stores/account"
 import { useEventStore } from "@/stores/event"
+import type member from "@/models/member"
+import type { Event } from "@/models/event"
 
 const store = useAccountStore()
 const eventStore = useEventStore()
@@ -168,7 +170,7 @@ const filteredList = computed(() => {
       // for admin to validate commits
       return event.status == "committed"
     } else if (eventsMatchingByRID.value === true) {
-      return isCurrentMember(event, memberId.value) && event.status != "closed"
+      return isCurrentMember(event, store.account.memberId || "") && event.status != "closed"
     } else {
       return event.status == "open"
     }
@@ -179,8 +181,13 @@ const filteredList = computed(() => {
   })
 })
 
-const showDetail = (e: number) => {
-  eventStore.eventId = e
+const showDetail = (e: Event) => {
+  eventStore.eventId = e.eventId
+  if (e.member == null) {
+    eventStore.mine = false
+    return
+  }
+  eventStore.mine = e.member.memberId == (store.account.memberId || "")
 }
 
 setEvents()
