@@ -26,16 +26,9 @@ const pwaOptions: Partial<VitePWAOptions> = {
   registerType: "autoUpdate",
   workbox: {
     runtimeCaching: [
-      // {
-      //   urlPattern: /someInterface/i, // 接口缓存 此处填你想缓存的接口正则匹配
-      //   handler: "CacheFirst",
-      //   options: {
-      //     cacheName: "interface-cache",
-      //   },
-      // },
       {
         urlPattern: /(.*?)\.(js|css|ts)/, // js /css /ts静态资源缓存
-        handler: "CacheFirst",
+        handler: "NetworkFirst",
         options: {
           cacheName: "js-css-cache",
         },
@@ -68,7 +61,6 @@ export default defineConfig({
     proxy: {
       "/api": {
         target: "https://api.nbtca.space/dev/",
-        // target: "http://localhost:4000",
         changeOrigin: true,
         rewrite: path => {
           return path.replace(/^\/api/, "")

@@ -5,15 +5,16 @@ import EventService from "@/services/event"
 import type { Event } from "@/models/event"
 import type { BottomDialogConfig } from "@/components/BottomDialog/types"
 const events = ref(Array<Event>())
-const setEvents = () => {
-  EventService.getAll()
-    .then(res => {
-      events.value = res
-    })
-    .catch(err => {
-      // TODO handle
-      console.log(err)
-    })
+const setEvents = async () => {
+  let offset = 0
+  while (true) {
+    const res = await EventService.getAll(offset, 30)
+    offset += res.length
+    events.value = events.value.concat(res)
+    if (res.length == 0) {
+      return
+    }
+  }
 }
 
 const getLastLog = (e: Event) => {

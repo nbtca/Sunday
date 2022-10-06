@@ -23,7 +23,7 @@ const BottomDialog = (config: BottomDialogConfig) => {
         // reject();
         return 0
       } else {
-        resolve()
+        resolve(null)
       }
     })
   })

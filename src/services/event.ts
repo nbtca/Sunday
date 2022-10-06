@@ -6,8 +6,8 @@ const EventService = {
     const res = await Axios("/events/" + eventId, null, "get")
     return res as Event
   },
-  async getAll() {
-    const res = await Axios("/events", null, "get")
+  async getAll(offset: number, limit: number) {
+    const res = await Axios(`/events?offset=${offset}&limit=${limit}`, null, "get")
     return res as Event[]
   },
   async getMemberEvent(eventId: number) {
