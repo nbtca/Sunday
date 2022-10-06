@@ -2,23 +2,27 @@ import Axios from "@/utils/axios"
 import type { Event } from "@/models/event"
 
 const EventService = {
-  async getAll() {
-    const res = await Axios("/events", null, "get")
+  async get(eventId: number) {
+    const res = await Axios("/events/" + eventId, null, "get")
+    return res as Event
+  },
+  async getAll(offset: number, limit: number) {
+    const res = await Axios(`/events?offset=${offset}&limit=${limit}`, null, "get")
     return res as Event[]
   },
-  async getMemberEvent(eventId: string) {
+  async getMemberEvent(eventId: number) {
     const res = await Axios("/member/events/" + eventId, null, "get")
     return res as Event
   },
-  async accept(eventId: string) {
+  async accept(eventId: number) {
     const res = await Axios("/member/events/" + eventId + "/accept", null, "post")
     return res as Event
   },
-  async drop(eventId: string) {
+  async drop(eventId: number) {
     const res = await Axios("/member/events/" + eventId + "/accept", null, "delete")
     return res as Event
   },
-  async commit(eventId: string, content: string) {
+  async commit(eventId: number, content: string) {
     const res = await Axios(
       "/member/events/" + eventId + "/commit",
       {
@@ -28,7 +32,7 @@ const EventService = {
     )
     return res as Event
   },
-  async alterCommit(eventId: string, content: string) {
+  async alterCommit(eventId: number, content: string) {
     const res = await Axios(
       "/member/events/" + eventId + "/commit",
       {
@@ -38,11 +42,11 @@ const EventService = {
     )
     return res as Event
   },
-  async close(eventId: string) {
+  async close(eventId: number) {
     const res = await Axios("/events/" + eventId + "/close", null, "post")
     return res as Event
   },
-  async rejectCommit(eventId: string) {
+  async rejectCommit(eventId: number) {
     const res = await Axios("/events/" + eventId + "/commit", null, "delete")
     return res as Event
   },

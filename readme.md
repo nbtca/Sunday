@@ -13,10 +13,10 @@
 
    在项目根目录下运行
    ``` sh
-   npm install
+   yarn
    ```
 3. 启动服务
    在项目根目录下运行
    ``` sh
-   npm run dev
+   yarn dev
    ```

@@ -13,16 +13,18 @@
           :passWarning="isIDValid"
           class="w-full"
           v-model:content="accountInput.id"
-          :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]"
-        />
+          :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]" />
         <InputBase
           placeholder="密码"
           :passWarning="isPasswordValid"
           type="password"
           class="w-full"
-          v-model:content="accountInput.password"
-        />
-        <button class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md" type="submit">登入</button>
+          v-model:content="accountInput.password" />
+        <button
+          class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md"
+          type="submit">
+          登入
+        </button>
       </form>
     </div>
   </div>
@@ -37,7 +39,6 @@ import MemberService from "@/services/member"
 import { useAccountStore } from "@/stores/account"
 
 const store = useAccountStore()
-const avatarHolder = "https://sunday-res.oss-cn-hangzhou.aliyuncs.com/img/logo.png"
 
 const accountInput = ref({
   id: "",
@@ -70,7 +71,6 @@ const login = async () => {
       })
       .catch(err => {
         // TODO code 422 id or password is wrong
-        console.log("fail")
       })
   }
 }

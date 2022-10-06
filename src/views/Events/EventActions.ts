@@ -5,15 +5,16 @@ import EventService from "@/services/event"
 import type { Event } from "@/models/event"
 import type { BottomDialogConfig } from "@/components/BottomDialog/types"
 const events = ref(Array<Event>())
-const setEvents = () => {
-  EventService.getAll()
-    .then(res => {
-      events.value = res
-    })
-    .catch(err => {
-      // TODO handle
-      console.log(err)
-    })
+const setEvents = async () => {
+  let offset = 0
+  while (true) {
+    const res = await EventService.getAll(offset, 30)
+    offset += res.length
+    events.value = events.value.concat(res)
+    if (res.length == 0) {
+      return
+    }
+  }
 }
 
 const getLastLog = (e: Event) => {
@@ -32,20 +33,23 @@ const eventBottomDialog = (config: BottomDialogConfig) => {
 }
 
 const acceptEvent = (event: Event) => {
+  if (event.eventId == undefined) {
+    return
+  }
   BottomDialog({
     subject: "接受事件",
     content: [
       {
         key: "型号",
-        value: event.model,
+        value: event.model || "无型号",
       },
       {
         key: "问题描述",
-        value: event.problem,
+        value: event.problem as string,
       },
       {
         key: "创建时间",
-        value: event.gmtCreate,
+        value: event.gmtCreate as string,
       },
     ],
     acceptAction: () => {
@@ -71,7 +75,7 @@ const commitEvent = (event: Event) => {
     content: [
       {
         key: "型号",
-        value: event.model,
+        value: event.model || "无型号",
       },
       {
         key: "问题描述",
@@ -107,7 +111,7 @@ const alterCommit = (event: Event) => {
       content: [
         {
           key: "型号",
-          value: event.model,
+          value: event.model || "无型号",
         },
         {
           key: "问题描述",
@@ -133,7 +137,7 @@ const dropEvent = (event: Event) => {
     content: [
       {
         key: "型号",
-        value: event.model,
+        value: event.model || "无型号",
       },
       {
         key: "问题描述",
@@ -159,7 +163,7 @@ const judgeSubmit = async (event: Event) => {
     content: [
       {
         key: "型号",
-        value: event.model,
+        value: event.model || "无型号",
       },
       {
         key: "问题描述",
@@ -183,4 +187,4 @@ const judgeSubmit = async (event: Event) => {
   })
 }
 
-export { setEvents, events, acceptEvent, commitEvent, alterCommit, dropEvent, judgeSubmit }
+export { setEvents, getLastLog, events, acceptEvent, commitEvent, alterCommit, dropEvent, judgeSubmit }

@@ -2,8 +2,7 @@
   <router-view />
 </template>
 
-<script lang="ts">
-</script>
+<script lang="ts"></script>
 
 <style>
 #app {
@@ -14,4 +13,5 @@
   color: #111827;
   height: 100vh;
 }
+
 </style>

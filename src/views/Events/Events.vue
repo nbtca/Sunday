@@ -1,39 +1,39 @@
 <template>
   <div class="flex">
-    <div class="flex flex-col h-full w-full items-center sm:(w-[24vw] min-w-[250px] border-r border-gray-400/30)">
+    <div class="flex flex-col h-full w-full items-center sm:(w-[24vw] min-w-[270px] border-r border-gray-400/30)">
       <div
-        class="bg-gray-50 border-t border-base-standout/70 flex flex-col order-last w-full px-0.5 self-end items-center sm:(border-t-0 order-first border-b px-0 pb-0.5)"
-      >
+        class="bg-gray-50 border-t border-base-standout/70 flex flex-col order-last w-full px-0.5 self-end items-center sm:(border-t-0 order-first border-b px-0 pb-0.5)">
         <input
           type="text"
           class="border-base-standout rounded-lg order-last h-10 shadow-inner my-0.5 mx-0.5 text-center sm:(rounded text-left)"
           style="width: 98%"
           v-model="searchQuery"
-          placeholder="搜索"
-        />
+          placeholder="搜索" />
         <TabGroup class="w-full" :defaultIndex="defaultIndex">
           <TabList class="flex space-x-1 p-1">
             <Tab v-for="item in filterOptions" as="template" :key="item" v-slot="{ selected }">
               <button
                 @click="filterHandler(item)"
                 class="rounded-lg font-semibold w-full py-2.5 text-indigo-600 leading-5 focus:(outline-none border-base-standout )"
-                :class="[selected ? 'bg-white shadow cursor-default' : 'text-gray-400 hover:bg-gray-50/[0.12] hover:text-blue-400']"
-              >
+                :class="[
+                  selected
+                    ? 'bg-white shadow cursor-default'
+                    : 'text-gray-400 hover:bg-gray-50/[0.12] hover:text-blue-400',
+                ]">
                 {{ item }}
               </button>
             </Tab>
           </TabList>
         </TabGroup>
       </div>
-      <scroll-area>
+      <scroll-area @scroll="onScroll">
         <div class="hidden sm:block">
           <button
             v-for="item in filteredList"
             :key="item.eventId"
             class="flex flex-row flex-nowrap cell justify-between"
-            :class="[item.eventId == selectedItem ? 'bg-gray-400/30 cursor-default shadow' : '']"
-            @click="showDetail(item.eventId)"
-          >
+            :class="[item.eventId == eventStore.eventId ? 'bg-gray-400/30 cursor-default shadow' : '']"
+            @click="showDetail(item)">
             <div class="text-left w-2/3 truncate">
               {{ item.problem }}
             </div>
@@ -48,8 +48,7 @@
             v-for="item in filteredList"
             :key="item.eventId"
             :class="isCurrentMember(item, memberId) ? 'h-30' : ''"
-            :bannerMessage="item.status == 'committed' && eventsMatchingByRID ? '已提交' : ''"
-          >
+            :bannerMessage="item.status == 'committed' && eventsMatchingByRID ? '已提交' : ''">
             <template #body>
               {{ item.problem }}
             </template>
@@ -60,15 +59,13 @@
                   <button
                     v-if="item.status == 'accepted' && isCurrentMember(item, memberId)"
                     @click="commitEvent(item)"
-                    class="btnxs btnActiveReverse"
-                  >
+                    class="btnxs btnActiveReverse">
                     提交
                   </button>
                   <button
                     v-if="item.status == 'committed' && isCurrentMember(item, memberId) && eventsMatchingByRID"
                     @click="alterCommit(item)"
-                    class="btnxs btnWarningReverse"
-                  >
+                    class="btnxs btnWarningReverse">
                     修改
                   </button>
                 </div>
@@ -76,8 +73,7 @@
               <button
                 v-if="item.status == 'committed' && store.account.role == 'admin' && checkOnly"
                 @click="judgeSubmit(item)"
-                class="btnxs btnWarningReverse"
-              >
+                class="btnxs btnWarningReverse">
                 审核
               </button>
               <div v-if="item.status == 'cancelled' || item.status == 'closed'">
@@ -100,8 +96,7 @@
               <button
                 v-if="item.status == 'accepted' && isCurrentMember(item, memberId) && eventsMatchingByRID"
                 @click="dropEvent(item)"
-                class="text-xs font-medium text-warning w-8 p-[1px] rounded ml-2 mb-0.5 border border-warning hover:(bg-warning text-warningContent)"
-              >
+                class="text-xs font-medium text-warning w-8 p-[1px] rounded ml-2 mb-0.5 border border-warning hover:(bg-warning text-warningContent)">
                 放弃
               </button>
             </template>
@@ -114,7 +109,9 @@
       </scroll-area>
     </div>
     <div class="w-full hidden sm:block">
-      <router-view @update="setEvents()"></router-view>
+      <div v-if="eventStore.eventId != undefined">
+        <events-detail></events-detail>
+      </div>
     </div>
   </div>
 </template>
@@ -126,14 +123,37 @@ import { setEvents, events, acceptEvent, commitEvent, alterCommit, dropEvent, ju
 import { TabGroup, TabList, Tab } from "@headlessui/vue"
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue"
 import EventCard from "../../components/EventCard/EventCard.vue"
+import EventsDetail from "./EventsDetail.vue"
 import { useRoute } from "vue-router"
 import { isCurrentMember } from "@/utils/event"
 import { useAccountStore } from "@/stores/account"
+import { useEventStore } from "@/stores/event"
+import type member from "@/models/member"
+import type { Event } from "@/models/event"
 
 const store = useAccountStore()
+const eventStore = useEventStore()
 const memberId = ref(store.account.memberId || "")
 
 // const statusToText = ref(["已取消", "待接受", "已接受", "待审核", "已关闭"])
+const reachBottomDistance = 100
+let isReachingBottom = false
+
+const onScroll = e => {
+  let scrollTop = e.target.scrollTop
+  let scrollHeight = e.target.scrollHeight
+  let offsetHeight = Math.ceil(e.target.getBoundingClientRect().height)
+  let currentHeight = scrollTop + offsetHeight + reachBottomDistance
+  if (currentHeight >= scrollHeight && !isReachingBottom) {
+    isReachingBottom = true
+    // emit("reachingBottom");
+    console.log("触底")
+  }
+  if (currentHeight < scrollHeight) {
+    isReachingBottom = false
+  }
+  // console.log(e.target.scrollTop);
+}
 
 // filter
 const defaultIndex = ref(0)
@@ -159,7 +179,7 @@ const filteredList = computed(() => {
       // for admin to validate commits
       return event.status == "committed"
     } else if (eventsMatchingByRID.value === true) {
-      return isCurrentMember(event, memberId.value) && event.status != "closed"
+      return isCurrentMember(event, store.account.memberId || "") && event.status != "closed"
     } else {
       return event.status == "open"
     }
@@ -170,17 +190,13 @@ const filteredList = computed(() => {
   })
 })
 
-const route = useRoute()
-
-const selectedItem = computed(() => {
-  let fullPath = route.path
-  let tailIndex = fullPath.lastIndexOf("/")
-  let pagePath = fullPath.substring(tailIndex + 1)
-  return pagePath
-})
-
-const showDetail = (e: string) => {
-  router.push("/Events/" + e)
+const showDetail = (e: Event) => {
+  eventStore.eventId = e.eventId
+  if (e.member == null) {
+    eventStore.mine = false
+    return
+  }
+  eventStore.mine = e.member.memberId == (store.account.memberId || "")
 }
 
 setEvents()
