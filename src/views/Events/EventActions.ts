@@ -6,6 +6,7 @@ import type { Event } from "@/models/event"
 import type { BottomDialogConfig } from "@/components/BottomDialog/types"
 const events = ref(Array<Event>())
 const setEvents = async () => {
+  events.value = []
   let offset = 0
   while (true) {
     const res = await EventService.getAll(offset, 30)
