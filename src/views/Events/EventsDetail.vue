@@ -90,7 +90,7 @@
 
 <script setup lang="ts">
 import { watch, ref, inject, onMounted } from "vue"
-import { acceptEvent, commitEvent, dropEvent, getLastLog } from "./EventActions"
+import { acceptEvent, commitEvent, dropEvent, getLastLog, detail, setDetail } from "./EventActions"
 import EventService from "@/services/event"
 import { isCurrentMember } from "@/utils/event"
 import type { Event } from "@/models/event"
@@ -103,23 +103,6 @@ const eventStore = useEventStore()
 
 // const statusToText = ref(["取消", "待接受", "已接受", "待审核", "关闭"])
 // const contactPreference = ref(["QQ", "微信", "电话"])
-
-const detail = ref<Event>()
-const setDetail = async () => {
-  if (eventStore.eventId == null) {
-    return
-  }
-  console.log(eventStore.mine)
-  if (eventStore.mine) {
-    EventService.getMemberEvent(eventStore.eventId).then(res => {
-      detail.value = res
-    })
-  } else {
-    EventService.get(eventStore.eventId).then(res => {
-      detail.value = res
-    })
-  }
-}
 
 onMounted(() => {
   setDetail()

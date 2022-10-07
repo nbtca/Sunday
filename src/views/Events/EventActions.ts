@@ -4,7 +4,11 @@ import BottomDialog from "@/components/BottomDialog/index.js"
 import EventService from "@/services/event"
 import type { Event } from "@/models/event"
 import type { BottomDialogConfig } from "@/components/BottomDialog/types"
+import { useEventStore } from "@/stores/event"
 const events = ref(Array<Event>())
+const detail = ref<Event>()
+const eventStore = useEventStore()
+
 const setEvents = async () => {
   events.value = []
   let offset = 0
@@ -17,20 +21,36 @@ const setEvents = async () => {
     }
   }
 }
+const setDetail = async () => {
+  if (eventStore.eventId == null) {
+    return
+  }
+  console.log(eventStore.mine)
+  if (eventStore.mine) {
+    EventService.getMemberEvent(eventStore.eventId).then(res => {
+      detail.value = res
+    })
+  } else {
+    EventService.get(eventStore.eventId).then(res => {
+      detail.value = res
+    })
+  }
+}
 
 const getLastLog = (e: Event) => {
   if (e.logs == null) {
     return null
   } else {
-    const last = e.logs[e.logs.length - 1]
-    console.log(last)
     return e.logs[e.logs.length - 1]
   }
 }
 
 const eventBottomDialog = (config: BottomDialogConfig) => {
   // TODO condition
-  BottomDialog(config).then(() => setEvents())
+  BottomDialog(config).then(() => {
+    setEvents()
+    setDetail()
+  })
 }
 
 const acceptEvent = (event: Event) => {
@@ -58,6 +78,7 @@ const acceptEvent = (event: Event) => {
     },
   }).then(() => {
     setEvents()
+    setDetail()
   })
 }
 
@@ -188,4 +209,4 @@ const judgeSubmit = async (event: Event) => {
   })
 }
 
-export { setEvents, getLastLog, events, acceptEvent, commitEvent, alterCommit, dropEvent, judgeSubmit }
+export { setEvents, getLastLog, events, acceptEvent, commitEvent, alterCommit, dropEvent, judgeSubmit, setDetail, detail }
