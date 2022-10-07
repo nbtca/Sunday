@@ -35,7 +35,7 @@ const pwaOptions: Partial<VitePWAOptions> = {
       },
       {
         urlPattern: /(.*?)\.(png|jpe?g|svg|gif|bmp|psd|tiff|tga|eps)/, // 图片缓存
-        handler: "CacheFirst",
+        handler: "NetworkFirst",
         options: {
           cacheName: "image-cache",
         },
@@ -60,7 +60,7 @@ export default defineConfig({
     host: "0.0.0.0",
     proxy: {
       "/api": {
-        target: "https://api.nbtca.space/dev/",
+        target: "https://api.nbtca.space/v2/",
         changeOrigin: true,
         rewrite: path => {
           return path.replace(/^\/api/, "")
