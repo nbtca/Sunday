@@ -8,11 +8,11 @@
               事件详情
               <span class="text-3xl pl-2 text-gray-400 font-medium">{{ "#" + detail?.eventId }}</span>
             </div>
-            <div class="md:hidden">{{ detail?.status }}</div>
+            <div class="uppercase md:hidden">{{ detail?.status }}</div>
           </h3>
           <p class="ml-0.5 textDescription">{{ detail?.gmtCreate }}</p>
         </div>
-        <div class="hidden md:flex textSubHeading">{{ detail?.status }}</div>
+        <div class="uppercase hidden md:flex textSubHeading">{{ detail?.status }}</div>
       </div>
       <div class="border border-gray-200 rounded-lg overflow-hidden">
         <div class="infoCell">
@@ -43,12 +43,12 @@
                   {{ detail?.phone }}
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td>偏好</td>
                 <td>
                   {{ detail?.contactPreference }}
                 </td>
-              </tr>
+              </tr> -->
             </table>
           </dd>
         </div>

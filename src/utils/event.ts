@@ -11,4 +11,21 @@ const isCurrentMember = (event: Event, memberId: string) => {
   }
 }
 
-export { isCurrentMember }
+const statusCovert = (status: string) => {
+  switch (status) {
+    case "open":
+      return "待处理"
+    case "cancelled":
+      return "取消"
+    case "accepted":
+      return "受理"
+    case "COMMITTED":
+      return "待审核"
+    case "CLOSED":
+      return "已关闭"
+    default:
+      return "未知状态"
+  }
+}
+
+export { isCurrentMember, statusCovert }
