@@ -1,18 +1,40 @@
 import Axios from "@/utils/axios"
 import type { Event } from "@/models/event"
 
+interface EventFilter {
+  offset?: number
+  limit?: number
+  status?: string
+  order?: "DESC" | "ASC"
+}
+
+const constructQuery = (filter: any) => {
+  let query = ""
+  for (const key in filter) {
+    if (filter[key]) {
+      query += `${key}=${filter[key]}&`
+    }
+  }
+  query = query.slice(0, -1)
+  return query
+}
+
 const EventService = {
   async get(eventId: number) {
     const res = await Axios("/events/" + eventId, null, "get")
     return res as Event
   },
-  async getAll(offset: number, limit: number) {
-    const res = await Axios(`/events?offset=${offset}&limit=${limit}`, null, "get")
+  async getAll(filter: EventFilter) {
+    const res = await Axios(`/events?${constructQuery(filter)}`, null, "get")
     return res as Event[]
   },
   async getMemberEvent(eventId: number) {
     const res = await Axios("/member/events/" + eventId, null, "get")
     return res as Event
+  },
+  async getAllMemberEvents() {
+    const res = await Axios("/member/events", null, "get")
+    return res as Event[]
   },
   async accept(eventId: number) {
     const res = await Axios("/member/events/" + eventId + "/accept", null, "post")

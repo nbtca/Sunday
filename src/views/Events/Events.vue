@@ -9,9 +9,9 @@
           style="width: 98%"
           v-model="searchQuery"
           placeholder="搜索" />
-        <TabGroup class="w-full" :defaultIndex="defaultIndex">
+        <TabGroup class="w-full" :defaultIndex="0">
           <TabList class="flex space-x-1 p-1">
-            <Tab v-for="item in filterOptions" as="template" :key="item" v-slot="{ selected }">
+            <Tab v-for="item in roleFilter" as="template" :key="item.name" v-slot="{ selected }">
               <button
                 @click="filterHandler(item)"
                 class="rounded-lg font-semibold w-full py-2.5 text-indigo-600 leading-5 focus:(outline-none border-base-standout )"
@@ -20,7 +20,7 @@
                     ? 'bg-white shadow cursor-default'
                     : 'text-gray-400 hover:bg-gray-50/[0.12] hover:text-blue-400',
                 ]">
-                {{ item }}
+                {{ item.name }}
               </button>
             </Tab>
           </TabList>
@@ -37,7 +37,7 @@
             <div class="text-left w-2/3 truncate">
               {{ item.problem }}
             </div>
-            <div>
+            <div class="uppercase">
               {{ item.status }}
             </div>
           </button>
@@ -76,7 +76,7 @@
                 class="btnxs btnWarningReverse">
                 审核
               </button>
-              <div v-if="item.status == 'cancelled' || item.status == 'closed'">
+              <div class="uppercase" v-if="item.status == 'cancelled' || item.status == 'closed'">
                 {{ item.status }}
               </div>
             </template>
@@ -117,25 +117,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
-import router from "@/router"
-import { setEvents, events, acceptEvent, commitEvent, alterCommit, dropEvent, judgeSubmit } from "./EventActions"
+import { ref } from "vue"
+import { setEvents, acceptEvent, commitEvent, alterCommit, dropEvent, judgeSubmit } from "./EventActions"
 import { TabGroup, TabList, Tab } from "@headlessui/vue"
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue"
 import EventCard from "../../components/EventCard/EventCard.vue"
 import EventsDetail from "./EventsDetail.vue"
-import { useRoute } from "vue-router"
 import { isCurrentMember } from "@/utils/event"
 import { useAccountStore } from "@/stores/account"
 import { useEventStore } from "@/stores/event"
-import type member from "@/models/member"
 import type { Event } from "@/models/event"
+import { searchQuery, roleFilter, filterHandler, filteredList, eventsMatchingByRID } from "./EventActions"
 
 const store = useAccountStore()
 const eventStore = useEventStore()
 const memberId = ref(store.account.memberId || "")
 
-// const statusToText = ref(["已取消", "待接受", "已接受", "待审核", "已关闭"])
 const reachBottomDistance = 100
 let isReachingBottom = false
 
@@ -146,49 +143,12 @@ const onScroll = e => {
   let currentHeight = scrollTop + offsetHeight + reachBottomDistance
   if (currentHeight >= scrollHeight && !isReachingBottom) {
     isReachingBottom = true
-    // emit("reachingBottom");
     console.log("触底")
   }
   if (currentHeight < scrollHeight) {
     isReachingBottom = false
   }
-  // console.log(e.target.scrollTop);
 }
-
-// filter
-const defaultIndex = ref(0)
-const filterOptions = ref(store.account.role == "admin" ? ["全部", "我的", "审核"] : ["待接受", "我的"])
-const checkOnly = ref(false)
-const eventsMatchingByRID = ref(false)
-const searchQuery = ref("")
-
-const filterHandler = (e: string) => {
-  checkOnly.value = false
-  eventsMatchingByRID.value = false
-  if (e == "全部") {
-    eventsMatchingByRID.value = false
-  } else if (e == "我的") {
-    eventsMatchingByRID.value = true
-  } else if (e == "审核") {
-    checkOnly.value = true
-  }
-}
-const filteredList = computed(() => {
-  const menuFilter = events.value.filter(event => {
-    if (checkOnly.value === true) {
-      // for admin to validate commits
-      return event.status == "committed"
-    } else if (eventsMatchingByRID.value === true) {
-      return isCurrentMember(event, store.account.memberId || "") && event.status != "closed"
-    } else {
-      return event.status == "open"
-    }
-  })
-  return menuFilter.filter(event => {
-    // TODO new API for searching events
-    return event.problem.indexOf(searchQuery.value) >= 0
-  })
-})
 
 const showDetail = (e: Event) => {
   eventStore.eventId = e.eventId

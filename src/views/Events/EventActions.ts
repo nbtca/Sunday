@@ -1,25 +1,20 @@
-import { ref } from "vue"
+import { computed, ref } from "vue"
 
 import BottomDialog from "@/components/BottomDialog/index.js"
 import EventService from "@/services/event"
 import type { Event } from "@/models/event"
 import type { BottomDialogConfig } from "@/components/BottomDialog/types"
 import { useEventStore } from "@/stores/event"
+import { useAccountStore } from "@/stores/account"
+import { isCurrentMember } from "@/utils/event"
 const events = ref(Array<Event>())
 const detail = ref<Event>()
 const eventStore = useEventStore()
+const store = useAccountStore()
 
 const setEvents = async () => {
-  events.value = []
-  let offset = 0
-  while (true) {
-    const res = await EventService.getAll(offset, 30)
-    offset += res.length
-    events.value = events.value.concat(res)
-    if (res.length == 0) {
-      return
-    }
-  }
+  console.log("setting")
+  events.value = await EventService.getAll({ order: "DESC" })
 }
 const setDetail = async () => {
   if (eventStore.eventId == null) {
@@ -45,10 +40,75 @@ const getLastLog = (e: Event) => {
   }
 }
 
+const checkOnly = ref(false)
+const eventsMatchingByRID = ref(false)
+const searchQuery = ref("")
+interface FilterOption {
+  name: string
+  handler: () => void
+  adminOnly?: boolean
+}
+const filterOptions: FilterOption[] = [
+  {
+    name: "待接受",
+    handler: () => {
+      setEvents()
+      eventsMatchingByRID.value = false
+    },
+  },
+  {
+    name: "我的",
+    handler: () => {
+      eventsMatchingByRID.value = true
+      setMemberEvents()
+    },
+  },
+  {
+    name: "审核",
+    handler: () => {
+      checkOnly.value = true
+    },
+    adminOnly: true,
+  },
+]
+const roleFilter = computed(() => {
+  return filterOptions.filter(item => !item.adminOnly || store.account.role == "admin")
+})
+
+const currentFilter = ref(filterOptions[0])
+
+const filterHandler = (o: FilterOption) => {
+  checkOnly.value = false
+  eventsMatchingByRID.value = false
+  o.handler()
+  currentFilter.value = o
+}
+const filteredList = computed(() => {
+  const menuFilter = events.value.filter(event => {
+    if (checkOnly.value === true) {
+      // for admin to validate commits
+      return event.status == "committed"
+    } else if (eventsMatchingByRID.value === true) {
+      return isCurrentMember(event, store.account.memberId || "") && event.status != "closed"
+    } else {
+      return event.status == "open"
+    }
+  })
+  return menuFilter.filter(event => {
+    // TODO new API for searching events
+    return event.problem.indexOf(searchQuery.value) >= 0
+  })
+})
+
+const setMemberEvents = async () => {
+  const res = await EventService.getAllMemberEvents()
+  events.value = res
+}
+
 const eventBottomDialog = (config: BottomDialogConfig) => {
   // TODO condition
   BottomDialog(config).then(() => {
-    setEvents()
+    currentFilter.value.handler()
     setDetail()
   })
 }
@@ -209,4 +269,20 @@ const judgeSubmit = async (event: Event) => {
   })
 }
 
-export { setEvents, getLastLog, events, acceptEvent, commitEvent, alterCommit, dropEvent, judgeSubmit, setDetail, detail }
+export {
+  setEvents,
+  getLastLog,
+  events,
+  searchQuery,
+  roleFilter,
+  filterHandler,
+  filteredList,
+  eventsMatchingByRID,
+  acceptEvent,
+  commitEvent,
+  alterCommit,
+  dropEvent,
+  judgeSubmit,
+  setDetail,
+  detail,
+}
