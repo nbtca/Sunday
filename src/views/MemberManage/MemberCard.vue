@@ -2,8 +2,7 @@
   <div class="cellsm overflow-visible">
     <div class="flex">
       <div class="border rounded-full flex-shrink-0 h-14 w-14 relative overflow-hidden">
-        <img v-if="member.avatar" class="object-fill object-center z-0 absolute" :src="member.avatar" alt="" />
-        <UserIcon v-if="!member.avatar" class="m-1" />
+        <img class="object-fill object-center z-0 absolute" :src="member.avatar || defaultAvatar" alt="" />
       </div>
       <div class="flex flex-col text-left ml-2 items-start justify-center">
         <div class="flex items-center">
@@ -25,9 +24,11 @@
 </template>
 <script setup lang="ts">
 import type Member from "@/models/member"
-import { UserIcon } from "@heroicons/vue/outline"
+
+const defaultAvatar = "https://oss.nbtca.space/weekend/1679839327.png"
 
 const props = defineProps<{
   member: Member
 }>()
+
 </script>
