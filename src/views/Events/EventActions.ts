@@ -13,9 +13,9 @@ const eventStore = useEventStore()
 const store = useAccountStore()
 
 const setEvents = async () => {
-  console.log("setting")
   events.value = await EventService.getAll({ order: "DESC" })
 }
+
 const setDetail = async () => {
   if (eventStore.eventId == null) {
     return
@@ -66,6 +66,7 @@ const filterOptions: FilterOption[] = [
   {
     name: "审核",
     handler: () => {
+      setEvents()
       checkOnly.value = true
     },
     adminOnly: true,
@@ -96,7 +97,7 @@ const filteredList = computed(() => {
   })
   return menuFilter.filter(event => {
     // TODO new API for searching events
-    return event.problem.indexOf(searchQuery.value) >= 0
+    return event.problem && event.problem.indexOf(searchQuery.value) >= 0
   })
 })
 
@@ -114,7 +115,7 @@ const eventBottomDialog = (config: BottomDialogConfig) => {
 }
 
 const acceptEvent = (event: Event) => {
-  if (event.eventId == undefined) {
+  if (!event.eventId == undefined) {
     return
   }
   BottomDialog({
@@ -176,6 +177,9 @@ const commitEvent = (event: Event) => {
 }
 
 const alterCommit = (event: Event) => {
+  if (event.eventId == undefined) {
+    return
+  }
   EventService.getMemberEvent(event.eventId).then(res => {
     // TODO if last log action is not commit ?????????
     eventBottomDialog({
@@ -237,6 +241,9 @@ const dropEvent = (event: Event) => {
 }
 
 const judgeSubmit = async (event: Event) => {
+  if (event.eventId == undefined) {
+    return
+  }
   eventBottomDialog({
     subject: "审核提交",
     acceptActionName: "通过",

@@ -13,18 +13,16 @@
           :passWarning="isIDValid"
           class="w-full"
           v-model:content="accountInput.id"
-          :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]" />
+          :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]"
+        />
         <InputBase
           placeholder="密码"
           :passWarning="isPasswordValid"
           type="password"
           class="w-full"
-          v-model:content="accountInput.password" />
-        <button
-          class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md"
-          type="submit">
-          登入
-        </button>
+          v-model:content="accountInput.password"
+        />
+        <button class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md" type="submit">登入</button>
       </form>
     </div>
   </div>
@@ -50,28 +48,39 @@ const isPasswordValid = ref("")
 const login = async () => {
   isPasswordValid.value = ""
   const account = isFormValid(accountInput.value)
-  if (account != false) {
-    let hashedPassword = ""
-    if (account.password != undefined && account.password != "") {
-      hashedPassword = md5(account.password)
-    }
-    await MemberService.createToken({
+  console.log(account)
+  if (!account) return
+  let hashedPassword = ""
+  if (account.password != undefined && account.password != "") {
+    hashedPassword = md5(account.password)
+  }
+  try {
+    const res = await MemberService.createToken({
       id: account.id,
       password: hashedPassword,
     })
-      .then(res => {
-        store.account = res
-        store.token = res.token
-        if (res.role.includes("inactive")) {
-          router.push("/activate")
-          router.push("/activate")
-        } else {
-          router.push("/Events")
-        }
-      })
-      .catch(err => {
-        // TODO code 422 id or password is wrong
-      })
+    store.account = res
+    store.token = res.token
+    if (res.role.includes("inactive")) {
+      router.push("/activate")
+      router.push("/activate")
+    } else {
+      router.push("/Events")
+    }
+  } catch (error) {
+    const errorData = error.response.data as any
+    console.log(errorData)
+    if (!errorData.errors || errorData.errors.length == 0) {
+      return
+    }
+    if (errorData.errors[0].field == "password") {
+      isPasswordValid.value = "密码错误"
+    }
+    if (errorData.errors[0].field == "memberId") {
+      isIDValid.value = "ID不存在"
+    }
+    // if(!error.response.data || !error.response.data.errors ||)
+    // console.log(error.response.data)
   }
 }
 </script>

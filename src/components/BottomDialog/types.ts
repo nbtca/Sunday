@@ -3,7 +3,7 @@ import type { InputProps, Rule } from "../Input/types"
 
 type Content = {
   key: string
-  value: string
+  value?: string
 }
 interface FormItem {
   id: string

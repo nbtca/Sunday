@@ -4,7 +4,7 @@
       <div class="flex h-15 mb-2 p-2 z-40 justify-between items-center sm:(p-0 m-0) md:(w-full h-24) lg:(p-2)">
         <div class="flex items-center sm:hidden" @click="accountSetting">
           <div class="rounded-full h-11 w-11 overflow-hidden border block">
-            <img class="" :src="store.account.avatar" alt="" />
+            <img class="" :src="store.account.avatar || defaultAvatar" alt="" />
           </div>
           <div class="ml-2">
             <div class="flex items-center">
@@ -64,7 +64,7 @@
     <div class="flex flex-col mb-4 hidden items-center sm:(flex)">
       <div class="flex flex-col items-center xl:(flex-row mb-4)">
         <div class="rounded-full overflow-hidden hidden border sm:(h-20 w-20 block) md:(h-28 w-28)">
-          <img class="" :src="store.account.avatar" alt="" />
+          <img class="" :src="store.account.avatar || defaultAvatar" alt="" />
         </div>
         <div class="relative xl:(self-end ml-2)">
           <div class="flex justify-center items-center xl:(flex-col items-start)">
@@ -135,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, type Ref } from "vue"
+import { ref, computed, watch } from "vue"
 import router from "@/router"
 import { MenuIcon, LogoutIcon, CogIcon } from "@heroicons/vue/outline"
 import { TransitionRoot } from "@headlessui/vue"
@@ -148,6 +148,9 @@ import MemberService from "@/services/member"
 import type Member from "@/models/member"
 import CommonService from "@/services/common"
 import { useAccountStore } from "@/stores/account"
+
+// TODO
+const defaultAvatar = "https://oss.nbtca.space/weekend/1679839327.png"
 
 const store = useAccountStore()
 
@@ -232,7 +235,7 @@ const accountSetting = () => {
     },
   })
 }
-const updateAvatar = async (e: InputEvent) => {
+const updateAvatar = async (e: Event) => {
   const target = e.target as HTMLInputElement
   const fileList = target.files as FileList
   const file = fileList[0]

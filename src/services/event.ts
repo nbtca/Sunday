@@ -8,24 +8,13 @@ interface EventFilter {
   order?: "DESC" | "ASC"
 }
 
-const constructQuery = (filter: any) => {
-  let query = ""
-  for (const key in filter) {
-    if (filter[key]) {
-      query += `${key}=${filter[key]}&`
-    }
-  }
-  query = query.slice(0, -1)
-  return query
-}
-
 const EventService = {
   async get(eventId: number) {
     const res = await Axios("/events/" + eventId, null, "get")
     return res as Event
   },
   async getAll(filter: EventFilter) {
-    const res = await Axios(`/events?${constructQuery(filter)}`, null, "get")
+    const res = await Axios(`/events`, filter, "get")
     return res as Event[]
   },
   async getMemberEvent(eventId: number) {
