@@ -12,9 +12,9 @@ const iconName = computed(() => {
   else if (props.status == Status.Accepted || props.status == Status.Committed) icon = "status_ongoing.svg"
   else if (props.status == Status.Closed) icon = "status_complete.svg"
   else if (props.status == Status.Cancelled) icon = "status_cancelled.svg"
-  return icon
+  return new URL(`../../assets/images/${icon}`, import.meta.url).href
 })
 </script>
 <template>
-  <img :src="'/src/assets/images/' + iconName" alt="" />
+  <img :src="iconName" alt="" />
 </template>
