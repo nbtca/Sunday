@@ -8,11 +8,16 @@
               事件详情
               <span class="text-3xl pl-2 text-gray-400 font-medium">{{ "#" + detail?.eventId }}</span>
             </div>
-            <div class="uppercase md:hidden">{{ detail?.status }}</div>
+            <div class="md:hidden flex items-center">
+              {{ statusCovert(detail?.status) }}
+              <event-status-icon :status="detail?.status" class="pl-1"></event-status-icon>
+            </div>
           </h3>
           <p class="ml-0.5 textDescription">{{ detail?.gmtCreate }}</p>
         </div>
-        <div class="uppercase hidden md:flex textSubHeading">{{ detail?.status }}</div>
+        <div class="hidden md:flex h-12 w-12">
+          <event-status-icon :status="detail?.status"></event-status-icon>
+        </div>
       </div>
       <div class="border border-gray-200 rounded-lg overflow-hidden">
         <div class="infoCell">
@@ -65,12 +70,7 @@
 
     <div class="w-full pb-16">
       <div>
-        <button
-          v-if="detail?.status == 'open'"
-          class="bg-primary text-primaryContent w-20 btn"
-          @click="acceptEvent(detail)">
-          接受
-        </button>
+        <button v-if="detail?.status == 'open'" class="bg-primary text-primaryContent w-20 btn" @click="acceptEvent(detail)">接受</button>
       </div>
       <div v-if="isCurrentMember(detail, store.account.memberId) && detail.status == 'accepted'" class="flex flex-col">
         <div>
@@ -78,9 +78,7 @@
           <button class="bg-primary text-primaryContent btn" @click="commitEvent(detail)">提交</button>
         </div>
       </div>
-      <div
-        v-if="detail?.status == 'committed' && store.account.role == 'admin'"
-        class="flex flex-nowrap justify-center">
+      <div v-if="detail?.status == 'committed' && store.account.role == 'admin'" class="flex flex-nowrap justify-center">
         <button class="bg-warning text-warningContent mx-4 w-20 btn" @click="rejectEvent(detail)">退回</button>
         <button class="bg-primary text-primaryContent mx-4 w-20 btn" @click="closeEvent(detail)">通过</button>
       </div>
@@ -97,6 +95,8 @@ import type { Event } from "@/models/event"
 import { useAccountStore } from "@/stores/account"
 import { BottomDialogInjectionKey, type BottomDialogType } from "@/components/BottomDialog/types"
 import { useEventStore } from "@/stores/event"
+import EventStatusIcon from "@/components/Event/EventStatusIcon.vue"
+import { statusCovert } from "@/utils/event"
 
 const store = useAccountStore()
 const eventStore = useEventStore()
@@ -105,10 +105,13 @@ const eventStore = useEventStore()
 // const contactPreference = ref(["QQ", "微信", "电话"])
 
 onMounted(() => {
-  setDetail()
+  setDetail(eventStore.mine)
 })
 
-watch(() => eventStore.eventId, setDetail)
+watch(
+  () => eventStore.eventId,
+  () => setDetail(eventStore.mine)
+)
 const BottomDialog = inject(BottomDialogInjectionKey) as BottomDialogType
 
 const rejectEvent = async (event: Event) => {

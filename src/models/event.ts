@@ -45,4 +45,5 @@ interface EventLog {
   gmtCreate: string
 }
 
-export type { Action, Status, Event, EventLog }
+export type { Action, Event, EventLog }
+export { Status }
