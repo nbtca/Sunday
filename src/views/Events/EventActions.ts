@@ -16,11 +16,11 @@ const setEvents = async () => {
   events.value = await EventService.getAll({ order: "DESC" })
 }
 
-const setDetail = async () => {
+const setDetail = async (mine?: Boolean) => {
   if (eventStore.eventId == null) {
     return
   }
-  console.log(eventStore.mine)
+  eventStore.mine = mine || eventStore.mine
   if (eventStore.mine) {
     EventService.getMemberEvent(eventStore.eventId).then(res => {
       detail.value = res
@@ -139,7 +139,7 @@ const acceptEvent = (event: Event) => {
     },
   }).then(() => {
     setEvents()
-    setDetail()
+    setDetail(true)
   })
 }
 
@@ -235,7 +235,9 @@ const dropEvent = (event: Event) => {
       },
     ],
     acceptAction: () => {
-      return EventService.drop(event.eventId)
+      return EventService.drop(event.eventId).then(res => {
+        eventStore.mine = false
+      })
     },
   })
 }

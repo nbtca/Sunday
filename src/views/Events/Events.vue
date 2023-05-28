@@ -37,8 +37,8 @@
             <div class="text-left w-2/3 truncate">
               {{ item.problem }}
             </div>
-            <div class="uppercase">
-              {{ item.status }}
+            <div class="">
+              <event-status-icon :status="item.status"></event-status-icon>
             </div>
           </button>
         </div>
@@ -133,6 +133,7 @@ import { useAccountStore } from "@/stores/account"
 import { useEventStore } from "@/stores/event"
 import type { Event } from "@/models/event"
 import { searchQuery, roleFilter, filterHandler, filteredList, eventsMatchingByRID } from "./EventActions"
+import EventStatusIcon from "@/components/Event/EventStatusIcon.vue"
 
 const store = useAccountStore()
 const eventStore = useEventStore()

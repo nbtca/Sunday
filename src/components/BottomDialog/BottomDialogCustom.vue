@@ -39,17 +39,14 @@ const isConfirmInputValid = ref(false)
 const performAction = (action: any) => {
   const formInput = isFormValid(getFormInput.value)
   // confirm input is valid when confirmMessage is required and form input is valid
-  if (
-    (isConfirmInputValid.value == true || props.confirmMessage != "") &&
-    (formInput != false || props.formList == null)
-  ) {
+  if ((isConfirmInputValid.value == true || props.confirmMessage != "") && (formInput != false || props.formList == null)) {
     message.value = "处理中..."
     action(formInput).then((res: any) => {
-      if (res.resultCode == 0) {
-        message.value = "成功!"
-      } else {
-        message.value = res.resultMsg
-      }
+      // if (res.resultCode == 0) {
+      message.value = "成功!"
+      // } else {
+      //   message.value = res.resultMsg
+      // }
       setTimeout(() => {
         destroySelf("done")
       }, 1000)
@@ -77,7 +74,8 @@ const destroySelf = (e: any) => {
         enter-to="opacity-100 "
         leave="duration-100 ease-in "
         leave-from="opacity-50"
-        leave-to="opacity-0">
+        leave-to="opacity-0"
+      >
         <div class="fixed absolute inset-0 top-0" style="height: 100vh"></div>
       </TransitionChild>
 
@@ -90,13 +88,15 @@ const destroySelf = (e: any) => {
         enter-to="opacity-100 translate-y-0 "
         leave="transition ease-in duration-200 transform"
         leave-from="opacity-100 translate-y-0 "
-        leave-to="opacity-0 translate-y-96">
+        leave-to="opacity-0 translate-y-96"
+      >
         <div class="flex h-11 px-2 justify-between items-center">
           <div class="font-semibold text-base">{{ subject }}</div>
           <button
             :class="[message == '' ? 'text-gray-500/80' : '']"
             class="text-positive focus:outline-none h-6 font-medium rounded-lg"
-            @click="destroySelf('cancel')">
+            @click="destroySelf('cancel')"
+          >
             取消
           </button>
         </div>
@@ -107,7 +107,8 @@ const destroySelf = (e: any) => {
               v-if="confirmMessage && confirmMessage != ''"
               v-model:content="isConfirmInputValid"
               :confirmMessage="confirmMessage"
-              class="mt-2"></input-to-confirm>
+              class="mt-2"
+            ></input-to-confirm>
             <div v-if="formList" class="px-2 py-2 w-full">
               <div v-for="item in formList" :key="item.id">
                 <input-base
@@ -120,17 +121,15 @@ const destroySelf = (e: any) => {
                   :hint="item.hint"
                   :rules="item.rules"
                   :pass-value="item.value"
-                  v-model:content="getFormInput[item.id]"></input-base>
+                  v-model:content="getFormInput[item.id]"
+                ></input-base>
               </div>
             </div>
           </div>
           <div class="flex flex-col min-h-28 py-4 px-2 items-center">
             {{ message }}
             <div v-if="message == ''" class="" :class="[declineAction ? 'flex justify-around w-[90vw]' : '']">
-              <button
-                v-if="declineAction"
-                @click="performAction(declineAction)"
-                class="materialBtn mx-2 btnWarningReverse">
+              <button v-if="declineAction" @click="performAction(declineAction)" class="materialBtn mx-2 btnWarningReverse">
                 {{ declineActionName || "取消" }}
               </button>
               <button
@@ -140,7 +139,8 @@ const destroySelf = (e: any) => {
                   declineAction ? 'materialBtn btnPrimaryReverse mx-2' : 'btnsm btnPositive rounded-x-full',
                   confirmMessage ? 'rounded-x-lg btnWarning' : '',
                   btnClass,
-                ]">
+                ]"
+              >
                 {{ acceptActionName || "确认" }}
               </button>
             </div>
@@ -156,7 +156,8 @@ const destroySelf = (e: any) => {
         enter-to="opacity-100 "
         leave="transition-opacity duration-100 ease-in"
         leave-from="opacity-50 "
-        leave-to="opacity-0">
+        leave-to="opacity-0"
+      >
         <div class="flex items-center justify-center h-full select-none">
           <div class="flex flex-col justify-between materialCard w-80 p-3 shadow-3xl text-lg">
             <div class="text-center font-medium text-xl mt-3">{{ subject }}</div>
@@ -170,7 +171,8 @@ const destroySelf = (e: any) => {
                   v-if="confirmMessage"
                   v-model:content="isConfirmInputValid"
                   :confirmMessage="confirmMessage"
-                  class="mt-2"></input-to-confirm>
+                  class="mt-2"
+                ></input-to-confirm>
                 <div v-if="formList" class="w-full">
                   <div v-for="item in formList" :key="item.id">
                     <input-base
@@ -183,7 +185,8 @@ const destroySelf = (e: any) => {
                       :hint="item.hint"
                       :rules="item.rules"
                       :value="item.value"
-                      v-model:content="getFormInput[item.id]"></input-base>
+                      v-model:content="getFormInput[item.id]"
+                    ></input-base>
                   </div>
                 </div>
               </div>
@@ -196,7 +199,8 @@ const destroySelf = (e: any) => {
               </div>
               <div
                 @click="destroySelf('cancel')"
-                class="materialBtn materialBtn flex items-center justify-center text-lg cursor-pointer btnWarningReverse mt-5">
+                class="materialBtn materialBtn flex items-center justify-center text-lg cursor-pointer btnWarningReverse mt-5"
+              >
                 取消
               </div>
             </form>
