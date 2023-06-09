@@ -48,7 +48,6 @@ const isPasswordValid = ref("")
 const login = async () => {
   isPasswordValid.value = ""
   const account = isFormValid(accountInput.value)
-  console.log(account)
   if (!account) return
   let hashedPassword = ""
   if (account.password != undefined && account.password != "") {
