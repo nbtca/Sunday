@@ -1,8 +1,8 @@
 <template>
   <div class="cellsm overflow-visible">
     <div class="flex">
-      <div class="border rounded-full flex-shrink-0 h-14 w-14 relative overflow-hidden">
-        <img class="object-fill object-center z-0 absolute" :src="member.avatar || defaultAvatar" alt="" />
+      <div class="border rounded-full flex-shrink-0 h-14 w-14 relative overflow-hidden flex items-center justify-center">
+        <img class="object-cover h-14 w-14" :src="member.avatar || defaultAvatar" alt="" />
       </div>
       <div class="flex flex-col text-left ml-2 items-start justify-center">
         <div class="flex items-center">
