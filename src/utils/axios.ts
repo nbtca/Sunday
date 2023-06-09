@@ -40,6 +40,11 @@ axios.interceptors.response.use(
     }
     switch (error.response.status) {
       case 403:
+        defaultNotify.message = "没有权限"
+        Notify(defaultNotify.color, defaultNotify.message)
+        logOut()
+        break
+      case 403:
         defaultNotify.message = "拒绝访问(403)"
         Notify(defaultNotify.color, defaultNotify.message)
         break
