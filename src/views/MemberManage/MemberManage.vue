@@ -68,15 +68,15 @@ const addElementByBottomDialog = () => {
 <template>
   <div class="h-full">
     <div class="hidden sm:block relative">
-      <div class="flex w-full py-6 px-8 justify-between absolute materialMedium bg-white/70 z-50">
+      <div class="flex w-full pt-9 pb-6 px-8 justify-between absolute materialMedium bg-white/70 z-50">
         <div class="textHeading">成员管理</div>
         <button class="bg-primary flex text-primaryContent w-30 btn justify-center items-center" @click="addElementByBottomDialog">
           <PlusIcon class="h-5 text-white mr-2 w-5" />
           <div>添加成员</div>
         </button>
       </div>
-      <div class="p-8 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-4 gap-y-2 overflow-auto pt-24 h-screen">
-        <member-card v-for="member in members" :key="member.memberId" :member="member"></member-card>
+      <div class="p-8 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-6 gap-y-4 overflow-auto pt-30 h-screen content-start">
+        <member-card class="mb-0" v-for="member in members" :key="member.memberId" :member="member"></member-card>
       </div>
     </div>
     <div class="sm:hidden">

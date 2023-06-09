@@ -39,7 +39,7 @@ axios.interceptors.response.use(
       return Promise.reject(error)
     }
     switch (error.response.status) {
-      case 403:
+      case 401:
         defaultNotify.message = "没有权限"
         Notify(defaultNotify.color, defaultNotify.message)
         logOut()
