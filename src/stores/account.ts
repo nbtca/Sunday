@@ -2,7 +2,7 @@ import type Member from "@/models/member"
 import { defineStore } from "pinia"
 
 export const useAccountStore = defineStore("account", {
-  state: () => {
+  state() {
     return {
       account: {
         avatar: "",
@@ -12,6 +12,12 @@ export const useAccountStore = defineStore("account", {
   },
   persist: {
     enabled: true,
+    strategies: [
+      {
+        storage: localStorage,
+        paths: ["token", "account"],
+      },
+    ],
   },
   actions: {
     setAccount(account: Member) {
