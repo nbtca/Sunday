@@ -64,7 +64,7 @@
     <div class="flex flex-col mb-4 hidden items-center sm:(flex)">
       <div class="flex flex-col items-center xl:(flex-row mb-4)">
         <div class="rounded-full overflow-hidden hidden border sm:(h-20 w-20 block) md:(h-28 w-28)">
-          <img class="" :src="store.account.avatar || defaultAvatar" alt="" />
+          <img class="sm:h-20 md:h-28 object-cover" :src="store.account.avatar || defaultAvatar" alt="" />
         </div>
         <div class="relative xl:(self-end ml-2)">
           <div class="flex justify-center items-center xl:(flex-col items-start)">
@@ -93,7 +93,7 @@
           <div class="flex items-center">
             <div class="relative flex">
               <div class="rounded-full border border-gray-400/30 h-20 w-20 overflow-hidden">
-                <img class="object-cover" :src="store.account.avatar" alt="" />
+                <img class="object-cover h-20" :src="store.account.avatar" alt="" />
               </div>
               <label for="file-upload" class="absolute relative textLink text-xs self-end cursor-pointer rounded-xl">
                 <span>修改头像</span>
