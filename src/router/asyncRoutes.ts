@@ -1,4 +1,6 @@
-const asyncRoutes = [
+import type { RouteRecordRaw } from "vue-router"
+
+const asyncRoutes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "Index",
@@ -31,7 +33,7 @@ const asyncRoutes = [
         component: () => import("@/views/MemberManage/MemberManage.vue"),
         meta: {
           menuIcon: true,
-          roles: ["admin"],
+          roles: ["admin", "member"],
           title: "成员管理",
         },
       },

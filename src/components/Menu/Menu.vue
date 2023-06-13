@@ -19,7 +19,7 @@
         <div class="logo hidden sm:block" @click="toEvent">sunday</div>
         <MenuIcon v-if="menuList.length > 1" class="bg-bg-gray-900 h-9 w-9 sm:(hidden)" @click="isOpen = !isOpen"></MenuIcon>
       </div>
-      <div class="hidden sm:(block)">
+      <div class="hidden sm:block">
         <button
           v-for="item in menuList"
           :key="item.name"
@@ -27,7 +27,7 @@
           :class="[item == selectedItem ? 'bg-gray-400/30 cursor-default shadow' : '']"
           @click="toLink(item)"
         >
-          {{ item.meta.title }}
+          {{ item.meta?.title }}
         </button>
       </div>
       <!-- overlay -->
@@ -53,7 +53,7 @@
                 @click="toLink(item)"
               >
                 <div class="w-24">
-                  {{ item.meta.title }}
+                  {{ item.meta?.title }}
                 </div>
               </button>
             </div>
@@ -145,7 +145,6 @@ import InputBase from "@/components/Input/InputBase.vue"
 import logOut from "@/composables/LogOut"
 import { useRoute, type RouteRecordRaw } from "vue-router"
 import MemberService from "@/services/member"
-import type Member from "@/models/member"
 import CommonService from "@/services/common"
 import { useAccountStore } from "@/stores/account"
 
@@ -162,23 +161,17 @@ const newAccountInfo = ref({
   qq: "",
 })
 
-// TODO what if roles is null ????
-interface RouterMeta {
-  menuIcon: boolean
-  roles: string[]
-  title: string
-}
-
 const menuList = computed(() => {
-  const children = router.options.routes[0].children as RouteRecordRaw[]
+  const children = router.options.routes[0].children
+  if (!children) return []
   return children.filter(item => {
-    if (item.meta == null) {
+    if (item.meta == undefined || item.meta.menuIcon == null) {
       return false
     }
-    const meta = item.meta as unknown as RouterMeta
-    for (const r of meta.roles) {
-      return r == store.account.role && meta.menuIcon != null
+    if (!item.meta.roles) {
+      return true
     }
+    return item.meta.roles.find(r => r == store.account.role)
   })
 })
 

@@ -3,12 +3,21 @@ import constantRoutes from "./constantRoutes"
 import asyncRoutes from "./asyncRoutes"
 import { useAccountStore } from "@/stores/account"
 
+declare module "vue-router" {
+  interface RouteMeta {
+    menuIcon?: boolean
+    roles?: string[]
+    title?: string
+  }
+}
+
 const routes = asyncRoutes.concat(constantRoutes)
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
+
 router.beforeEach((to, from, next) => {
   const store = useAccountStore()
   const token = store.token
@@ -47,17 +56,5 @@ router.beforeEach((to, from, next) => {
     next("/NotAuthorized")
   }
 })
-// function constructionRouters(router, t) {
-//   t = router.filter(item => {
-//     // 如果 roles 没有被设置，则所有人均可访问
-//     if (!item.meta || !item.meta.roles || item.meta.roles.length === 0) return true
-//     return item.meta.roles.indexOf(localStorage.getItem("user_role")) !== -1
-//   })
-//   for (const item of t) {
-//     if (item.children) {
-//       item.children = constructionRouters(item.children)
-//     }
-//   }
-//   return t
-// }
+
 export default router

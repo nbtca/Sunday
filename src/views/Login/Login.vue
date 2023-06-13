@@ -68,7 +68,7 @@ const login = async () => {
     }
   } catch (error) {
     const errorData = error.response.data as any
-    console.log(errorData)
+    console.log(error)
     if (!errorData.errors || errorData.errors.length == 0) {
       return
     }

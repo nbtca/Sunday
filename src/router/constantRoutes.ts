@@ -1,4 +1,6 @@
-const constantRoutes = [
+import type { RouteRecordRaw } from "vue-router"
+
+const constantRoutes: RouteRecordRaw[] = [
   {
     path: "/login",
     name: "Login",

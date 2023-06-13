@@ -6,6 +6,9 @@ import MemberCard from "./MemberCard.vue"
 import MemberService from "@/services/member"
 import type Member from "@/models/member"
 import { BottomDialogInjectionKey, type BottomDialogType } from "@/components/BottomDialog/types"
+import { useAccountStore } from "@/stores/account"
+
+const store = useAccountStore()
 
 const members = ref(Array<Member>())
 const setMembers = () => {
@@ -70,12 +73,18 @@ const addElementByBottomDialog = () => {
     <div class="hidden sm:block relative">
       <div class="flex w-full pt-9 pb-6 px-8 justify-between absolute materialMedium bg-white/70 z-50">
         <div class="textHeading">成员管理</div>
-        <button class="bg-primary flex text-primaryContent w-30 btn justify-center items-center" @click="addElementByBottomDialog">
+        <button
+          class="bg-primary flex text-primaryContent w-30 btn justify-center items-center"
+          @click="addElementByBottomDialog"
+          v-if="store.account.role == 'admin'"
+        >
           <PlusIcon class="h-5 text-white mr-2 w-5" />
           <div>添加成员</div>
         </button>
       </div>
-      <div class="p-8 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-6 gap-y-4 overflow-auto pt-30 h-screen content-start">
+      <div
+        class="p-8 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-6 gap-y-4 overflow-auto pt-30 h-screen content-start"
+      >
         <member-card class="mb-0" v-for="member in members" :key="member.memberId" :member="member"></member-card>
       </div>
     </div>
@@ -87,15 +96,13 @@ const addElementByBottomDialog = () => {
       <div class="border-t flex h-12 w-full py-2 px-1 items-center">
         <input
           type="text"
-          class="border-base-standout rounded-lg h-10 shadow-inner my-0.5 mx-0.5 text-center w-[90vw]"
+          class="border-base-standout rounded-lg h-10 shadow-inner my-0.5 mx-0.5 text-center flex-grow"
           placeholder="搜索"
         />
-        <!-- <button disabled class="flex h-8 mx-1 w-8 justify-center items-center">
-          <UploadIcon class="h-5 text-gray-900 w-5" />
-        </button> -->
         <button
-          class="rounded-lg flex h-8 mx-1 w-8 justify-center items-center focus:(shadow-inner outline-none)"
+          class="rounded-lg flex h-8 mx-1 w-8 justify-center items-center focus:(shadow-inner outline-none) flex-shrink-0"
           @click="addElementByBottomDialog"
+          v-if="store.account.role == 'admin'"
         >
           <PlusIcon class="h-5 text-gray-900 w-5" />
         </button>
