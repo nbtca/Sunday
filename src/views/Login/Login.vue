@@ -24,17 +24,28 @@
         />
         <button class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md" type="submit">登入</button>
       </form>
+      <button
+        class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md mt-8"
+        type="submit"
+        @click="onSighInWithLogto"
+      >
+        <div class="flex items-center gap-2">
+          <img src="../../assets/images/logto.svg" alt="" class="h-6 w-6" />
+          <div>使用连接器登入</div>
+        </div>
+      </button>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { isFormValid } from "@/utils/isFormValid"
 import InputBase from "@/components/Input/InputBase.vue"
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import router from "@/router"
 import md5 from "blueimp-md5"
 import MemberService from "@/services/member"
 import { useAccountStore } from "@/stores/account"
+import { useLogto } from "@logto/vue"
 
 const store = useAccountStore()
 
@@ -44,6 +55,11 @@ const accountInput = ref({
 })
 const isIDValid = ref("")
 const isPasswordValid = ref("")
+
+const { signIn } = useLogto()
+const onSighInWithLogto = () => {
+  signIn(import.meta.env.VITE_LOGTO_CALLBACK_URL)
+}
 
 const login = async () => {
   isPasswordValid.value = ""

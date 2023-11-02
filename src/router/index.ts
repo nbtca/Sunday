@@ -1,7 +1,8 @@
-import { createRouter, createWebHashHistory, createWebHistory } from "vue-router"
+import { createRouter, createWebHistory } from "vue-router"
 import constantRoutes from "./constantRoutes"
 import asyncRoutes from "./asyncRoutes"
 import { useAccountStore } from "@/stores/account"
+import { useLogto } from "@logto/vue"
 
 declare module "vue-router" {
   interface RouteMeta {
@@ -19,6 +20,15 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  // console.log(to)
+  // const { isAuthenticated } = useLogto()
+
+  // const target = to.matched[to.matched.length - 1]
+  // if (!isAuthenticated.value && target.meta.roles && target.meta.roles?.length > 0) {
+  //   next({ path: "/login" })
+  //   return
+  // }
+  // next()
   const store = useAccountStore()
   const token = store.token
   let userRole = store.account.role
@@ -45,8 +55,7 @@ router.beforeEach((to, from, next) => {
     return
   }
   // role
-  const roles = target.meta.role || []
-  if (!target.meta || !target.meta.roles || roles.length == 0 || roles.indexOf(userRole) !== -1) {
+  if (!target.meta?.roles || target.meta.roles.length == 0 || target.meta.roles.indexOf(userRole) !== -1) {
     if (userRole == "notActivated") {
       userRole == "notActivated" ? next({ path: "/notActivated" }) : next()
     } else {

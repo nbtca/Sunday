@@ -5,6 +5,7 @@
 		"cellsm",
 		"innerlg",
 		"innersm",
+		"Logto",
 		"sclass"
 	],
 	"testing.automaticallyOpenPeekView": "never"
