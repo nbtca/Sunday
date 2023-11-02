@@ -20,7 +20,6 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // console.log(to)
   // const { isAuthenticated } = useLogto()
 
   // const target = to.matched[to.matched.length - 1]
@@ -42,7 +41,7 @@ router.beforeEach((to, from, next) => {
     return
   }
   if (!token) {
-    if (to.path === "/login") {
+    if (to.path === "/login" || to.path === "/callback") {
       next()
     } else {
       next("/login")

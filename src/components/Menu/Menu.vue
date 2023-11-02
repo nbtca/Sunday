@@ -76,11 +76,12 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-row">
-        <button class="p-2 rounded" @click="accountSetting">
+      <div class="flex flex-row items-center gap-4 text-sm">
+        <button class="rounded-full flex items-center text-blue-600 px-2 py-1" @click="accountSetting">
           <CogIcon class="h-6"></CogIcon>
+          设置
         </button>
-        <logout-button class="p-2 rounded"> logout </logout-button>
+        <logout-button class="p-2 rounded"> 登出 </logout-button>
       </div>
     </div>
     <BottomDialog ref="bottomDialog">

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import logOut from "@/composables/LogOut"
 import type Member from "@/models/member"
 import router from "@/router"
 import { useAccountStore } from "@/stores/account"
@@ -8,11 +9,9 @@ import { ref, onMounted } from "vue"
 
 const store = useAccountStore()
 
-const { signIn, isAuthenticated, fetchUserInfo, getAccessToken } = useLogto()
+const { signIn, signOut, isAuthenticated, fetchUserInfo, getAccessToken } = useLogto()
 const authenticateFailed = ref(false)
 const { isLoading } = useHandleSignInCallback(async () => {
-  const info = await fetchUserInfo()
-
   const token = await getAccessToken(import.meta.env.VITE_LOGTO_RESOURCE)
 
   const res = await window.fetch("/api/member/token/logto", {
@@ -33,7 +32,7 @@ const { isLoading } = useHandleSignInCallback(async () => {
     }
   } else {
     setTimeout(() => {
-      router.push("/login")
+      signOut(import.meta.env.VITE_LOGTO_REDIRECT_URL)
     }, 2000)
   }
 })

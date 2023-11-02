@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import router from "@/router"
 import { useAccountStore } from "@/stores/account"
 import { useLogto } from "@logto/vue"
 
@@ -9,7 +10,7 @@ const logOut = () => {
   const store = useAccountStore()
   store.account = {}
   store.token = ""
-  signIn(import.meta.env.VITE_LOGTO_CALLBACK_URL)
+  signOut(import.meta.env.VITE_LOGTO_REDIRECT_URL)
 }
 </script>
 <template>

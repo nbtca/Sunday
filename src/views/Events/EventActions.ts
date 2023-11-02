@@ -270,10 +270,10 @@ const judgeSubmit = async (event: Event) => {
       },
     ],
     acceptAction: () => {
-      return EventService.close(event.eventId)
+      return EventService.close(event.eventId as number)
     },
     declineAction: () => {
-      return EventService.rejectCommit(event.eventId)
+      return EventService.rejectCommit(event.eventId as number)
     },
   })
 }
