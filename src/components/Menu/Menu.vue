@@ -76,13 +76,12 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-row">
-        <button class="p-2 rounded" @click="accountSetting">
+      <div class="flex flex-row items-center gap-4 text-sm">
+        <button class="rounded-full flex items-center text-blue-600 px-2 py-1" @click="accountSetting">
           <CogIcon class="h-6"></CogIcon>
+          设置
         </button>
-        <button class="p-2 rounded" @click="logOut">
-          <LogoutIcon class="h-6"></LogoutIcon>
-        </button>
+        <logout-button class="p-2 rounded"> 登出 </logout-button>
       </div>
     </div>
     <BottomDialog ref="bottomDialog">
@@ -128,7 +127,7 @@
         </form>
       </template>
       <template #actionSpace>
-        <button @click="logOut" class="materialBtn btnWarning mt-1 shadow">登出</button>
+        <logout-button class="materialBtn btnWarning mt-1 shadow">登出</logout-button>
       </template>
     </BottomDialog>
   </div>
@@ -142,7 +141,7 @@ import { TransitionRoot } from "@headlessui/vue"
 import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue"
 import InputSection from "@/components/Input/InputSection.vue"
 import InputBase from "@/components/Input/InputBase.vue"
-import logOut from "@/composables/LogOut"
+import LogoutButton from "../LogoutButton.vue"
 import { useRoute, type RouteRecordRaw } from "vue-router"
 import MemberService from "@/services/member"
 import CommonService from "@/services/common"
@@ -184,13 +183,7 @@ const selectedItem = computed(() => {
   if (menuList.value == null) {
     return null
   }
-  let ans
-  for (const item of menuList.value) {
-    if (item.path == pagePath) {
-      ans = item
-    }
-  }
-  return ans
+  return menuList.value.find(item => item.path == pagePath)
 })
 
 const toLink = (item: RouteRecordRaw) => {

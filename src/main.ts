@@ -13,6 +13,7 @@ import BottomDialog from "@/components/BottomDialog"
 import Notify from "@/components/Notify"
 import { BottomDialogInjectionKey } from "./components/BottomDialog/types"
 import { NotifyInjectionKey } from "./components/Notify/types"
+import { createLogto, type LogtoConfig } from "@logto/vue"
 
 app.provide(BottomDialogInjectionKey, BottomDialog)
 app.provide(NotifyInjectionKey, Notify)
@@ -20,4 +21,12 @@ app.provide(NotifyInjectionKey, Notify)
 app.use(pinia)
 app.use(router)
 
+const config: LogtoConfig = {
+  endpoint: import.meta.env.VITE_LOGTO_ENDPOINT,
+  appId: import.meta.env.VITE_LOGTO_APP_ID,
+  resources: [ import.meta.env.VITE_LOGTO_RESOURCE ],
+  scopes: ["email", "custom_data"],
+}
+
+app.use(createLogto, config)
 app.mount("#app")

@@ -60,7 +60,8 @@ export default defineConfig({
     host: "0.0.0.0",
     proxy: {
       "/api": {
-        target: "https://api.nbtca.space/dev/",
+        // target: "https://api.nbtca.space/dev/",
+        target: "http://localhost:4000",
         changeOrigin: true,
         rewrite: path => {
           return path.replace(/^\/api/, "")

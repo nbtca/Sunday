@@ -32,7 +32,9 @@
 
         <button class="w-full btn bg-primary text-primaryContent mt-5" type="submit">提交</button>
       </form>
-      <button class="w-full btn bg-warning text-primaryContent mt-5" style="width: 17vw; min-width: 300px" @click="logOut">取消</button>
+      <logout-button class="w-full btn bg-warning text-primaryContent mt-5" style="width: 17vw; min-width: 300px" @click="logOut"
+        >取消
+      </logout-button>
     </div>
   </div>
 </template>
@@ -41,8 +43,8 @@ import { ref, computed } from "vue"
 import md5 from "blueimp-md5"
 import router from "@/router"
 import InputBase from "@/components/Input/InputBase.vue"
+import LogoutButton from "@/components/LogoutButton.vue"
 import { isFormValid } from "@/utils/isFormValid"
-import logOut from "@/composables/LogOut"
 import MemberService from "@/services/member"
 import { useAccountStore } from "@/stores/account"
 

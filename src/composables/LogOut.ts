@@ -5,8 +5,6 @@ const logOut = () => {
   const store = useAccountStore()
   store.account = {}
   store.token = ""
-  localStorage.clear()
-  router.push("/login")
 }
 
 export default logOut

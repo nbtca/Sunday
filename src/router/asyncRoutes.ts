@@ -5,6 +5,9 @@ const asyncRoutes: RouteRecordRaw[] = [
     path: "/",
     name: "Index",
     component: () => import("@/views/index.vue"),
+    meta: {
+      roles: ["admin", "member"],
+    },
     children: [
       {
         path: "/Events",

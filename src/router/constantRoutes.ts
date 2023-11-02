@@ -7,6 +7,11 @@ const constantRoutes: RouteRecordRaw[] = [
     component: () => import("@/views/Login/Login.vue"),
   },
   {
+    path: "/callback",
+    name: "callback",
+    component: () => import("@/views/CallbackView.vue"),
+  },
+  {
     path: "/NotFound",
     name: "NotFound",
     component: () => import("@/views/ErrorPage/NotFound.vue"),

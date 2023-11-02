@@ -16,13 +16,66 @@
 <script setup lang="ts">
 import Menu from "@/components/Menu/Menu.vue"
 import { ref } from "@vue/reactivity"
+import { onMounted } from "vue"
 const isSafari = ref(false)
-
 var userAgent = navigator.userAgent
 isSafari.value = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1
 
 let vh = window.innerHeight * 0.01
 document.documentElement.style.setProperty("---vh", `${vh}px`)
+
+// const urlBase64ToUint8Array = (base64String: string) => {
+//   const padding = "=".repeat((4 - (base64String.length % 4)) % 4)
+//   const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/")
+//   const rawData = window.atob(base64)
+//   return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)))
+// }
+
+// const subscribe = () => {
+//   navigator.serviceWorker.ready
+//     .then(registration => {
+//       const vapidPublicKey = "BGtkbcjrO12YMoDuq2sCQeHlu47uPx3SHTgFKZFYiBW8Qr0D9vgyZSZPdw6_4ZFEI9Snk1VEAj2qTYI1I1YxBXE"
+
+//       return registration.pushManager.subscribe({
+//         userVisibleOnly: true,
+//         applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+//       })
+//     })
+//     .then(subscription => {
+//       console.log(
+//         JSON.stringify({
+//           subscription: subscription,
+//         })
+//       )
+//     })
+//     .catch(err => console.error(err))
+// }
+
+// onMounted(async () => {
+// const { getAccessToken } = useLogto()
+// const token = await getAccessToken("https://api.nbtca.space/v2")
+// console.log(token)
+// if ("serviceWorker" in navigator) {
+//   navigator.serviceWorker
+//     .register(new URL("../sw.ts", import.meta.url).href)
+//     .then(registration => {
+//       console.log(registration)
+//       return registration.pushManager.getSubscription()
+//       return registration.pushManager.getSubscription()
+//     })
+//     .then(function (subscription) {
+//       if (!subscription) {
+//         subscribe()
+//       } else {
+//         console.log(
+//           JSON.stringify({
+//             subscription: subscription,
+//           })
+//         )
+//       }
+//     })
+// }
+// })
 </script>
 
 <style>
