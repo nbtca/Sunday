@@ -37,7 +37,7 @@
             <div class="text-left w-2/3 truncate">
               {{ item.problem }}
             </div>
-            <div class="">
+            <div class="" v-if="item.status != undefined">
               <event-status-icon :status="item.status"></event-status-icon>
             </div>
           </button>

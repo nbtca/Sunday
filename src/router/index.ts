@@ -41,11 +41,16 @@ router.beforeEach((to, from, next) => {
     return
   }
   if (!token) {
-    if (to.path === "/login" || to.path === "/callback") {
+    if (to.path === "/login" || to.path === "/callback" || to.path === "/register") {
       next()
     } else {
       next("/login")
     }
+    return
+  }
+
+  if (userRole.includes("inactive") && to.path != "/activate") {
+    next({ path: "/activate" })
     return
   }
 

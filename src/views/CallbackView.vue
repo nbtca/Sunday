@@ -7,20 +7,13 @@ import { ref, onMounted, computed } from "vue"
 import InputBase from "@/components/Input/InputBase.vue"
 import { isFormValid } from "@/utils/isFormValid"
 import md5 from "blueimp-md5"
+import { createTokenViaLogtoToken } from "@/services/logto"
 
 const store = useAccountStore()
 
 const { signIn, signOut, isAuthenticated, fetchUserInfo, getAccessToken } = useLogto()
 const authenticateFailed = ref(false)
 const needBindMember = ref(false)
-
-const createTokenViaLogtoToken = async (token: string) => {
-  return await window.fetch("/api/member/token/logto", {
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-  })
-}
 
 const handleCreateToken = async () => {
   const token = await getAccessToken(import.meta.env.VITE_LOGTO_RESOURCE)
@@ -37,7 +30,7 @@ const handleCreateToken = async () => {
   if (body instanceof Object && "token" in body && "memberId" in body && "role" in body) {
     store.account = body as Member
     store.token = body.token as string
-    if (body.role instanceof Array && body.role.includes("inactive")) {
+    if (body.role && body.role.includes("inactive")) {
       router.push("/activate")
       router.push("/activate")
     } else {
@@ -103,8 +96,8 @@ const login = async () => {
 
   await handleCreateToken()
 }
-const logout = () => {
-  signOut(import.meta.env.VITE_LOGTO_REDIRECT_URL)
+const onRegisterMember = () => {
+  router.push({ name: "LoginRegister" })
 }
 onMounted(() => {
   if (isAuthenticated.value) {
@@ -114,36 +107,47 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-3 h-full">
+  <div class="p-3 h-full bg-systemBackground-lightSecondary">
     <p v-if="isLoading">页面跳转中。。。</p>
     <p v-if="authenticateFailed">认证失败，跳转至登入页面。</p>
     <div v-if="needBindMember" class="flex flex-col items-center justify-center h-full">
       <div class="pb-10 text-lg flex flex-col items-center">
         <div class="pb-8 text-2xl font-bold">在第一次登入时，我们需要您绑定你的账户信息</div>
-        <div class="">如果你原先已经使用过此维修平台，请输入原先用于登入的帐号和密码</div>
-        <div class="">如果这是第一次使用，请联系管理员添加你的信息，随后只需要输入你的学号即可</div>
+        <div class="">如果你原先已经使用过此维修平台，请输入原先用于登入的帐号和密码来绑定信息</div>
+        <div class="mt-2">
+          如果这是你第一次使用，请点击下方的
+          <span class="italic font-bold"> 登记信息 </span>
+          来获取你的账号
+        </div>
       </div>
-      <form @submit.prevent="login" class="grid gap-4 place-items-center" style="width: 20vw; min-width: 300px">
-        <InputBase
-          placeholder=""
-          hint="学号"
-          maxLength="10"
-          required
-          :passWarning="isIDValid"
-          class="w-full"
-          v-model:content="accountInput.id"
-          :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]"
-        />
-        <InputBase
-          placeholder="初始密码为空"
-          hint="密码"
-          :passWarning="isPasswordValid"
-          type="password"
-          class="w-full"
-          v-model:content="accountInput.password"
-        />
-        <button class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md" type="submit">绑定账号</button>
-      </form>
+      <div style="width: 20vw; min-width: 300px">
+        <form @submit.prevent="login" class="grid gap-4 place-items-center">
+          <InputBase
+            placeholder=""
+            hint="学号"
+            maxLength="10"
+            required
+            :passWarning="isIDValid"
+            class="w-full"
+            v-model:content="accountInput.id"
+            :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]"
+          />
+          <InputBase
+            placeholder="初始密码为空"
+            hint="密码"
+            :passWarning="isPasswordValid"
+            type="password"
+            class="w-full"
+            v-model:content="accountInput.password"
+          />
+          <button class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md" type="submit">
+            绑定账号
+          </button>
+        </form>
+        <button class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md mt-8" @click="onRegisterMember">
+          登记信息
+        </button>
+      </div>
     </div>
   </div>
 </template>

@@ -5,6 +5,7 @@ const asyncRoutes: RouteRecordRaw[] = [
     path: "/",
     name: "Index",
     component: () => import("@/views/index.vue"),
+    redirect: "/Events",
     meta: {
       roles: ["admin", "member"],
     },
@@ -41,6 +42,11 @@ const asyncRoutes: RouteRecordRaw[] = [
         },
       },
     ],
+  },
+  {
+    path: "/register",
+    name: "LoginRegister",
+    component: () => import("@/views/Login/LoginRegister.vue"),
   },
   {
     path: "/activate",

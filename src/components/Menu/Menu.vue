@@ -63,8 +63,10 @@
     </div>
     <div class="flex flex-col mb-4 hidden items-center sm:(flex)">
       <div class="flex flex-col items-center xl:(flex-row mb-4)">
-        <div class="rounded-full overflow-hidden hidden border sm:(h-20 w-20 block) md:(h-28 w-28)">
-          <img class="sm:h-20 md:h-28 object-cover" :src="store.account.avatar || defaultAvatar" alt="" />
+        <div
+          class="border rounded-full flex-shrink-0 sm:(h-20 w-20 block) md:(h-28 w-28) relative overflow-hidden flex items-center justify-center"
+        >
+          <img class="object-cover sm:(h-20 w-20 block) md:(h-28 w-28)" :src="store.account.avatar || defaultAvatar" alt="" />
         </div>
         <div class="relative xl:(self-end ml-2)">
           <div class="flex justify-center items-center xl:(flex-col items-start)">

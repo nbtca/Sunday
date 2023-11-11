@@ -42,6 +42,37 @@ module.exports = {
           content: "#f3F4F6",
         },
         darkBase: "#171718",
+        systemGreen: { light: "#00b300", dark: "#32d74b" },
+        systemRed: { light: "#ff3b30", dark: "#ff453a" },
+        systemBlue: { light: "#007aff", dark: "#0a84ff" },
+        systemGrey: { light: "#8e8e93", dark: "#8e8e93" },
+        systemWhite: { light: "#FFFFFF", dark: "#FFFFFF" },
+        textBlack: { light: "#0b0a0a", dark: "#f5f5f5" },
+        borderGrey: { light: "#b9b9bb", dark: "#b9b9bb" },
+        systemBackground: { light: "#f9f9f9f0", lightSecondary: "#F2F2F7", dark: "#f9f9f9f0" },
+        labelColor: {
+          light: {
+            tertiary: "#bebec0",
+            secondary: "#86868a",
+          },
+        },
+        fillColor: {
+          light: {
+            teritary: "#e5e5e6",
+            secondary: "#e1e1e2",
+          },
+        },
+        separatorColor: {
+          light: {
+            withTrans: "#3C3C435C",
+          },
+        },
+      },
+      fillColor: {
+        light: {
+          teritary: "#e5e5e6",
+          secondary: "#e1e1e2",
+        },
       },
     },
   },
@@ -70,7 +101,7 @@ module.exports = {
     btnxs:
       "rounded-full whitespace-nowrap shadow-sm select-none focus:(outline-none) transition duration-300 ease-in-out min-w-13 text-xs font-bold p-1 h-7 ",
     cellsm:
-      "relative overflow-hidden bg-white/90 border border-base-standout/70 rounded-xl flex justify-between w-full h-21 mb-2 py-1 px-2 text-sm items-center shadow-sm",
+      "relative overflow-hidden bg-white/90 border border-base-standout/70 rounded-xl flex justify-between w-full min-h-21 mb-2 py-1 px-2 text-sm items-center shadow-sm",
     cell: "flex items-center justify-center w-full p-3 my-1 transition-all duration-300 ease-in-out rounded-md cursor-pointer select-none hover:( materialThick bg-gray-400/40 shadow-sm) focus:(outline-none)",
     infoCell: "px-1 py-1  grid grid-cols-2 sm:py-4 sm:gap-4 sm:px-3",
     infoHead: "text-sm font-medium flex flex-col justify-center",
