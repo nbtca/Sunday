@@ -24,7 +24,7 @@
         />
         <button class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md" type="submit">登入</button>
       </form> -->
-      <!-- <button
+      <button
         class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md mt-10 w-84"
         type="submit"
         @click="onSighInWithLogto"
@@ -33,7 +33,7 @@
           <img src="../../assets/images/logto.svg" alt="" class="h-6 w-6" />
           <div>登入</div>
         </div>
-      </button> -->
+      </button>
     </div>
   </div>
 </template>
@@ -46,6 +46,7 @@ import md5 from "blueimp-md5"
 import MemberService from "@/services/member"
 import { useAccountStore } from "@/stores/account"
 import { useLogto } from "@logto/vue"
+import { convertToObject } from "typescript"
 
 const store = useAccountStore()
 
@@ -58,7 +59,7 @@ const isPasswordValid = ref("")
 
 const { signIn, isAuthenticated } = useLogto()
 const onSighInWithLogto = () => {
-  signIn(import.meta.env.VITE_LOGTO_CALLBACK_URL)
+  return signIn(import.meta.env.VITE_LOGTO_CALLBACK_URL)
 }
 
 const login = async () => {
@@ -98,7 +99,11 @@ const login = async () => {
     // console.log(error.response.data)
   }
 }
-onMounted(() => {
-  onSighInWithLogto()
-})
+// onMounted(() => {
+//   try {
+//     onSighInWithLogto()
+//   } catch (error) {
+//     console.log(error)
+//   }
+// })
 </script>

@@ -77,7 +77,7 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div class="flex flex-col items-center justify-center h-full p-4 bg-ligth-se">
+  <div class="flex flex-col items-center justify-center h-full w-full p-4 bg-systemBackground-lightSecondary">
     <div class="pb-10 text-lg flex flex-col items-center">
       <div class="text-2xl font-bold">在你可以使用维修平台之前，我们需要收集你的一些信息</div>
       <div class="mt-4">这些信息会被用来验证你的身份,请认真填写</div>

@@ -107,7 +107,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-3 h-full bg-systemBackground-lightSecondary">
+  <div class="p-6 h-full w-full bg-systemBackground-lightSecondary">
     <p v-if="isLoading">页面跳转中。。。</p>
     <p v-if="authenticateFailed">认证失败，跳转至登入页面。</p>
     <div v-if="needBindMember" class="flex flex-col items-center justify-center h-full">
