@@ -9,43 +9,28 @@ import LogoutButton from "@/components/LogoutButton.vue"
 import { isFormValid } from "@/utils/isFormValid"
 import md5 from "blueimp-md5"
 import { createTokenViaLogtoToken } from "@/services/logto"
+import { handleCreateToken } from "./Login/login"
 
 const store = useAccountStore()
 
-const { signIn, signOut, isAuthenticated, fetchUserInfo, getAccessToken } = useLogto()
+const { isAuthenticated, getAccessToken } = useLogto()
 const authenticateFailed = ref(false)
 const needBindMember = ref(false)
 
-const handleCreateToken = async () => {
+const { isLoading, error } = useHandleSignInCallback(async () => {
   const token = await getAccessToken(import.meta.env.VITE_LOGTO_RESOURCE)
-  if (token == undefined) {
-    throw new Error("token is undefined")
-  }
-
-  const res = await createTokenViaLogtoToken(token)
-  const body: unknown = await res.json()
-  if (res.status == 422 && body instanceof Object && "message" in body && body.message.includes("not found")) {
-    needBindMember.value = true
+  if (!token) {
     return
   }
-  if (body instanceof Object && "token" in body && "memberId" in body && "role" in body) {
-    store.account = body as Member
-    store.token = body.token as string
-    if (body.role && body.role.includes("inactive")) {
-      router.push("/activate")
-      router.push("/activate")
+  try {
+    await handleCreateToken(token)
+  } catch (error) {
+    if (error instanceof Error && error.message == "need bind member") {
+      needBindMember.value = true
     } else {
-      router.push("/Events")
+      authenticateFailed.value = true
     }
-  } else {
-    // setTimeout(() => {
-    //   signOut(import.meta.env.VITE_LOGTO_REDIRECT_URL)
-    // }, 2000)
   }
-}
-
-const { isLoading, error } = useHandleSignInCallback(async () => {
-  await handleCreateToken()
 })
 
 const accountInput = ref({
@@ -64,6 +49,9 @@ const login = async () => {
     hashedPassword = md5(account.password)
   }
   let token = await getAccessToken(import.meta.env.VITE_LOGTO_RESOURCE)
+  if (!token) {
+    return
+  }
   const res = await window.fetch(`/api/members/${account.id}/logto_id`, {
     method: "PATCH",
     headers: {
@@ -94,15 +82,28 @@ const login = async () => {
     }
     return
   }
-
-  await handleCreateToken()
+  handleCreateToken(token)
 }
 const onRegisterMember = () => {
   router.push({ name: "LoginRegister" })
 }
-onMounted(() => {
-  if (isAuthenticated.value) {
-    handleCreateToken()
+onMounted(async () => {
+  if (!isAuthenticated.value) {
+    return
+  }
+  const token = await getAccessToken(import.meta.env.VITE_LOGTO_RESOURCE)
+  if (!token) {
+    return
+  }
+  try {
+    await handleCreateToken(token)
+  } catch (error) {
+    console.log(error)
+    if (error instanceof Error && error.message == "need bind member") {
+      needBindMember.value = true
+    } else {
+      authenticateFailed.value = false
+    }
   }
 })
 </script>
@@ -152,7 +153,7 @@ onMounted(() => {
           >
             登记信息
           </button>
-        <logout-button class="mt-6 p-2"> 登出 </logout-button>
+          <logout-button class="mt-6 p-2"> 登出 </logout-button>
         </div>
       </div>
     </div>

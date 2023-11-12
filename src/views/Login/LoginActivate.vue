@@ -15,10 +15,19 @@ import LogoutButton from "@/components/LogoutButton.vue"
 import MemberCard from "../MemberManage/MemberCard.vue"
 import { useAccountStore } from "@/stores/account"
 import { useLogto } from "@logto/vue"
+import { onMounted } from "vue"
+import { handleCreateToken } from "./login"
 
-const { signIn, signOut, isAuthenticated, fetchUserInfo, getAccessToken } = useLogto()
+const { signOut, getAccessToken } = useLogto()
 const store = useAccountStore()
 const logOut = () => {
   signOut(import.meta.env.VITE_LOGTO_REDIRECT_URL)
 }
+onMounted(async () => {
+  const token = await getAccessToken(import.meta.env.VITE_LOGTO_RESOURCE)
+  if (token == undefined) {
+    throw new Error("token is undefined")
+  }
+  handleCreateToken(token)
+})
 </script>

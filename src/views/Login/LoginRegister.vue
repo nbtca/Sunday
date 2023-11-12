@@ -8,6 +8,7 @@ import { useAccountStore } from "@/stores/account"
 import { useLogto } from "@logto/vue"
 import { createTokenViaLogtoToken } from "@/services/logto"
 import type Member from "@/models/member"
+import { handleCreateToken } from "./login"
 
 const store = useAccountStore()
 const { getAccessToken } = useLogto()
@@ -23,33 +24,6 @@ const account = ref({
 })
 const qqRule = ref([{ rule: /[1-9][0-9]{4,14}/, warning: "格式错误" }])
 
-// TODO  move to util
-const handleCreateToken = async () => {
-  const token = await getAccessToken(import.meta.env.VITE_LOGTO_RESOURCE)
-  if (token == undefined) {
-    throw new Error("token is undefined")
-  }
-
-  const res = await createTokenViaLogtoToken(token)
-  const body: unknown = await res.json()
-  if (res.status == 422) {
-    throw new Error(body as string)
-  }
-  if (body instanceof Object && "token" in body && "memberId" in body && "role" in body) {
-    store.account = body as Member
-    store.token = body.token as string
-    if (body.role instanceof Array && body.role.includes("inactive")) {
-      router.push("/activate")
-      router.push("/activate")
-    } else {
-      router.push("/Events")
-    }
-  } else {
-    // setTimeout(() => {
-    //   signOut(import.meta.env.VITE_LOGTO_REDIRECT_URL)
-    // }, 2000)
-  }
-}
 const activate = async () => {
   const formInput = isFormValid(account.value)
   console.log(formInput)
@@ -67,7 +41,11 @@ const activate = async () => {
     phone: formInput.phone,
     qq: formInput.qq,
   })
-  handleCreateToken()
+  const token = await getAccessToken(import.meta.env.VITE_LOGTO_RESOURCE)
+  if (token == undefined) {
+    throw new Error("token is undefined")
+  }
+  handleCreateToken(token)
 }
 
 onMounted(() => {
