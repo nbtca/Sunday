@@ -41,7 +41,7 @@ jobs:
         with:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
-          key: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.ACCESS_TOKEN }}
           script: |
             cd /home/nbtca/weekend/sunday
             docker compose stop && docker compose rm -f
