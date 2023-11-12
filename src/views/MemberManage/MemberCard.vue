@@ -10,9 +10,7 @@
             <span class="font-semibold text-base leading-tight">
               {{ member.alias || "null" }}
             </span>
-            <span class="bg-green-100 h-5 text-green-800 badge ml-2 uppercase">
-              {{ member.role }}
-            </span>
+            <span v-if="member.role == 'admin'" class="bg-green-100 h-5 text-green-800 badge"> 管理员 </span>
           </div>
         </div>
         <div>

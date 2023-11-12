@@ -5,6 +5,7 @@ import { useAccountStore } from "@/stores/account"
 import { useHandleSignInCallback, useLogto } from "@logto/vue"
 import { ref, onMounted, computed } from "vue"
 import InputBase from "@/components/Input/InputBase.vue"
+import LogoutButton from "@/components/LogoutButton.vue"
 import { isFormValid } from "@/utils/isFormValid"
 import md5 from "blueimp-md5"
 import { createTokenViaLogtoToken } from "@/services/logto"
@@ -151,6 +152,7 @@ onMounted(() => {
           >
             登记信息
           </button>
+        <logout-button class="mt-6 p-2"> 登出 </logout-button>
         </div>
       </div>
     </div>
