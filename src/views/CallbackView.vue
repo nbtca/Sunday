@@ -107,46 +107,51 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-6 h-full w-full bg-systemBackground-lightSecondary">
-    <p v-if="isLoading">页面跳转中。。。</p>
-    <p v-if="authenticateFailed">认证失败，跳转至登入页面。</p>
-    <div v-if="needBindMember" class="flex flex-col items-center justify-center h-full">
-      <div class="pb-10 text-lg flex flex-col items-center">
-        <div class="pb-8 text-2xl font-bold">在第一次登入时，我们需要您绑定你的账户信息</div>
-        <div class="">如果你原先已经使用过此维修平台，请输入原先用于登入的帐号和密码来绑定信息</div>
-        <div class="mt-2">
-          如果这是你第一次使用，请点击下方的
-          <span class="italic font-bold"> 登记信息 </span>
-          来获取你的账号
+  <div class="h-screen w-full bg-systemBackground-lightSecondary">
+    <div class="p-6 flex items-center justify-center h-screen">
+      <p v-if="isLoading">页面跳转中。。。</p>
+      <p v-if="authenticateFailed">认证失败，跳转至登入页面。</p>
+      <div v-if="needBindMember" class="flex flex-col items-center justify-center h-full">
+        <div class="pb-10 text-lg flex flex-col items-center">
+          <div class="pb-8 text-2xl font-bold">在第一次登入时，我们需要您绑定你的账户信息</div>
+          <div class="">如果你原先已经使用过此维修平台，请输入原先用于登入的帐号和密码来绑定信息</div>
+          <div class="mt-2">
+            如果这是你第一次使用，请点击下方的
+            <span class="italic font-bold"> 登记信息 </span>
+            来获取你的账号
+          </div>
         </div>
-      </div>
-      <div style="width: 20vw; min-width: 300px">
-        <form @submit.prevent="login" class="grid gap-4 place-items-center">
-          <InputBase
-            placeholder=""
-            hint="学号"
-            maxLength="10"
-            required
-            :passWarning="isIDValid"
-            class="w-full"
-            v-model:content="accountInput.id"
-            :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]"
-          />
-          <InputBase
-            placeholder="初始密码为空"
-            hint="密码"
-            :passWarning="isPasswordValid"
-            type="password"
-            class="w-full"
-            v-model:content="accountInput.password"
-          />
-          <button class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md" type="submit">
-            绑定账号
+        <div style="width: 20vw; min-width: 300px">
+          <form @submit.prevent="login" class="grid gap-4 place-items-center">
+            <InputBase
+              placeholder=""
+              hint="学号"
+              maxLength="10"
+              required
+              :passWarning="isIDValid"
+              class="w-full"
+              v-model:content="accountInput.id"
+              :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]"
+            />
+            <InputBase
+              placeholder="初始密码为空"
+              hint="密码"
+              :passWarning="isPasswordValid"
+              type="password"
+              class="w-full"
+              v-model:content="accountInput.password"
+            />
+            <button class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md" type="submit">
+              绑定账号
+            </button>
+          </form>
+          <button
+            class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md mt-8"
+            @click="onRegisterMember"
+          >
+            登记信息
           </button>
-        </form>
-        <button class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md mt-8" @click="onRegisterMember">
-          登记信息
-        </button>
+        </div>
       </div>
     </div>
   </div>

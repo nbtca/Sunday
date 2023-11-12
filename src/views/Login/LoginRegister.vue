@@ -77,10 +77,10 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div class="flex flex-col items-center justify-center h-full w-full p-4 bg-systemBackground-lightSecondary">
-    <div class="pb-10 text-lg flex flex-col items-center">
+  <div class="flex flex-col items-center justify-center h-full w-full p-6 bg-systemBackground-lightSecondary">
+    <div class="pb-6 lg:pb-10 text-lg flex flex-col items-center">
       <div class="text-2xl font-bold">在你可以使用维修平台之前，我们需要收集你的一些信息</div>
-      <div class="mt-4">这些信息会被用来验证你的身份,请认真填写</div>
+      <div class="mt-2 lg:mt-4 text-base">这些信息会被用来验证你的身份,请认真填写</div>
     </div>
     <div style="width: 20vw; min-width: 300px" class="flex flex-col items-center">
       <form @submit.prevent="activate" class="flex flex-col gap-3 lg:gap-0" style="width: 17vw; min-width: 300px">
@@ -116,7 +116,7 @@ onMounted(() => {
           class="w-full"
           v-model:content="account.name"
         />
-        <InputBase subject="昵称" placeholder="别人会看到的名字" required class="w-full" v-model:content="account.alias" />
+        <InputBase subject="昵称" required class="w-full" v-model:content="account.alias" />
         <InputBase
           subject="电话"
           placeholder="你的手机号"
