@@ -1,11 +1,12 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.node.json",
   "include": [
     "vite.config.*",
     "vitest.config.*",
     "cypress.config.*"
   ],
   "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "composite": true,
     "types": [
       "node"
