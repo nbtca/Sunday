@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import Menu from "@/components/Menu/Menu.vue"
-import { ref,onMounted } from "vue"
+import { ref, onMounted } from "vue"
 const isSafari = ref(false)
 var userAgent = navigator.userAgent
 isSafari.value = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1
