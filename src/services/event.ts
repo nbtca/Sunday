@@ -21,8 +21,8 @@ const EventService = {
     const res = await Axios("/member/events/" + eventId, null, "get")
     return res as Event
   },
-  async getAllMemberEvents() {
-    const res = await Axios("/member/events", null, "get")
+  async getAllMemberEvents(filter?:EventFilter) {
+    const res = await Axios("/member/events", filter, "get")
     return res as Event[]
   },
   async accept(eventId: number) {
