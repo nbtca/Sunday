@@ -102,7 +102,9 @@ const filteredList = computed(() => {
 })
 
 const setMemberEvents = async () => {
-  const res = await EventService.getAllMemberEvents()
+  const res = await EventService.getAllMemberEvents({
+    order: "DESC"
+  })
   events.value = res
 }
 
