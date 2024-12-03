@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, inject, computed, onMounted } from "vue"
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue"
-import { PlusIcon } from "@heroicons/vue/outline"
+import { PlusIcon } from "@heroicons/vue/24/outline"
 import MemberCard from "./MemberCard.vue"
 import MemberService from "@/services/member"
 import type Member from "@/models/member"

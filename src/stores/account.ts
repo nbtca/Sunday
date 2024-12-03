@@ -1,27 +1,27 @@
 import type Member from "@/models/member"
 import { defineStore } from "pinia"
+import { ref } from "vue"
 
-export const useAccountStore = defineStore("account", {
-  state() {
-    return {
-      account: {
-        avatar: "",
-      } as Member,
-      token: "",
-    }
-  },
+
+export const useAccountStore = defineStore("account", () => {
+
+  const account = ref<Member>({
+    avatar: "",
+  })
+  const token = ref("")
+
+  const setAccount = (a: Member) => {
+    account.value = a
+  }
+
+  return {
+    account,
+    token,
+    setAccount
+  }
+}, {
   persist: {
-    enabled: true,
-    strategies: [
-      {
-        storage: localStorage,
-        paths: ["token", "account"],
-      },
-    ],
-  },
-  actions: {
-    setAccount(account: Member) {
-      this.account = account
-    },
+    storage: sessionStorage,
+    pick: ['token', "account"],
   },
 })
