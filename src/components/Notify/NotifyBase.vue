@@ -11,7 +11,7 @@
   >
     <div class="cellsm sm:w-[20vw] rounded-xl materialMedium border border-gray-300/30 h-16 shadow-md">
       <div class="w-1/5 p-2">
-        <ExclamationIcon class="" />
+        <ExclamationTriangleIcon class="" />
       </div>
       <div class="w-4/5 text-center text-base font-semibold p-3 select-none">
         {{ content }}
@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
 import { TransitionRoot } from "@headlessui/vue"
-import { ExclamationIcon } from "@heroicons/vue/outline"
+import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps({

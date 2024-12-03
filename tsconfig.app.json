@@ -9,9 +9,6 @@
     "src/**/__tests__/*"
   ],
   "compilerOptions": {
-    "types": [
-      "pinia-plugin-persist"
-    ],
     // "composite": true,
     "baseUrl": ".",
     "paths": {

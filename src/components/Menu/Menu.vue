@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="logo hidden sm:block" @click="toEvent">sunday</div>
-        <MenuIcon v-if="menuList.length > 1" class="bg-bg-gray-900 h-9 w-9 sm:(hidden)" @click="isOpen = !isOpen"></MenuIcon>
+        <Bars3Icon v-if="menuList.length > 1" class="bg-bg-gray-900 h-9 w-9 sm:(hidden)" @click="isOpen = !isOpen"></Bars3Icon>
       </div>
       <div class="hidden sm:block">
         <button
@@ -138,7 +138,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue"
 import router from "@/router"
-import { MenuIcon, LogoutIcon, CogIcon } from "@heroicons/vue/outline"
+import { Bars3Icon, ArrowLeftStartOnRectangleIcon, CogIcon } from "@heroicons/vue/24/outline"
 import { TransitionRoot } from "@headlessui/vue"
 import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue"
 import InputSection from "@/components/Input/InputSection.vue"
