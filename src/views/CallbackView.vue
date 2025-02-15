@@ -53,7 +53,7 @@ const login = async () => {
   if (!token) {
     return
   }
-  const { response, error } = await client.POST("/members/{MemberId}/logto_id", {
+  const { response, error } = await client.PATCH("/members/{MemberId}/logto_id", {
     params: {
       path: {
         MemberId: account.id,
@@ -86,8 +86,8 @@ const onRegisterMember = () => {
   router.push({ name: "LoginRegister" })
 }
 onMounted(async () => {
+  console.log(isAuthenticated.value)
   if (!isAuthenticated.value) {
-    console.log("not Authenticated")
     return
   }
   const token = await getAccessToken(import.meta.env.VITE_LOGTO_RESOURCE)

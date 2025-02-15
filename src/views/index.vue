@@ -1,9 +1,9 @@
 <template>
-  <div class="safe-container relative flex flex-col-reverse sm:(flex-row) overflow-hidden h-screen">
-    <div class="sm:(w-[17vw] mix-w-[17vw] bg-current)">
+  <div class="safe-container relative flex flex-col-reverse sm:(flex-row) overflow-hidden h-screen bg-systemBackground-lightSecondary">
+    <div class="min-h-[83px] sm:w-[320px] bg-current)">
       <Menu ref="menu"></Menu>
     </div>
-    <div class="w-full" @click="this.$refs.menu.isOpen = false">
+    <div class="w-full h-full" @click="this.$refs.menu.isOpen = false">
       <router-view v-slot="{ Component }">
         <keep-alive>
           <component :is="Component" />
