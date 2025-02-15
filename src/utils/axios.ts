@@ -2,6 +2,7 @@ import axios, { type Method } from "axios"
 import Notify from "@/components/Notify"
 import logOut from "@/composables/LogOut"
 import { useAccountStore } from "@/stores/account"
+import { useLogto } from "@logto/vue"
 
 axios.defaults.baseURL = "api/"
 
@@ -11,9 +12,9 @@ axios.defaults.timeout = 10000
 const store = useAccountStore()
 
 axios.interceptors.request.use(
-  config => {
-    const token = store.token
-    config.headers.authorization = token
+  async config => {
+    const logtoToken = await store.logto.getAccessToken()
+    config.headers.authorization = "bearer " + logtoToken
     return config
   },
   error => {

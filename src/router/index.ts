@@ -29,8 +29,9 @@ router.beforeEach((to, from, next) => {
   // }
   // next()
   const store = useAccountStore()
+  store.setUserInfo()
   const token = store.token
-  let userRole = store.account.role
+  let userRole = store.account?.role
   if (userRole == null) {
     userRole = ""
   }

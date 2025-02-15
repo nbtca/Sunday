@@ -41,6 +41,16 @@ const asyncRoutes: RouteRecordRaw[] = [
           title: "成员管理",
         },
       },
+      {
+        path: "/AccountManage",
+        name: "Account",
+        component: () => import("@/views/Account/AccountView.vue"),
+        meta: {
+          menuIcon: true,
+          roles: ["admin", "member"],
+          title: "账户设置",
+        },
+      },
     ],
   },
   {
