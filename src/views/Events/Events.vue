@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex h-full">
     <div class="flex flex-col h-full w-full items-center sm:(w-[24vw] min-w-[270px] border-r border-gray-400/30)">
       <div
         class="bg-gray-50 border-t border-base-standout/70 flex flex-col order-last w-full px-0.5 self-end items-center sm:(border-t-0 order-first border-b px-0 pb-0.5)"
@@ -25,7 +25,7 @@
           </TabList>
         </TabGroup>
       </div>
-      <scroll-area @scroll="onScroll">
+      <scroll-area @scroll="onScroll" class="flex-grow">
         <div class="hidden sm:block">
           <button
             v-for="item in filteredList"
@@ -134,13 +134,21 @@ import { useEventStore } from "@/stores/event"
 import type { Event } from "@/models/event"
 import { searchQuery, roleFilter, filterHandler, filteredList, eventsMatchingByRID } from "./EventActions"
 import EventStatusIcon from "@/components/Event/EventStatusIcon.vue"
+import { useLogto } from "@logto/vue"
 
 const store = useAccountStore()
 const eventStore = useEventStore()
 const memberId = ref(store.account.memberId || "")
 
+const Logto = useLogto()
 const reachBottomDistance = 100
 let isReachingBottom = false
+
+console.log(Logto.getIdToken())
+
+Logto.fetchUserInfo().then(res => {
+  console.log(res)
+})
 
 const onScroll = e => {
   let offsetHeight = Math.ceil(e.target.getBoundingClientRect().height)

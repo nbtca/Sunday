@@ -10,6 +10,7 @@ import { isFormValid } from "@/utils/isFormValid"
 import md5 from "blueimp-md5"
 import { createTokenViaLogtoToken } from "@/services/logto"
 import { handleCreateToken } from "./Login/login"
+import { client } from "@/utils/client"
 
 const store = useAccountStore()
 
@@ -52,32 +53,29 @@ const login = async () => {
   if (!token) {
     return
   }
-  const res = await window.fetch(`/api/members/${account.id}/logto_id`, {
-    method: "PATCH",
+  const { response, error } = await client.PATCH("/members/{MemberId}/logto_id", {
+    params: {
+      path: {
+        MemberId: account.id,
+      },
+    },
+    body: {
+      password: hashedPassword,
+    },
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      password: hashedPassword,
-    }),
   })
-  const body = (await res.json()) as unknown
-  if (
-    res.status != 200 &&
-    body instanceof Object &&
-    "errors" in body &&
-    body.errors instanceof Array &&
-    body.errors.length > 0 &&
-    "field" in body.errors[0]
-  ) {
-    if (body.errors[0].field == "password") {
+  // const body = (await res.json()) as unknown
+  if (error?.errors) {
+    if (error.errors[0].field == "password") {
       isPasswordValid.value = "密码错误"
     }
-    if (body.errors[0].field == "memberId") {
+    if (error.errors[0].field == "memberId") {
       isIDValid.value = "ID不存在"
     }
-    if (body.errors[0].field == "member") {
+    if (error.errors[0].field == "member") {
       isIDValid.value = "该ID已经被绑定"
     }
     return
@@ -88,11 +86,13 @@ const onRegisterMember = () => {
   router.push({ name: "LoginRegister" })
 }
 onMounted(async () => {
+  console.log(isAuthenticated.value)
   if (!isAuthenticated.value) {
     return
   }
   const token = await getAccessToken(import.meta.env.VITE_LOGTO_RESOURCE)
   if (!token) {
+    throw new Error("token is not found")
     return
   }
   try {
