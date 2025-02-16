@@ -17,23 +17,14 @@
       </div>
     </div>
     <div class="flex flex-col mb-4 hidden sm:flex">
-      <div class="flex">
+      <div class="flex items-end">
         <div class="border rounded-full flex-shrink-0 h-16 w-16 relative overflow-hidden flex items-center justify-center">
           <img class="object-cover w-full" :src="store.userInfo?.picture || defaultAvatar" alt="" />
         </div>
         <div class="flex ml-2">
           <div class="flex flex-col items-start">
             <div class="textSubHeading pl-1">{{ store.userInfo?.name || store.userInfo?.email }}</div>
-            <div class="flex flex-row items-center gap-2 text-sm">
-              <button class="rounded flex items-center text-blue-600 p-1 gap-1 hover:bg-gray-200" @click="accountSetting">
-                <CogIcon class="h-6"></CogIcon>
-                <span class="hidden md:block">设置</span>
-              </button>
-              <logout-button class="rounded flex items-center gap-1 p-1 hover:bg-gray-200">
-                <ArrowLeftStartOnRectangleIcon class="h-6"></ArrowLeftStartOnRectangleIcon>
-                <span class="hidden md:block">登出</span>
-              </logout-button>
-            </div>
+            <div class="text-systemGrey-light text-xs pl-1">{{ store.userInfo?.email }}</div>
           </div>
         </div>
       </div>

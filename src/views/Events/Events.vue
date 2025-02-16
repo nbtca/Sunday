@@ -2,11 +2,11 @@
   <div class="flex h-full">
     <div class="flex flex-col h-full w-full items-center sm:(w-[24vw] min-w-[270px] border-r border-gray-400/30)">
       <div
-        class="bg-gray-50 border-t border-base-standout/70 flex flex-col order-last w-full px-0.5 self-end items-center sm:(border-t-0 order-first border-b px-0 pb-0.5)"
+        class="bg-gray-50 border-base-standout/70 flex flex-col w-full pt-2 pb-1 px-1 items-center border-b"
       >
         <input
           type="text"
-          class="border-base-standout rounded-lg order-last h-10 shadow-inner my-0.5 mx-0.5 text-center sm:(rounded text-left)"
+          class="border-base-standout rounded-lg h-10 shadow-inner my-1 mx-0.5 text-center sm:(rounded text-left) "
           style="width: 98%"
           v-model="searchQuery"
           placeholder="搜索"
@@ -25,25 +25,7 @@
           </TabList>
         </TabGroup>
       </div>
-      <scroll-area @scroll="onScroll" class="flex-grow">
-        <div class="hidden sm:block">
-          <button
-            v-for="item in filteredList"
-            :key="item.eventId"
-            class="flex flex-row flex-nowrap cell justify-between"
-            :class="[item.eventId == eventStore.eventId ? 'bg-gray-400/30 cursor-default shadow' : '']"
-            @click="showDetail(item)"
-          >
-            <div class="text-left w-2/3 truncate">
-              {{ item.problem }}
-            </div>
-            <div class="" v-if="item.status != undefined">
-              <event-status-icon :status="item.status"></event-status-icon>
-            </div>
-          </button>
-        </div>
-        <!-- mobile -->
-        <div class="sm:hidden flex flex-col-reverse">
+      <div class="flex-grow overflow-auto w-full p-2 sm:hidden">
           <event-card
             v-for="item in filteredList"
             :key="item.eventId"
@@ -95,8 +77,8 @@
               </div>
             </template>
             <template #footer>
-              <div class="w-17 truncate">{{ item.model || "无型号" }}</div>
-              <span class="text-xs ml-2 textDescription">{{ item.gmtCreate }}</span>
+              <span class="text-xs mr-2 textDescription">#{{ item.eventId }}</span>
+              <span class="text-xs textDescription">{{ dayjs(item.gmtCreate).format("YY/MM/DD HH:mm") }}</span>
               <button
                 v-if="item.status == 'accepted' && isCurrentMember(item, memberId) && eventsMatchingByRID"
                 @click="dropEvent(item)"
@@ -109,8 +91,22 @@
           <div v-if="filteredList.length == 0">
             <div class="mb-2 text-center text-gray-400">现在是空的</div>
           </div>
-          <div class="py-20"></div>
-        </div>
+      </div>
+      <scroll-area @scroll="onScroll" class="hidden sm:block">
+        <button
+          v-for="item in filteredList"
+          :key="item.eventId"
+          class="flex flex-row flex-nowrap cell justify-between"
+          :class="[item.eventId == eventStore.eventId ? 'bg-gray-400/30 cursor-default shadow' : '']"
+          @click="showDetail(item)"
+        >
+          <div class="text-left w-2/3 truncate">
+            {{ item.problem }}
+          </div>
+          <div class="" v-if="item.status != undefined">
+            <event-status-icon :status="item.status"></event-status-icon>
+          </div>
+        </button>
       </scroll-area>
     </div>
     <div class="w-full hidden sm:block">
@@ -135,6 +131,7 @@ import type { Event } from "@/models/event"
 import { searchQuery, roleFilter, filterHandler, filteredList, eventsMatchingByRID } from "./EventActions"
 import EventStatusIcon from "@/components/Event/EventStatusIcon.vue"
 import { useLogto } from "@logto/vue"
+import dayjs from "dayjs"
 
 const store = useAccountStore()
 const eventStore = useEventStore()
