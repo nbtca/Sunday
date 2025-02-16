@@ -10,7 +10,7 @@ const accountSetting = () => {
 </script>
 <template>
   <div class="h-full p-3 text-left">
-    <div class="text-left text-2xl font-bold mt-7 mb-4">账户设置</div>
+    <div class="text-left text-2xl font-bold mt-4 mb-2 sm:mt-7 sm:mb-4">账户设置</div>
     <div>
       <div class="regular-footnote px-[13px] py-[11px] inline-block text-systemGrey-light">账户信息</div>
       <div class="bg-white rounded-lg w-full">
@@ -24,7 +24,7 @@ const accountSetting = () => {
           <span>{{ store.userInfo?.roles?.filter(v => v.includes("Repair"))?.join(",") }}</span>
         </div>
         <div class="h-[0.5px] ml-4 bg-black/30"></div>
-        <button @click="accountSetting" type="submit" class="label-item">
+        <button @click="accountSetting" type="submit" class="label-item font-normal">
           <span>修改账户信息</span>
           <span class="textLink">myid.app.nbtca.space</span>
         </button>

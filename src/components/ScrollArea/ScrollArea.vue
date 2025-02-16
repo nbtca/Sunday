@@ -1,7 +1,6 @@
 <template>
   <div
-    class="flex flex-col-reverse w-full px-2 overflow-auto sm:flex-col"
-    :style="[isSafari ? '' : 'height: calc(var(---vh, 1vh) * 100)']"
+    class="flex flex-col w-full px-2 overflow-auto min-h-0"
   >
     <slot></slot>
   </div>
