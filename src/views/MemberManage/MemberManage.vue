@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, inject, computed, onMounted } from "vue"
 import ScrollArea from "@/components/ScrollArea/ScrollArea.vue"
-import { PlusIcon } from "@heroicons/vue/24/outline"
 import MemberCard from "./MemberCard.vue"
 import MemberService from "@/services/member"
 import type Member from "@/models/member"
@@ -102,14 +101,6 @@ onMounted(() => {
     <div class="hidden sm:block relative">
       <div class="flex w-full pt-9 pb-6 px-8 justify-between z-50">
         <div class="textHeading">成员管理</div>
-        <!-- <button
-          class="bg-primary flex text-primaryContent w-30 btn justify-center items-center"
-          @click="addElementByBottomDialog"
-          v-if="store.account.role == 'admin'"
-        >
-          <PlusIcon class="h-5 text-white mr-2 w-5" />
-          <div>添加成员</div>
-        </button> -->
       </div>
       <div class="mt-4 px-4">
         <div v-if="store.account.role == 'admin'">
@@ -136,9 +127,6 @@ onMounted(() => {
             <div v-else>
               <div class="pl-4 text-left text-gray-400 pt-2">暂无待通过的申请</div>
             </div>
-            <!-- <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-6 gap-y-4 overflow-auto content-start">
-            <member-card class="mb-0" v-for="member in inactiveMembers" :key="member.memberId" :member="member"></member-card>
-          </div> -->
           </div>
           <div class="h-[0.5px] w-full bg-gray-300 my-8"></div>
         </div>
@@ -226,18 +214,6 @@ onMounted(() => {
             </Tab>
           </TabList>
         </TabGroup>
-        <!-- <input
-          type="text"
-          class="border-base-standout rounded-lg h-10 shadow-inner my-0.5 mx-0.5 text-center flex-grow"
-          placeholder="搜索"
-        /> -->
-        <!-- <button
-          class="rounded-lg flex h-8 mx-1 w-8 justify-center items-center focus:(shadow-inner outline-none) flex-shrink-0"
-          @click="addElementByBottomDialog"
-          v-if="store.account.role == 'admin'"
-        >
-          <PlusIcon class="h-5 text-gray-900 w-5" />
-        </button> -->
       </div>
     </div>
   </div>

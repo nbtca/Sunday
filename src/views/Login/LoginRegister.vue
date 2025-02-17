@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
-import router from "@/router"
 import InputBase from "@/components/Input/InputBase.vue"
 import { isFormValid } from "@/utils/isFormValid"
 import MemberService from "@/services/member"
 import { useAccountStore } from "@/stores/account"
 import { useLogto } from "@logto/vue"
-import { createTokenViaLogtoToken } from "@/services/logto"
-import type Member from "@/models/member"
 import { handleCreateToken } from "./login"
 
 const store = useAccountStore()
@@ -26,9 +23,7 @@ const qqRule = ref([{ rule: /[1-9][0-9]{4,14}/, warning: "格式错误" }])
 
 const activate = async () => {
   const formInput = isFormValid(account.value)
-  console.log(formInput)
   if (!formInput) return
-  // const password = md5(formInput.password)
   let accessToken = await getAccessToken(import.meta.env.VITE_LOGTO_RESOURCE)
   if (accessToken == undefined) {
     throw new Error("token is undefined")
@@ -48,11 +43,6 @@ const activate = async () => {
   handleCreateToken(token)
 }
 
-onMounted(() => {
-  // if (store.account.memberId != "") {
-  //   router.push("/Events")
-  // }
-})
 </script>
 <template>
   <div class="flex flex-col items-center justify-center h-full w-full p-6 bg-systemBackground-lightSecondary">

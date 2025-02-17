@@ -141,7 +141,6 @@ const Logto = useLogto()
 const reachBottomDistance = 100
 let isReachingBottom = false
 
-console.log(Logto.getIdToken())
 
 Logto.fetchUserInfo().then(res => {
   console.log(res)
