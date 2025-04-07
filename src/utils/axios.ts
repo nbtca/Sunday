@@ -14,7 +14,8 @@ const store = useAccountStore()
 axios.interceptors.request.use(
   async config => {
     const logtoToken = await store.logto.getAccessToken()
-    config.headers.authorization = "bearer " + logtoToken
+    config.headers.authorization = "Bearer " + logtoToken
+    config.headers["Content-Type"] = "application/json"
     return config
   },
   error => {
