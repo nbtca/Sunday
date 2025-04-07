@@ -1,16 +1,10 @@
 <script setup lang="ts">
-import type Member from "@/models/member"
 import router from "@/router"
 import { useAccountStore } from "@/stores/account"
 import { useHandleSignInCallback, useLogto } from "@logto/vue"
-import { ref, onMounted, computed } from "vue"
-import InputBase from "@/components/Input/InputBase.vue"
+import { ref, onMounted } from "vue"
 import LogoutButton from "@/components/LogoutButton.vue"
-import { isFormValid } from "@/utils/isFormValid"
-import md5 from "blueimp-md5"
-import { createTokenViaLogtoToken } from "@/services/logto"
 import { handleCreateToken } from "./Login/login"
-import { client } from "@/utils/client"
 
 const store = useAccountStore()
 
@@ -34,59 +28,10 @@ const { isLoading, error } = useHandleSignInCallback(async () => {
   }
 })
 
-const accountInput = ref({
-  id: "",
-  password: "",
-})
-const isIDValid = ref("")
-const isPasswordValid = ref("")
-
-const login = async () => {
-  isPasswordValid.value = ""
-  const account = isFormValid(accountInput.value)
-  if (!account) return
-  let hashedPassword = ""
-  if (account.password != undefined && account.password != "") {
-    hashedPassword = md5(account.password)
-  }
-  let token = await getAccessToken(import.meta.env.VITE_LOGTO_RESOURCE)
-  if (!token) {
-    return
-  }
-  const { response, error } = await client.PATCH("/members/{MemberId}/logto_id", {
-    params: {
-      path: {
-        MemberId: account.id,
-      },
-    },
-    body: {
-      password: hashedPassword,
-    },
-    headers: {
-      Authorization: "Bearer " + token,
-      "Content-Type": "application/json",
-    },
-  })
-  // const body = (await res.json()) as unknown
-  if (error?.errors) {
-    if (error.errors[0].field == "password") {
-      isPasswordValid.value = "密码错误"
-    }
-    if (error.errors[0].field == "memberId") {
-      isIDValid.value = "ID不存在"
-    }
-    if (error.errors[0].field == "member") {
-      isIDValid.value = "该ID已经被绑定"
-    }
-    return
-  }
-  handleCreateToken(token)
-}
 const onRegisterMember = () => {
   router.push({ name: "LoginRegister" })
 }
 onMounted(async () => {
-  console.log(isAuthenticated.value)
   if (!isAuthenticated.value) {
     return
   }
@@ -115,38 +60,15 @@ onMounted(async () => {
       <p v-if="authenticateFailed">认证失败，跳转至登入页面。</p>
       <div v-if="needBindMember" class="flex flex-col items-center justify-center h-full">
         <div class="pb-10 text-lg flex flex-col items-center">
-          <div class="pb-8 text-2xl font-bold">在第一次登入时，我们需要您绑定你的账户信息</div>
-          <div class="">如果你原先已经使用过此维修平台，请输入原先用于登入的帐号和密码来绑定信息</div>
-          <div class="mt-2">
-            如果这是你第一次使用，请点击下方的
+          <div class="pb-8 text-2xl font-bold">你没有访问维修平台的权限</div>
+          <div class="">
+            点击下方的
             <span class="italic font-bold"> 登记信息 </span>
-            来获取你的账号
+            来申请访问权限
           </div>
+          <div class="mt-2">如遇到问题，你可以通过邮件联系我们: <a class="" href="mailto:contact@nbtca.space">contact@nbtca.space</a></div>
         </div>
         <div style="width: 20vw; min-width: 300px">
-          <form @submit.prevent="login" class="grid gap-4 place-items-center">
-            <InputBase
-              placeholder=""
-              hint="学号"
-              maxLength="10"
-              required
-              :passWarning="isIDValid"
-              class="w-full"
-              v-model:content="accountInput.id"
-              :rules="[{ rule: /^\d{10}$/, warning: '格式错误' }]"
-            />
-            <InputBase
-              placeholder="初始密码为空"
-              hint="密码"
-              :passWarning="isPasswordValid"
-              type="password"
-              class="w-full"
-              v-model:content="accountInput.password"
-            />
-            <button class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md" type="submit">
-              绑定账号
-            </button>
-          </form>
           <button
             class="w-full btn bg-gradient-to-b from-primary/80 to-primary text-primaryContent shadow-md mt-8"
             @click="onRegisterMember"

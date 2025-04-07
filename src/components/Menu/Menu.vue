@@ -53,67 +53,14 @@
         <div :class="selectedItem?.name == 'Account' ? 'text-[#007AFF]' : 'tab-bar-item-text'">账号设置</div>
       </div>
     </div>
-    <BottomDialog ref="bottomDialog">
-      <template #body>
-        <div
-          class="flex items-center justify-between rounded-xl px-5 mb-2.5 h-26 bg-white/50 border border-gray-400/40 materialMedium shadow-lg"
-        >
-          <div class="flex items-center">
-            <div class="relative flex">
-              <div class="rounded-full border border-gray-400/30 h-20 w-20 overflow-hidden">
-                <img class="object-cover h-20" :src="store.account.avatar" alt="" />
-              </div>
-              <label for="file-upload" class="absolute relative textLink text-xs self-end cursor-pointer rounded-xl">
-                <span>修改头像</span>
-                <input id="file-upload" name="file-upload" type="file" class="sr-only" accept="image/*" @change="updateAvatar" />
-              </label>
-            </div>
-          </div>
-          <div class="flex flex-col items-start">
-            <div class="flex text-base font-medium">
-              <div class="mr-2">{{ store.account.name }}</div>
-              <div>{{ store.account.section }}</div>
-            </div>
-            <div class="leading-tight textDescription">{{ store.account.memberId }}</div>
-          </div>
-        </div>
-        <form @submit.prevent="" class="relative">
-          <input-section subject="昵称">
-            <input-base subject="" :passValue="store.account.alias" confirmBeforeInput v-model:content="newAccountInfo.alias"></input-base>
-          </input-section>
-          <input-section subject="联系方式">
-            <input-base
-              subject="手机"
-              :passValue="store.account.phone"
-              confirmBeforeInput
-              v-model:content="newAccountInfo.phone"
-            ></input-base>
-            <input-base subject="QQ" :passValue="store.account.qq" confirmBeforeInput v-model:content="newAccountInfo.qq"></input-base>
-          </input-section>
-          <input-section subject="" class="mt-4">
-            <button @click="updateAccount" type="submit" class="materialBtn btnPrimaryReverse shadow">确定</button>
-          </input-section>
-        </form>
-      </template>
-      <template #actionSpace>
-        <logout-button class="materialBtn btnWarning mt-1 shadow">登出</logout-button>
-      </template>
-    </BottomDialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue"
 import router from "@/router"
-import { Bars3Icon, ArrowLeftStartOnRectangleIcon, CogIcon } from "@heroicons/vue/24/outline"
-import { TransitionRoot } from "@headlessui/vue"
-import BottomDialog from "@/components/BottomDialog/BottomDialogBase.vue"
-import InputSection from "@/components/Input/InputSection.vue"
-import InputBase from "@/components/Input/InputBase.vue"
-import LogoutButton from "../LogoutButton.vue"
 import { useRoute, type RouteRecordRaw } from "vue-router"
 import MemberService from "@/services/member"
-import CommonService from "@/services/common"
 import { useAccountStore } from "@/stores/account"
 
 // TODO
@@ -183,34 +130,6 @@ const setAccountInfo = async () => {
 
 watch(route, setAccountInfo)
 
-const bottomDialog = ref()
-const accountSetting = () => {
-  window.open("https://myid.app.nbtca.space/account/aboutme", "_blank")
-}
-const updateAvatar = async (e: Event) => {
-  const target = e.target as HTMLInputElement
-  const fileList = target.files as FileList
-  const file = fileList[0]
-  const url = await CommonService.upload(file)
-  MemberService.updateAvatar(url.url).then(res => {
-    store.account.avatar = url.url
-  })
-}
-
-const updateAccount = () => {
-  if (
-    newAccountInfo.value.alias == store.account.alias &&
-    newAccountInfo.value.qq == store.account.qq &&
-    newAccountInfo.value.phone == store.account.phone
-  ) {
-    bottomDialog.value.cancel()
-    return
-  }
-  MemberService.update(newAccountInfo.value).then(async res => {
-    store.account = res
-    bottomDialog.value.cancel()
-  })
-}
 </script>
 <style>
 .logo {

@@ -6,7 +6,6 @@ import { useLogto } from "@logto/vue"
 
 axios.defaults.baseURL = "api/"
 
-axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8"
 axios.defaults.timeout = 10000
 
 const store = useAccountStore()
@@ -14,7 +13,8 @@ const store = useAccountStore()
 axios.interceptors.request.use(
   async config => {
     const logtoToken = await store.logto.getAccessToken()
-    config.headers.authorization = "bearer " + logtoToken
+    config.headers.authorization = "Bearer " + logtoToken
+    config.headers["Content-Type"] = "application/json"
     return config
   },
   error => {
