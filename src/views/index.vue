@@ -1,17 +1,19 @@
 <template>
-  <GlobalBanner></GlobalBanner>
-  <div
-    class="safe-container relative flex flex-col-reverse sm:(flex-row) overflow-hidden h-[calc(100vh-40px)] bg-systemBackground-lightSecondary"
-  >
-    <div class="min-h-[83px] sm:w-[320px] bg-current)">
-      <Menu ref="menu"></Menu>
-    </div>
-    <div class="w-full h-[calc(100dvh-123px)] sm:h-full" @click="this.$refs.menu.isOpen = false">
-      <router-view v-slot="{ Component }">
-        <keep-alive>
-          <component :is="Component" />
-        </keep-alive>
-      </router-view>
+  <div>
+    <GlobalBanner></GlobalBanner>
+    <div
+      class="safe-container relative flex flex-col-reverse sm:(flex-row) overflow-hidden h-[calc(100dvh-40px)] bg-systemBackground-lightSecondary"
+    >
+      <div class="min-h-[83px] sm:w-[320px] bg-current)">
+        <Menu ref="menu"></Menu>
+      </div>
+      <div class="w-full h-[calc(100dvh-123px)] sm:h-full">
+        <router-view v-slot="{ Component }">
+          <keep-alive>
+            <component :is="Component" />
+          </keep-alive>
+        </router-view>
+      </div>
     </div>
   </div>
 </template>
