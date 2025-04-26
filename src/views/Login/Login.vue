@@ -1,6 +1,7 @@
 <template>
-  <div class="flex flex-col items-center justify-center h-screen bg-systemBackground-lightSecondary">
-    <div class="flex flex-col items-center pb-10">
+  <GlobalBanner></GlobalBanner>
+  <div class="flex flex-col items-center justify-center h-[calc(100vh-40px)] bg-systemBackground-lightSecondary">
+    <div class="flex flex-col items-center pb-28">
       <div class="w-[18vw] sm:h-auto" style="min-width: 250px">
         <img src="../../assets/images/logo.png" alt="" class="filter drop-shadow" />
       </div>
@@ -19,6 +20,7 @@
 </template>
 <script setup lang="ts">
 import { useLogto } from "@logto/vue"
+import GlobalBanner from "@/components/Banner/GlobalBanner.vue"
 
 const { signIn } = useLogto()
 const onSighInWithLogto = () => {
