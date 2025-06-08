@@ -44,6 +44,4 @@ jobs:
           key: ${{ secrets.ACCESS_TOKEN }}
           script: |
             cd /home/nbtca/weekend/sunday
-            docker compose stop && docker compose rm -f
-            docker compose pull
-            docker compose up -d
+            docker stack deploy -c ./compose.yaml weekend
