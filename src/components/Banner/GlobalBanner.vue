@@ -1,10 +1,10 @@
 <template>
   <a
     class="h-10 bg-systemBlue-light flex items-center justify-center text-white text-sm px-2"
-    href="https://docs.nbtca.space/repair/weekend.html#在github上处理维修"
+    href="https://nbtca.space/repair/admin"
     target="_blank"
   >
-    <span class="mr-1"> 查看如何在Github Issue中更快的处理维修 </span>
+    <span class="mr-1"> 前往 nbtca.space/repair 处理维修</span>
     <svg width="16" height="16" viewBox="0 0 29 29" fill="white" xmlns="http://www.w3.org/2000/svg">
       <g clip-path="url(#clip0_2207_33208)">
         <path
